@@ -1,0 +1,45 @@
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Musical Sample Directories File For Mikezart2
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
+
+<Name> Wood_Pipe_h10
+<Type> percussion
+<FDir> /wood pipe high 10.wav
+<DVol> +0
+<DPan> +0
+
+<Name> Anvil_1
+<Type> percussion
+<FDir> /brake 01.wav
+<DVol> -20
+<DPan> +0
+
+<Name> Anvil_2
+<Type> percussion
+<FDir> /brake 02.wav
+<DVol> -20
+<DPan> +0
+
+<Name> Anvil_3
+<Type> percussion
+<FDir> /brake 03.wav
+<DVol> -20
+<DPan> +0
+
+<Name> Egg_2
+<Type> percussion
+<FDir> /egg02.wav
+<DVol> +0
+<DPan> +0
+
+<Name> Egg_3
+<Type> percussion
+<FDir> /egg03.wav
+<DVol> +0
+<DPan> +0
+
+<Name> BassDrum_9
+<Type> percussion
+<FDir> /processed bassdrum hit 06.wav
+<DVol> -25
+<DPan> +0
