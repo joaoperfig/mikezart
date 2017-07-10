@@ -3,15 +3,17 @@ import random
 
 class Part:
     
-    def __init__(self, typ=None, intensity=0, size=0):
+    def __init__(self, typ=None, intensity=0, size=0, gen=0, cho=0):
         self._type = typ #"n1", "n2", "bg", "ch", "ge"
-        if intensity<0 or size<0 or intensity>1 or size>1:
+        if intensity<0 or gen<0 or cho<0 or size<0 or intensity>1 or size>1 or gen>1 or cho>1:
             raise ValueError ("Invalid Values for Structure Part")
         self._intensity = intensity # [0-1]
         self._size = size # [0-1]
+        self._genover = gen # [0-1] overlay of general type lines
+        self._chover = cho # [0-1] overlay of chord type lines
         
     def __repr__(self):
-        return "[" + self._type + "-" + str(self._intensity) + "-" + str(self._size) + "]"
+        return "[" + self._type + "-" + str(self._intensity) + "-" + str(self._size) + "-" + str(self._genover) + "-" + str(self._chover) + "]"
         
     @classmethod
     def fromString(cls, string): # [n1-0.123-0.321]
@@ -38,7 +40,9 @@ class Part:
         valstrings = str.split(string, "-")
         inten = eval(valstrings[0])
         size = eval(valstrings[1])
-        return cls(typ, inten, size)
+        gen = eval(valstrings[2])
+        cho = eval(valstrings[3])
+        return cls(typ, inten, size, gen, cho)
 
 
 class Structure:
@@ -122,6 +126,13 @@ def readData(filename): #"../resources/*.txt"
     for song in data:
         markovs.addData(song)
     filezart.saveMarkov(markovs)
+    
+def learnData(string):
+    if len(string)<8:
+        return
+    markovs = filezart.getMarkov()
+    markovs.addData(string)
+    filezart.saveMarkov(markovs)
         
 
 def dicinc(dic, el):
@@ -131,4 +142,52 @@ def dicinc(dic, el):
         dic[el] = 1
     return dic
 
-print(filezart.getMarkov().makeStruct())
+def learnMode():
+    print("Welcome to markovzart input learnMode")
+    while True:
+        print("Write M to start a song, Q to quit")
+        inp = raw_input(">")
+        if inp=="M" or inp=="m":
+            song = ""
+            while True:
+                print("Write the type (n1, n2, ge, bg, ch), followed by space, intensity and optional (size=1, gen=0, cho=0), or S to stop")
+                print("Song: "+str(song))
+                inp = raw_input(">")
+                if inp == "S" or inp == "s":
+                    print ("Save song to main memory? Y N C (yes, no, cancel)")
+                    inp = raw_input (">")
+                    if inp == "y" or inp == "Y":
+                        print("Saving")
+                        learnData(song)
+                        song = ""
+                        break
+                    elif inp == "N" or inp=="n":
+                        print("Deleting song")
+                        song = ""
+                        break
+                    elif inp == "C" or inp=="c":
+                        print("Returning")
+                    else:
+                        print("Unknown input, Returning")
+                elif inp[:2] in ("n1", "n2", "ge", "bg", "ch"):
+                    part = tuple(str.split(inp, " "))
+                    if len(part)<2:
+                        part = part + ("0.5",)
+                    if len(part)<3:
+                        part = part + ("1",)
+                    if len(part)<4:
+                        part = part + ("0",)
+                    if len(part)<5:
+                        part = part + ("0",)
+                    if len(song)!= 0:
+                        song = song + ", "
+                    song = song + "[" + part[0] + "-" + part[1] + "-" + part[2] + "-" + part[3] + "-" + part[4] + "]"
+                else:
+                    print("Unknown input")
+        elif inp=="q" or inp=="Q":
+            return
+        else:
+            print("Unknown input")
+            
+learnMode()
+            
