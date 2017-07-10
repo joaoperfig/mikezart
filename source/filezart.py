@@ -154,3 +154,20 @@ def unPickle(directory):
 def unPPOfSong(name):
     return unPickle("exports/song_"+name+"/pickle.pi")
 
+def readText(filename):
+    f=open(filename, "r")
+    text = f.read()
+    f.close()
+    return text
+
+def readLines(filename):
+    f=open(filename, "r")
+    lines = f.readlines()
+    f.close()
+    return lines
+
+def getMarkov():
+    return unPickle("../configuration/data.mrkv")
+
+def saveMarkov(markov):
+    pickleObject("../configuration/data.mrkv", markov)

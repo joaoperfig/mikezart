@@ -1,4 +1,4 @@
-from random import random
+import random
 #from pydub import AudioSegment
 #from pydub.playback import play
 import glob
@@ -787,17 +787,15 @@ def lowercase(text):
     
 # rselect RandomSelect returns random element of list
 def rselect(lista):
-    dicti = {}
-    for i in lista:
-        dicti[i] = 1
-    return wselect(dicti)
+    return random.choice(lista)
+
 
 # wselect WeightedSelect returns element of dictionary based on dict weights {element:weight}
 def wselect(dicti):
     total=0
     for i in list(dicti):
         total = total + dicti[i]
-    indice = total*random()
+    indice = total*random.random()
     for i in list(dicti):
         if dicti[i]>=indice:
             return i
