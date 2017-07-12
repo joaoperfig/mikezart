@@ -1,8 +1,9 @@
 import filezart
 import random
+import pickle
 
 class Part:
-    
+
     def __init__(self, typ=None, intensity=0, size=0, gen=0, cho=0):
         self._type = typ #"n1", "n2", "bg", "ch", "ge"
         if intensity<0 or gen<0 or cho<0 or size<0 or intensity>1 or size>1 or gen>1 or cho>1:
@@ -11,10 +12,10 @@ class Part:
         self._size = size # [0-1]
         self._genover = gen # [0-1] overlay of general type lines
         self._chover = cho # [0-1] overlay of chord type lines
-        
+
     def __repr__(self):
         return "[" + self._type + "-" + str(self._intensity) + "-" + str(self._size) + "-" + str(self._genover) + "-" + str(self._chover) + "]"
-        
+
     @classmethod
     def fromString(cls, string): # [n1-0.123-0.321]
         while string[0] == " ":
@@ -46,25 +47,25 @@ class Part:
 
 
 class Structure:
-    
+
     def __init__(self):
         self._parts = ()
-        
+
     def add(self, part):
         self._parts = self._parts+(part,)
-    
+
     def __repr__(self):
         return "@STRUCTURE:" + str(self._parts)
- 
- 
+
+
 class Markov:
-    
+
     def __init__(self):
         self._dict = {"n1":(), "n2":(), "bg":(), "ch":(), "ge":()}
         self._start = ()
         self._end = ()
         self._size = {}
-        
+
     def addData(self, song): #song should be string of parts separated by commas, !NO COMMA AT THE END!
         if len(song)<8:
             return
@@ -82,7 +83,7 @@ class Markov:
                 last = parts[i]
             if i==len(parts)-1:
                 self._end = self._end + (parts[i],) #add to end list
-                
+
     def makeStruct(self): #generates a structure from data
         size = wselect(self._size)
         struct = Structure()
@@ -100,8 +101,8 @@ class Markov:
                 last = part
                 struct.add(part)
         return struct
-                
-                
+
+
 # wselect WeightedSelect returns element of dictionary based on dict weights {element:weight}
 def wselect(dicti):
     total=0
@@ -121,19 +122,35 @@ def rselect(lista):
 
 
 def readData(filename): #"../resources/*.txt"
-    markovs = filezart.getMarkov()
-    data = filezart.readLines(filename)
+    markovs = getMarkov()
+    data = readLines(filename)
     for song in data:
         markovs.addData(song)
     filezart.saveMarkov(markovs)
-    
+
 def learnData(string):
     if len(string)<8:
         return
-    markovs = filezart.getMarkov()
+    markovs = getMarkov()
     markovs.addData(string)
-    filezart.saveMarkov(markovs)
-        
+    saveMarkov(markovs)
+
+def getMarkov():
+    return unPickle("../configuration/data.mrkv")
+
+def saveMarkov(markov):
+    pickleObject("../configuration/data.mrkv", markov)
+
+def pickleObject(directory, content):
+    f =  open(directory, "wb")
+    pickle.dump(content,f )
+    f.close()
+
+def unPickle(directory):
+    f = open( directory, "rb" )
+    data = pickle.load(f)
+    f.close()
+    return data
 
 def dicinc(dic, el):
     if el in list(dic):
@@ -146,16 +163,16 @@ def learnMode():
     print("Welcome to markovzart input learnMode")
     while True:
         print("Write M to start a song, Q to quit")
-        inp = raw_input(">")
+        inp = input(">")
         if inp=="M" or inp=="m":
             song = ""
             while True:
                 print("Write the type (n1, n2, ge, bg, ch), followed by space, intensity and optional (size=1, gen=0, cho=0), or S to stop")
                 print("Song: "+str(song))
-                inp = raw_input(">")
+                inp = input(">")
                 if inp == "S" or inp == "s":
                     print ("Save song to main memory? Y N C (yes, no, cancel)")
-                    inp = raw_input (">")
+                    inp = input (">")
                     if inp == "y" or inp == "Y":
                         print("Saving")
                         learnData(song)
@@ -188,6 +205,6 @@ def learnMode():
             return
         else:
             print("Unknown input")
-            
+
+saveMarkov(Markov())
 learnMode()
-            
