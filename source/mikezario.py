@@ -21,16 +21,24 @@ def wselect(dicti):
     raise ValueError ("something went wrong")
 
 
+
 def mainMenu():
     print("\nWelcome to the MikezarIO music creation interface (art by Forrest Cook & Alexander Craxton)")
-    print("     ________________________________    \n    /    o   oooo ooo oooo   o o o  /\    \n   /    oo  ooo  oo  oooo   o o o  / /    \n  /    _________________________  / /     \n / // / // /// // /// // /// / / / /      \n/___ //////////////////////////_/ /       \n\____\________________________\_\/  \n")
-    print("Starting Palette creation:")
-    bpm = bpmMenu()
-    csize = csizeMenu()
-    progsize = psizeMenu()
-    progcount = progcMenu()
-    scale = scaleMenu()
-    pal = musictheory.palette(scale, progsize, progcount, csize)
+    print("      ________________________________    \n     /    o   oooo ooo oooo   o o o  /\    \n    /    oo  ooo  oo  oooo   o o o  / /    \n   /    _________________________  / /     \n  / // / // /// // /// // /// / / / /      \n /___ //////////////////////////_/ /       \n \____\________________________\_\/  \n")
+    while True:
+        print("Pp - Create a Palette")
+        print("Ee - Edit a Palette")
+        print("Ss - Create a Structure")
+        print("Cc - Create a Song from a Palette and a Structure")
+        print("Qq - Quit")
+        
+        inp = input(">")
+        if inp in "Pp":
+            paletteMenu()
+        
+        elif inp in "Qq":
+            return
+
     
 def bpmMenu():
     while True:
@@ -45,9 +53,9 @@ def bpmMenu():
             inp = input(">")
             if inp in "Yy":
                 return bpm
-            if inp in "Nn":
+            elif inp in "Nn":
                 break
-            if inp in "Pp":
+            elif inp in "Pp":
                 previewbpm(bpm)
 
 def csizeMenu():
@@ -63,9 +71,9 @@ def csizeMenu():
             inp = input(">")
             if inp in "Yy":
                 return cs
-            if inp in "Nn":
+            elif inp in "Nn":
                 break
-            if inp in "Pp":
+            elif inp in "Pp":
                 previewcs(cs)
                 
 def psizeMenu():
@@ -81,9 +89,9 @@ def psizeMenu():
             inp = input(">")
             if inp in "Yy":
                 return ps
-            if inp in "Nn":
+            elif inp in "Nn":
                 break
-            if inp in "Pp":
+            elif inp in "Pp":
                 previewps(ps)
     
 def progcMenu():
@@ -99,9 +107,9 @@ def progcMenu():
             inp = input(">")
             if inp in "Yy":
                 return pc
-            if inp in "Nn":
+            elif inp in "Nn":
                 break
-            if inp in "Pp":
+            elif inp in "Pp":
                 previewpc(pc)
     
 def scaleMenu():
@@ -120,9 +128,34 @@ def scaleMenu():
         while True:
             print ("Your scale: "+str(scale)[2:-2])
             pianoprinter.octoPrint(scale._notes)
+            print("Chords |Short  |Normal |Large  ")
+            print("Minor  |" + str(len(scale.getChords("minor", "short"))) + "      |" + str(len(scale.getChords("minor", "normal"))) + "      |" + str(len(scale.getChords("minor", "large"))) + "      ")
+            print("Weird  |" + str(len(scale.getChords("weird", "short"))) + "      |" + str(len(scale.getChords("weird", "normal"))) + "      |" + str(len(scale.getChords("weird", "large"))) + "      ")
+            print("Major  |" + str(len(scale.getChords("major", "short"))) + "      |" + str(len(scale.getChords("major", "normal"))) + "      |" + str(len(scale.getChords("major", "large"))) + "      ")
+            print()
             print ("Accept? (Yy, Nn, Pp(preview)):")
             inp = input(">")
+            if inp in "Yy":
+                return scale
+            elif inp in "Nn":
+                break
+            elif inp in "Pp":
+                previewscale(scale)
             
-
+def paletteMenu():
+    while True:
+        print("Starting Palette creation:")
+        bpm = bpmMenu()
+        csize = csizeMenu()
+        progsize = psizeMenu()
+        progcount = progcMenu()
+        scale = scaleMenu()
+        pal = musictheory.palette(scale, progsize, progcount, csize)
+        print("Palette created, Accept? Yy Nn")
+        inp = input(">")
+            if inp in "Yy":
+                name = nameMenu()
+                paletteEdit(pal, name)
+            elif inp in "Nn":
             
 mainMenu()

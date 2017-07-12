@@ -218,13 +218,13 @@ class scale7:
         return string + "$"
     
     def randcnotes(self, notes):
-        ns = removeElsList(firstOctave(), notes, lambda x,y: ((x._value == y._value) or (x._value == y._value+1) or (x._value+1 == y._value) or (x._value+11 == y._value) or (x._value == y._value+11)))
+        ns = removeElsList(firstOctave(), notes, lambda x,y: (x._value == y._value)) #removeElsList(firstOctave(), notes, lambda x,y: ((x._value == y._value) or (x._value == y._value+1) or (x._value+1 == y._value) or (x._value+11 == y._value) or (x._value == y._value+11)))
         n5 = self.rand5notes(ns)
         nf= removeElsList(firstOctave(), n5, lambda x,y: (x._value == y._value))
-        #print("given", notes)
-        #print("remove possibilities", ns)
-        #print("remove", n5)
-        #print("final", nf)
+        print("given", notes)
+        print("remove possibilities", ns)
+        print("remove", n5)
+        print("final", nf)
         return nf
             
     def randnotes(self):
