@@ -28,7 +28,7 @@ def wselect(dicti):
         indice = indice - dicti[i]
     raise ValueError ("something went wrong")
 
-# Make random ong with selected instruments
+# Make random song with selected instruments
 def palFromInsts(cinsts, sminsts, lminsts, pinsts):
     
     scale = musictheory.scale7()
