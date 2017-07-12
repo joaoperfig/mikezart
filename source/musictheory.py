@@ -200,8 +200,12 @@ class scale7:
             for i in notes:
                 self._notes = self._notes + (mnote(i._type),)
             self._notes = sorted(self._notes, key=operator.attrgetter('_value'))
-        else:
+        elif (len(notes)==0):
             self._notes = sorted(self.randnotes(), key=operator.attrgetter('_value'))
+        elif (len(notes)>7):
+                  raise ValueError("Generate keys with 7 notes at most")
+        else:                                                                   # Can autocomplete smaller list of notes
+            self._notes = sorted(self.randcnotes(notes), key=operator.attrgetter('_value'))
             
     @classmethod
     def octave(cls):                                                            # Technically not a scale7, but useful in some cases where one is required
@@ -212,12 +216,23 @@ class scale7:
         for i in self._notes:
             string = string + i._typename + "-"
         return string + "$"
+    
+    def randcnotes(self, notes):
+        ns = removeElsList(firstOctave(), notes, lambda x,y: ((x._value == y._value) or (x._value == y._value+1) or (x._value+1 == y._value) or (x._value+11 == y._value) or (x._value == y._value+11)))
+        n5 = self.rand5notes(ns)
+        nf= removeElsList(firstOctave(), n5, lambda x,y: (x._value == y._value))
+        #print("given", notes)
+        #print("remove possibilities", ns)
+        #print("remove", n5)
+        #print("final", nf)
+        return nf
             
     def randnotes(self):
         return removeElsList(firstOctave(), self.rand5notes(), lambda x,y: (x._value == y._value))
     
-    def rand5notes(self):
-        possibilities = firstOctave()
+    def rand5notes(self, possibilities = False):
+        if possibilities == False:
+            possibilities = firstOctave()
         selecteds = ()
         for i in range(5):
             if len(possibilities) == 0:
