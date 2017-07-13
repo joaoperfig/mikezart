@@ -220,23 +220,28 @@ class scale7:
     def randcnotes(self, notes):
         ns = removeElsList(firstOctave(), notes, lambda x,y: (x._value == y._value)) #removeElsList(firstOctave(), notes, lambda x,y: ((x._value == y._value) or (x._value == y._value+1) or (x._value+1 == y._value) or (x._value+11 == y._value) or (x._value == y._value+11)))
         n5 = self.rand5notes(ns)
+        c = 0
+        while c<100 and n5 == "fail":
+            n5 = self.rand5notes(ns)
+            c = c+1
+        if n5 == "fail":
+             print("WARNING: Could not generate a valid Scale from input, generating from random.")
+             n5 = self.rand5notes()
         nf= removeElsList(firstOctave(), n5, lambda x,y: (x._value == y._value))
-        print("given", notes)
-        print("remove possibilities", ns)
-        print("remove", n5)
-        print("final", nf)
         return nf
             
     def randnotes(self):
         return removeElsList(firstOctave(), self.rand5notes(), lambda x,y: (x._value == y._value))
     
-    def rand5notes(self, possibilities = False):
+    def rand5notes(self, possibilities = False, count=0):
+        if (count == 700):
+            return "fail"
         if possibilities == False:
             possibilities = firstOctave()
         selecteds = ()
         for i in range(5):
             if len(possibilities) == 0:
-                return self.rand5notes()
+                return self.rand5notes(possibilities, count+1)
             note = rselect(possibilities)
             selecteds = selecteds + (note,)
             possibilities = removeEls(possibilities, note, lambda x,y: ((y.isNext(x)) or (y.isSame(x))))

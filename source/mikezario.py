@@ -29,7 +29,7 @@ def mainMenu():
         print("Pp - Create a Palette")
         print("Ee - Edit a Palette")
         print("Ss - Create a Structure")
-        print("Cc - Create a Song from a Palette and a Structure")
+        print("Cc - Create a Song from a Palette and a Structure")    #UNDEFINED OPTIONS
         print("Qq - Quit")
         
         inp = input(">")
@@ -151,11 +151,120 @@ def paletteMenu():
         progcount = progcMenu()
         scale = scaleMenu()
         pal = musictheory.palette(scale, progsize, progcount, csize)
-        print("Palette created, Accept? Yy Nn")
-        inp = input(">")
+        while True:
+            print("Palette created, Accept? Yy Nn(redo) Qq(quit):")
+            inp = input(">")
             if inp in "Yy":
                 name = nameMenu()
                 paletteEdit(pal, name)
+                return
             elif inp in "Nn":
+                print("Retrying:")
+                break
+            elif inp in "Qq":
+                return
+        
+def nameMenu():
+    while True:
+        print("Name this palette (will be used as filename):")
+        name = input(">")
+        while True:
+            print(name + ", is this name ok? Yy Nn:")
+            inp = input(">")
+            if inp in "Yy":
+                return name
+            elif inp in "Nn":
+                break
+            
+def paletteEdit(pal, name):
+    print("Entering palette edition interface for palette: "+name)
+    if pal._n1 == None:
+        cprogN1 = None
+    else:
+        cprogN1 = pal._n1._cprog
+    if pal._n2 == None:
+        cprogN2 = None
+    else:
+        cprogN2 = pal._n2._cprog
+    if pal._ch == None:
+        cprogCH = None
+    else:
+        cprogCH = pal._ch._cprog
+    if pal._bg != None:
+        cprogCH = pal._bg._cprog
+    while True:
+        if cprogN1 == None:
+            print ("Warning: undefined chord progression: Verses 1!")
+        if cprogN2 == None:
+            print ("Warning: undefined chord progression: Verses 2!")
+        if cprogCH == None:
+            print ("Warning: undefined chord progression: Chorus/Bridge!")
+        if pal._n1 == None:
+            print ("Warning: undefined Theme: Verses 1!")
+        if pal._n2 == None:
+            print ("Warning: undefined Theme: Verses 2!")
+        if pal._ch == None:
+            print ("Warning: undefined Theme: Chorus!")
+        if pal._bg == None:
+            print ("Warning: undefined Theme: Bridge!")
+        if pal._ge == None:
+            print ("Warning: undefined Theme: General!")
+        print("Cc - Define chord Progressions")
+        print("Tt - Create a Theme")
+        print("Ee - Edit a Theme")
+        print("Dd - Display Palette Properties")
+        print("Ss - Save Palette")
+        print("Qq - Quit")
+        inp = input(">")                                #UNDEFINED OPTIONS
+        if inp in "Cc":
+            res = cprogMenu(pal, cprogN1, cprogN2, cprogCH)
+            if res == False:
+                res = False
+            elif res[0] == "n1":
+                cprogN1 = res[1]
+            elif res[0] == "n2":
+                cprogN2 = res[1]
+            elif res[0] == "ch":
+                crpogCH = res[1]
+    
+def cprogMenu(pal, cprogN1, cprogN2, cprogCH):
+    while True:
+        print("Note: changed progressions are only taken into effect if their themes are recreated")
+        if cprogN1 == None:
+            print ("n1 - Define Verses 1 chord Progression (undefined!)")
+        else:
+            print ("n1 - Define Verses 1 chord Progression")
+        if cprogN2 == None:
+            print ("n2 - Define Verses 2 chord Progresion (undefined!)")
+        else:
+            print ("n2 - Define Verses 2 chord Progresion")
+        if cprogCH == None:
+            print ("ch - Define Chorus/Bridge chord Progresion (undefined!)")
+        else:
+            print ("ch - Define Chorus/Bridge chord Progresion")
+        print ("Qq - Quit")
+        inp = input(">")
+        if inp in "n1":
+            prog = makeProgMenu(pal)
+            if prog == False:
+                prog = False
+            else:
+                return ("n1", prog)
+        elif inp in "n2":
+            prog = makeProgMenu(pal)
+            if prog == False:
+                prog = False
+            else:
+                return ("n2", prog)   
+        elif inp in "ch":
+            prog = makeProgMenu(pal)
+            if prog == False:
+                prog = False
+            else:
+                return ("ch", prog)   
+        elif inp in "Qq":
+            return False
+            
+        
             
 mainMenu()
