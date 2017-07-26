@@ -11,7 +11,7 @@ class Part:
         self._intensity = intensity # [0-1]
         self._size = size # [0-1]
         self._genover = gen # [0-1] overlay of general type lines
-        self._chover = cho # [0-1] overlay of chord type lines
+        self._chover = cho # [0-1] overlay of chorus type lines
 
     def __repr__(self):
         return "[" + self._type + "-" + str(self._intensity) + "-" + str(self._size) + "-" + str(self._genover) + "-" + str(self._chover) + "]"
