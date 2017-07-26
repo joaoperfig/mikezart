@@ -1,6 +1,6 @@
 # mikezart
 
-## upcoming changes list:
+#### upcoming changes list:
 - [x] Palette generator
 - [ ] Double note distribution 
 - [ ] Last note on note selection wil not be on same tempo 
