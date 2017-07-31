@@ -767,15 +767,18 @@ class theme:
         self._progc = progcount
         self._csize = csize
         self._voices = {"general": (), "chordic":(), "smelodic":(), "lmelodic":(), "percussion":()}
+        self._sorting = ()                                                      # List of tvindicator
         
     def addVoice(self, inst, centre, mtype, ncount=None, tweights=None, mweights=None):   # Creates voice and generates progressions for it
         nvoice = voice(inst, centre, self._scale, mtype)     ### ncount was here????                                        
         nvoice.autoProg(self._cprog, self._progc, self._csize, ncount, tweights, mweights) ###ncount wasnt here???
-        self._voices[nvoice._mtype] = self._voices[nvoice._mtype] + (nvoice,)
+        self._voices[mtype] = self._voices[mtype] + (nvoice,)
+        self._sorting = self._sorting + (tvindicator(mtype, len(self._voices[mtype])-1)
         
     def addVoiceAsIs(self, voic):                                               # Copies voice !!voice should have same parameters as theme!!
         nvoice = copy.deepcopy(voic)
         self._voices[nvoice._mtype] = self._voices[nvoice._mtype] + (nvoice,)
+        self._sorting = self._sorting + (tvindicator(voic._mtype, len(self._voices[voic._mtype])-1)
         
     def previewAudio(self, bpm):                                                # return audio of all voices' first prog
         total = (len(self._cprog)*self._csize*bpmToBeat(bpm)) + 3000
@@ -798,6 +801,23 @@ class theme:
                 filezart.makeFolder(vfolder)
                 filezart.makeTextFile(vfolder + "/tab.txt", voic.toTab())
                 (voic._progs[0].getAudio(voic._inst, bpm)).export(vfolder + "/preview.mp3", format = "mp3")
+        
+        
+        
+# TVIndicator class, pointer for voice in theme
+# Initialized with voice mtype and voice id (index on theme mtype list)  
+class tvindicator:
+    def __init__(self, mtype, index):
+        if not mtype in ("general", "chordic", "smelodic", "lmelodic", "percussion"):
+            raise ValueError ("Invalid mtype: "+str(mtype))
+        self._mtype = mtype
+        self._index = index
+        
+    def getVoice(self, them):                                                  # get corresponding voice in theme
+        return them._voices[self._mtype][self._index]
+        
+        
+        
         
 def uppercase(text):
     ret = ""
