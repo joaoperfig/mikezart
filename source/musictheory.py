@@ -579,12 +579,14 @@ class voice:
     def __repr__(self):
         return "~" + self._inst._name + "->" + str(self._cent) + "<-" + str(self._scale)[2:-2] + "~"
     
-    def autoProg(self, cprog, progcount, csize, ncount=None):                                # Fills voice with progressions
+    def autoProg(self, cprog, progcount, csize, ncount=None, tweights=None, mweights=None):                                # Fills voice with progressions
         self._progs = ()
         
         if(self._mtype == "chordic"):
-            tweights = chordicTWeights()
-            mweights = chordicMWeights()
+            if tweights == None:
+                tweights = chordicTWeights()
+            if mweights == None:
+                mweights = chordicMWeights()
             if ncount == None:
                 ncount = wselect(chordicCWeights())
             rithm = chunk(csize)
@@ -600,8 +602,10 @@ class voice:
             return
         
         elif(self._mtype == "generic"):
-            tweights = genericTWeights()
-            mweights = genericMWeights()
+            if tweights == None:
+                tweights = genericTWeights()
+            if mweights == None:
+                mweights = genericMWeights()
             if ncount == None:
                 ncount = wselect(genericCWeights())
             rithm = chunk(csize)
@@ -617,8 +621,10 @@ class voice:
             return
         
         elif(self._mtype == "smelodic"): # small melodic melodies repeat every progression
-            tweights = smelodicTWeights()
-            mweights = smelodicMWeights()     
+            if tweights == None:
+                tweights = smelodicTWeights()
+            if mweights == None:
+                mweights = smelodicMWeights()     
             prog = progression(csize)
             if ncount == None:
                 ncount = wselect(smelodicCWeights())
@@ -633,8 +639,10 @@ class voice:
             return
         
         elif(self._mtype == "lmelodic"): # large melodic melodies repeat every list of progressions
-            tweights = lmelodicTWeights()
-            mweights = lmelodicMWeights() 
+            if tweights == None:
+                tweights = lmelodicTWeights()
+            if mweights == None:
+                mweights = lmelodicMWeights() 
             if ncount == None:
                 ncount = wselect(lmelodicCWeights())    
             for i in range(progcount):
@@ -649,8 +657,10 @@ class voice:
             return
         
         elif(self._mtype == "percussion"):
-            tweights = percussionTWeights()
-            mweights = percussionMWeights()
+            if tweights == None:
+                tweights = percussionTWeights()
+            if mweights == None:
+                mweights = percussionMWeights()
             if ncount == None:
                 ncount = wselect(percussionCWeights())
             rithm = chunk(csize)
