@@ -768,9 +768,9 @@ class theme:
         self._csize = csize
         self._voices = {"general": (), "chordic":(), "smelodic":(), "lmelodic":(), "percussion":()}
         
-    def addVoice(self, inst, centre, mtype, ncount=None):                       # Creates voice and generates progressions for it
-        nvoice = voice(inst, centre, self._scale, mtype, ncount)                                            
-        nvoice.autoProg(self._cprog, self._progc, self._csize)
+    def addVoice(self, inst, centre, mtype, ncount=None, tweights=None, mweights=None):   # Creates voice and generates progressions for it
+        nvoice = voice(inst, centre, self._scale, mtype)     ### ncount was here????                                        
+        nvoice.autoProg(self._cprog, self._progc, self._csize, ncount, tweights, mweights) ###ncount wasnt here???
         self._voices[nvoice._mtype] = self._voices[nvoice._mtype] + (nvoice,)
         
     def addVoiceAsIs(self, voic):                                               # Copies voice !!voice should have same parameters as theme!!
