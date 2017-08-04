@@ -817,7 +817,15 @@ class theme:
         base = partialProg*progdur
         return base 
         
-        
+    def resetSort(self):
+        self._sorting = ()
+        for mt in list self._voices:
+            for i in range(len(self._voices[mt])):
+                self._sorting = self._sorting + tvindicator(mt, i)
+    
+    def shuffleSort(self):
+        self.resetSort()
+        self._sorting = random.shuffle(self._sorting)
         
         
         
