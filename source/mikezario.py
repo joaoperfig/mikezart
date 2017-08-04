@@ -209,6 +209,7 @@ def paletteEdit(pal, name): # Main palette edition thing, can enter theme or pro
             print ("Warning: undefined Theme: Bridge!")
         if pal._ge == None:
             print ("Warning: undefined Theme: General!")
+        print("DEBUG", cprogCH)
         print("Cc - Define chord Progressions")
         print("Tt - Create a Theme")
         print("Ee - Edit a Theme")
@@ -225,7 +226,7 @@ def paletteEdit(pal, name): # Main palette edition thing, can enter theme or pro
             elif res[0] == "n2":
                 cprogN2 = res[1]
             elif res[0] == "ch":
-                crpogCH = res[1]
+                crpogCH = res[1] #BUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     
 def cprogMenu(pal, cprogN1, cprogN2, cprogCH): # Edit progressions for palette, returns ("ch", prog) or False if failed
     while True:
@@ -246,21 +247,22 @@ def cprogMenu(pal, cprogN1, cprogN2, cprogCH): # Edit progressions for palette, 
         inp = input(">")
         if inp in "n1":
             prog = makeProgMenu(pal)
-            if prog == False:
+            if prog == None:
                 prog = False
             else:
                 return ("n1", prog)
         elif inp in "n2":
             prog = makeProgMenu(pal)
-            if prog == False:
+            if prog == None:
                 prog = False
             else:
                 return ("n2", prog)   
         elif inp in "ch":
             prog = makeProgMenu(pal)
-            if prog == False:
+            if prog == None:
                 prog = False
             else:
+                print("DEBUG: returning ch",prog)
                 return ("ch", prog)   
         elif inp in "Qq":
             return False
@@ -301,6 +303,21 @@ def makeProgMenu(pal): # Request progression generation, returns None if failed
             prog = list(pal._scale.makeProg(progsize, musictheory.n1ChWeights()[0], musictheory.n1ChWeights()[1]))
         elif inp in "Cc":
             prog = list(pal._scale.makeProg(progsize, musictheory.chChWeights()[0], musictheory.chChWeights()[1])) #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX FINISH ME
+        elif inp in "Gg":
+            raise ValueError("pooop")
+        elif inp in "Ss":
+            for c in prog:
+                if c == "<UNDEFINED>":
+                    pianoprinter.octoPrint([])
+                else:
+                    pianoprinter.octoPrint(c._types)
+        elif inp in "Pp":
+            previewProg(prog)
+        elif inp in "Ff":
+            return prog
+        elif inp in "Qq":
+            return None
+        
         
                     
 def idMenu(): # Request int id, return None if failed
