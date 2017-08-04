@@ -176,7 +176,7 @@ def nameMenu():
             elif inp in "Nn":
                 break
             
-def paletteEdit(pal, name):
+def paletteEdit(pal, name): # Main palette edition thing, can enter theme or prog edition
     print("Entering palette edition interface for palette: "+name)
     if pal._n1 == None:
         cprogN1 = None
@@ -227,7 +227,7 @@ def paletteEdit(pal, name):
             elif res[0] == "ch":
                 crpogCH = res[1]
     
-def cprogMenu(pal, cprogN1, cprogN2, cprogCH):
+def cprogMenu(pal, cprogN1, cprogN2, cprogCH): # Edit progressions for palette, returns ("ch", prog) or False if failed
     while True:
         print("Note: changed progressions are only taken into effect if their themes are recreated")
         if cprogN1 == None:
@@ -264,7 +264,136 @@ def cprogMenu(pal, cprogN1, cprogN2, cprogCH):
                 return ("ch", prog)   
         elif inp in "Qq":
             return False
-            
+        
+        
+def makeProgMenu(pal): # Request progression generation, returns None if failed
+    progsize = pal._progsize
+    prog = [] # list of chord3
+    for i in range(progsize):
+        prog = prog + ["<UNDEFINED>"]
+    while True:
+        string = ""
+        for chord in prog:
+            string = string + str(chord) + " "
+        print("Your progression:")
+        print(string)
+        print("Dd - Define chords")
+        print("Vv - Generate Progression with default verses weights")
+        print("Cc - Generate Progression with default chorus weights")
+        print("Gg - Generate Progression with custom weights")
+        print("Ss - Show in piano")
+        print("Pp - Preview")
+        print("Ff - Use Progression as is")
+        print("Qq - Quit")
+        inp = input(">")
+        if inp in "Dd":
+            print("Requesting id in range [0-"+str(progsize-1)+"]")
+            cid = idMenu()
+            if cid in range(progsize):
+                print("Defining chord "+str(cid))
+                chord = chordMenu(pal._scale)
+                if chord != None:
+                    print("Chord defined!")
+                    prog[cid] = chord
+            else:
+                print("Invalid id: " + str(cid))
+        elif inp in "Vv":
+            prog = list(pal._scale.makeProg(progsize, musictheory.n1ChWeights()[0], musictheory.n1ChWeights()[1]))
+        elif inp in "Cc":
+            prog = list(pal._scale.makeProg(progsize, musictheory.chChWeights()[0], musictheory.chChWeights()[1])) #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX FINISH ME
+        
+                    
+def idMenu(): # Request int id, return None if failed
+    while True:
+        print("Please input id: (Qq-quit)")
+        inp = input(">")
+        flag = True
+        if inp in "Qq":
+            return None
+        for i in inp:
+            if not i in "0123456789":
+                flag = False
+        if flag:
+            return eval(inp)
+        
+def chordMenu(scale): # Request chord3 generation, return None if failed
+    while True:
+        print("Defining chord in scale: "+str(scale))
+        print("Input list of 3 notes, separated by spaces")
+        print("Input first note in chord")
+        print("Rr - Generate")
+        print("Aa - Generate with restraints")
+        print("Ii - Scale info")
+        print("Qq - Quit")
+        inp = input(">")
+        if inp in "Rr":
+            chord = musictheory.chord3.fromScale(scale)
+            pianoprinter.octoPrint(chord._types)
+            while True:
+                print(str(chord)+", accept? Yy Nn")
+                inp2 = input(">")
+                if inp2 in "Yy":
+                    return chord
+                elif inp2 in "Nn":
+                    break
+        elif inp in "Aa":
+            print("Input restraint 1 (leave empty for NONE)")
+            res1 = input(">")
+            if res1 == "":
+                res1 = None
+            print("Input restraint 2 (leave empty for NONE)")
+            res2 = input(">")
+            if res2 == "":
+                res2 = None
+            chord = rselect(scale.getChords(res1, res2))
+            pianoprinter.octoPrint(chord._types)
+            while True:
+                print(str(chord)+", accept? Yy Nn")
+                inp2 = input(">")
+                if inp2 in "Yy":
+                    return chord
+                elif inp2 in "Nn":
+                    break
+        elif inp in "Ii":
+            print ("Your scale: "+str(scale)[2:-2])
+            pianoprinter.octoPrint(scale._notes)
+            print("Chords |Short  |Normal |Large  ")
+            print("Minor  |" + str(len(scale.getChords("minor", "short"))) + "      |" + str(len(scale.getChords("minor", "normal"))) + "      |" + str(len(scale.getChords("minor", "large"))) + "      ")
+            print("Weird  |" + str(len(scale.getChords("weird", "short"))) + "      |" + str(len(scale.getChords("weird", "normal"))) + "      |" + str(len(scale.getChords("weird", "large"))) + "      ")
+            print("Major  |" + str(len(scale.getChords("major", "short"))) + "      |" + str(len(scale.getChords("major", "normal"))) + "      |" + str(len(scale.getChords("major", "large"))) + "      ")
+        elif inp in "Qq":
+            return None
+        else:
+            notenames = str.split(inp, " ")
+            notes = ()
+            for i in range(len(notenames)):
+                if len(notenames[i]) != 0:
+                    notes = notes + (musictheory.mnote.fromName(notenames[i] + "0"),)
+            if len(notes) == 1:
+                for i in scale.getChords():
+                    if i._types[0]._type == notes[0]._type:
+                        chord = i
+                        break
+                pianoprinter.octoPrint(chord._types)
+                while True:
+                    print(str(chord)+", accept? Yy Nn")
+                    inp2 = input(">")
+                    if inp2 in "Yy":
+                        return chord
+                    elif inp2 in "Nn":
+                        break
+                
+            elif len(notes) == 3:
+                chord = musictheory.chord3(notes)
+                pianoprinter.octoPrint(chord._types)
+                while True:
+                    print(str(chord)+", accept? Yy Nn")
+                    inp2 = input(">")
+                    if inp2 in "Yy":
+                        return chord
+                    elif inp2 in "Nn":
+                        break
+    
         
             
 mainMenu()

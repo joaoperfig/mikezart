@@ -819,7 +819,7 @@ class theme:
         
     def resetSort(self):
         self._sorting = ()
-        for mt in list self._voices:
+        for mt in list(self._voices):
             for i in range(len(self._voices[mt])):
                 self._sorting = self._sorting + tvindicator(mt, i)
     
