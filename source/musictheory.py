@@ -6,6 +6,7 @@ import operator
 import naming
 import filezart
 import copy
+import math
 from filezart import instrument
 
 def notenames():
@@ -737,7 +738,7 @@ class palette:
         self._ch = theme(self._scale, chprog, self._progcount, self._csize) #Chorus
         self._ge = theme(self._scale, n1prog, self._progcount, self._csize) #General        
         
-    def infoToFolder(self, bpm, folder):
+    def infoToFolder(self, bpm, folder): # Exports various information and samples to a folder
         filezart.pickleObject(folder + "/pickle.pi", self)
         filezart.makeTextFile(folder + "/scale.txt", str(self._scale))
         
@@ -762,23 +763,23 @@ class palette:
 # Initialized with scale and chord progression
 class theme:
     def __init__(self, scale, cprog, progcount, csize):
-        self._scale = scale
-        self._cprog = cprog
-        self._progc = progcount
-        self._csize = csize
+        self._scale = scale # scale7
+        self._cprog = cprog # chord progression, list of chord3
+        self._progc = progcount # number of progressions in Voice
+        self._csize = csize #sixe of chunk
         self._voices = {"general": (), "chordic":(), "smelodic":(), "lmelodic":(), "percussion":()}
-        self._sorting = ()                                                      # List of tvindicator
+        self._sorting = () # List of tvindicator
         
     def addVoice(self, inst, centre, mtype, ncount=None, tweights=None, mweights=None):   # Creates voice and generates progressions for it
         nvoice = voice(inst, centre, self._scale, mtype)     ### ncount was here????                                        
         nvoice.autoProg(self._cprog, self._progc, self._csize, ncount, tweights, mweights) ###ncount wasnt here???
         self._voices[mtype] = self._voices[mtype] + (nvoice,)
-        self._sorting = self._sorting + (tvindicator(mtype, len(self._voices[mtype])-1)
+        self._sorting = self._sorting + (tvindicator(mtype, len(self._voices[mtype])-1),)
         
     def addVoiceAsIs(self, voic):                                               # Copies voice !!voice should have same parameters as theme!!
         nvoice = copy.deepcopy(voic)
         self._voices[nvoice._mtype] = self._voices[nvoice._mtype] + (nvoice,)
-        self._sorting = self._sorting + (tvindicator(voic._mtype, len(self._voices[voic._mtype])-1)
+        self._sorting = self._sorting + (tvindicator(voic._mtype, len(self._voices[voic._mtype])-1),)
         
     def previewAudio(self, bpm):                                                # return audio of all voices' first prog
         total = (len(self._cprog)*self._csize*bpmToBeat(bpm)) + 3000
@@ -788,8 +789,9 @@ class theme:
                 sound = sound.overlay(voic._progs[0].getAudio(voic._inst, bpm))
         return sound                
         
-    def infoToFolder(self, bpm, folder):
+    def infoToFolder(self, bpm, folder): # Exports various information about this theme to a folder
         filezart.makeTextFile(folder + "/prog.txt", str(self._cprog))
+        filezart.makeTextFile(folder + "/sorting.txt", self.sortingString())
         (self.previewAudio(bpm)).export(folder + "/preview.mp3", format = "mp3")
         
         for mtype in list(self._voices):
@@ -801,6 +803,21 @@ class theme:
                 filezart.makeFolder(vfolder)
                 filezart.makeTextFile(vfolder + "/tab.txt", voic.toTab())
                 (voic._progs[0].getAudio(voic._inst, bpm)).export(vfolder + "/preview.mp3", format = "mp3")
+                
+    def sortingString(self):
+        string = ""
+        for tvi in self._sorting:
+            string = string + tvi.indicationStr(self) + "\n"
+        return string
+                
+    def baseDurForStruct(self, size, bpm):                                            # Duration to be requested by a markovzart2 Part
+        beat = bpmToBeat(bpm)
+        progdur = beat*self._csize*len(self._cprog)
+        partialProg = math.ceil(size*progcount)
+        base = partialProg*progdur
+        return base 
+        
+        
         
         
         
@@ -815,6 +832,9 @@ class tvindicator:
         
     def getVoice(self, them):                                                  # get corresponding voice in theme
         return them._voices[self._mtype][self._index]
+    
+    def indicationStr(self, them):
+        return "["+self._mtype+"_"+str(self._index)+str(them._voices[self._mtype][self._index])+"]"
         
         
         

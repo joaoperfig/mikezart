@@ -55,6 +55,11 @@ class Structure:
     def __repr__(self):
         return "@STRUCTURE:" + str(self._parts) 
     
+    def song(self, pal):
+        song = ()
+        for p in self._parts:
+            song = song + (p.piece(pal))
+        return song
     
 # wselect WeightedSelect returns element of dictionary based on dict weights {element:weight}
 def wselect(dicti):
@@ -158,7 +163,9 @@ def sizeSequence(size):
     return sequence
 
 
-def makeStruct(size = wselect(lenweights())):
+def makeStruct(size = None):
+    if size == None:
+        size = wselect(lenweights())
     types = typeSequence(size)
     inten = intensitySequence(size)
     sizes = sizeSequence(size)
@@ -183,4 +190,4 @@ def pooptest():
     for i in range(30):
         print(makeStruct())
         
-pooptest()
+
