@@ -31,9 +31,10 @@ class instrument:
 
     def getAudio(self, formatedName):
         if self._type == "percussion":
-            noteaudio = AudioSegment.from_file(self._dir1)
+            noteaudio = AudioSegment.from_file("../resources/"+self._dir1)
             return noteaudio
-        noteaudio = AudioSegment.from_file(self._dir1 + formatedName + self._dir2)
+        print("../resources/"+self._dir1 + formatedName + self._dir2)
+        noteaudio = AudioSegment.from_file("../resources/"+self._dir1 + formatedName + self._dir2)
         noteaudio = noteaudio.pan(self._dpan) + self._dvol
         return noteaudio
 
