@@ -87,7 +87,10 @@ def pooptest1():
 
 def pooptest2():
     cinsts = (filezart.getInstrument("Vibraphone_dampen"),filezart.getInstrument("Piano_original"),)
-    pinsts =  ()#(filezart.getInstrument("Wood_Pipe_h10"),)
+    pinsts =  (filezart.getInstrument("Wood_Pipe_h10"),)
     lminsts = ()
     sminsts = (filezart.getInstrument("Cello_pizzicato"),)
     return palFromInsts(cinsts, sminsts, lminsts, pinsts)
+
+print("This is just a test \nA palette file will appear on mikezart/exports,\ncheck out how the themes sound on each folder")
+pooptest2()
