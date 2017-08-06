@@ -86,7 +86,7 @@ def pooptest1():
     return palFromInsts(cinsts, sminsts, lminsts, pinsts)
 
 def pooptest2():
-    cinsts = (filezart.getInstrument("Vibraphone_dampen"),filezart.getInstrument("Piano_original"),)
+    cinsts = (filezart.getInstrument("Vibraphone_dampen"),filezart.getInstrument("Church_Piano_piano"),)
     pinsts =  (filezart.getInstrument("Wood_Pipe_h10"),)
     lminsts = ()
     sminsts = (filezart.getInstrument("Cello_pizzicato"),)
