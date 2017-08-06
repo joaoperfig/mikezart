@@ -67,8 +67,8 @@ def palFromInsts(cinsts, sminsts, lminsts, pinsts):
             ncount = wselect(musictheory.percussionCWeights())
             them.addVoice(inst, centre, "percussion", ncount)
             
-    filezart.makeFolder("exports/song_" + name)
-    palett.infoToFolder(bpm, "exports/song_" + name)
+    filezart.makeFolder("../exports/song_" + name)
+    palett.infoToFolder(bpm, "../exports/song_" + name)
     
     print("done with", name)
             
