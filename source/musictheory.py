@@ -1,6 +1,6 @@
 import random
-#from pydub import AudioSegment
-#from pydub.playback import play
+from pydub import AudioSegment
+from pydub.playback import play
 import glob
 import operator
 import naming
