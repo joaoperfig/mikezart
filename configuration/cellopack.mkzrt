@@ -51,6 +51,15 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 <DVol> +0
 <DPan> +0
 
+<Name> Cello_pianissimo_arco_normal_05
+<Type> melodic
+<Nclt> name_octave
+<Case> upper
+<BmSp> esse
+<FDir> /pihlharmonia_cello/cello_@_05_pianissimo_arco-normal.mp3
+<DVol> +0
+<DPan> +0
+
 <Name> Cello_fingered
 <Type> melodic
 <Nclt> name_octave
