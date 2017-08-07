@@ -51,3 +51,12 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 <DVol> -10
 <DPan> +0
 
+<Name> Piano_original
+<Type> melodic
+<Nclt> name_octave
+<Case> upper
+<BmSp> bemol
+<FDir> /piano/Piano.mf.@.mp3
+<DVol> +15
+<DPan> +0
+
