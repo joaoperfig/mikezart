@@ -1,8 +1,8 @@
 # mikezart
 
 ### about:
-Mikezart is an autonomous music generator
-Mikezario is a tool for lazy musicians
+Mikezart is an autonomous music generator  
+Mikezario is a tool for lazy musicians  
 
 ### setup:
 - install ptython 3 or latter
