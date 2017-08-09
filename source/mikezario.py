@@ -112,6 +112,14 @@ def progcMenu():
             elif inp in "Pp":
                 previewpc(pc)
     
+def scaleInfo(scale):
+    print ("Your scale: "+str(scale)[2:-2])
+    pianoprinter.octoPrint(scale._notes)
+    print("Chords |Short  |Normal |Large  ")
+    print("Minor  |" + str(len(scale.getChords("minor", "short"))) + "      |" + str(len(scale.getChords("minor", "normal"))) + "      |" + str(len(scale.getChords("minor", "large"))) + "      ")
+    print("Weird  |" + str(len(scale.getChords("weird", "short"))) + "      |" + str(len(scale.getChords("weird", "normal"))) + "      |" + str(len(scale.getChords("weird", "large"))) + "      ")
+    print("Major  |" + str(len(scale.getChords("major", "short"))) + "      |" + str(len(scale.getChords("major", "normal"))) + "      |" + str(len(scale.getChords("major", "large"))) + "      ")
+    
 def scaleMenu():
     while True:
         print("Please input the list of 7 notes in the Scale (ex: 'C Ds E ...'), a smaller list to autocomplete, or write G or g for random:")
@@ -126,12 +134,7 @@ def scaleMenu():
                     notes = notes + (musictheory.mnote.fromName(notenames[i] + "0"),)
             scale = musictheory.scale7(notes)
         while True:
-            print ("Your scale: "+str(scale)[2:-2])
-            pianoprinter.octoPrint(scale._notes)
-            print("Chords |Short  |Normal |Large  ")
-            print("Minor  |" + str(len(scale.getChords("minor", "short"))) + "      |" + str(len(scale.getChords("minor", "normal"))) + "      |" + str(len(scale.getChords("minor", "large"))) + "      ")
-            print("Weird  |" + str(len(scale.getChords("weird", "short"))) + "      |" + str(len(scale.getChords("weird", "normal"))) + "      |" + str(len(scale.getChords("weird", "large"))) + "      ")
-            print("Major  |" + str(len(scale.getChords("major", "short"))) + "      |" + str(len(scale.getChords("major", "normal"))) + "      |" + str(len(scale.getChords("major", "large"))) + "      ")
+            scaleInfo(scale)
             print()
             print ("Accept? (Yy, Nn, Pp(preview)):")
             inp = input(">")
@@ -213,6 +216,7 @@ def paletteEdit(pal, name): # Main palette edition thing, can enter theme or pro
         print("Tt - Create a Theme")
         print("Ee - Edit a Theme")
         print("Dd - Display Palette Properties")
+        print("Ii - Scale Info")
         print("Ss - Save Palette")
         print("Qq - Quit")
         inp = input(">")                                #UNDEFINED OPTIONS
@@ -226,6 +230,8 @@ def paletteEdit(pal, name): # Main palette edition thing, can enter theme or pro
                 cprogN2 = res[1]
             elif res[0] == "ch":
                 cprogCH = res[1] 
+        elif inp in "Ii":
+            scaleInfo(pal._scale)
     
 def cprogMenu(pal, cprogN1, cprogN2, cprogCH): # Edit progressions for palette, returns ("ch", prog) or False if failed
     while True:
@@ -242,6 +248,7 @@ def cprogMenu(pal, cprogN1, cprogN2, cprogCH): # Edit progressions for palette, 
             print ("ch - Define Chorus/Bridge chord Progresion (undefined!)")
         else:
             print ("ch - Define Chorus/Bridge chord Progresion")
+        print ("Ii - Scale Info")
         print ("Qq - Quit")
         inp = input(">")
         if inp in "n1":
@@ -261,7 +268,9 @@ def cprogMenu(pal, cprogN1, cprogN2, cprogCH): # Edit progressions for palette, 
             if prog == None:
                 prog = False
             else:
-                return ("ch", prog)   
+                return ("ch", prog)
+        elif inp in "Ii":
+            scaleInfo(pal._scale)
         elif inp in "Qq":
             return False
         
@@ -283,6 +292,7 @@ def makeProgMenu(pal): # Request progression generation, returns None if failed
         print("Gg - Generate Progression with custom weights")
         print("Ss - Show in piano")
         print("Pp - Preview")
+        print("Ii - Scale Info")
         print("Ff - Use Progression as is")
         print("Qq - Quit")
         inp = input(">")
@@ -300,9 +310,13 @@ def makeProgMenu(pal): # Request progression generation, returns None if failed
         elif inp in "Vv":
             prog = list(pal._scale.makeProg(progsize, musictheory.n1ChWeights()[0], musictheory.n1ChWeights()[1]))
         elif inp in "Cc":
-            prog = list(pal._scale.makeProg(progsize, musictheory.chChWeights()[0], musictheory.chChWeights()[1])) #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX FINISH ME
+            prog = list(pal._scale.makeProg(progsize, musictheory.chChWeights()[0], musictheory.chChWeights()[1])) 
         elif inp in "Gg":
-            raise ValueError("pooop")
+            w0 = customWeightMenu(("short", "normal", "large"))
+            if w0 != None:
+                w1 = customWeightMenu(("minor", "weird", "major"))
+                if w1 != None:
+                    prog = list(pal._scale.makeProg(progsize, w0, w1))
         elif inp in "Ss":
             for c in prog:
                 if c == "<UNDEFINED>":
@@ -311,12 +325,38 @@ def makeProgMenu(pal): # Request progression generation, returns None if failed
                     pianoprinter.octoPrint(c._types)
         elif inp in "Pp":
             previewProg(prog)
+        elif inp in "Ii":
+            scaleInfo(pal._scale)
         elif inp in "Ff":
             return prog
         elif inp in "Qq":
             return None
         
-        
+def customWeightMenu(lista): # Create custom weight set for lista, return None if failed
+    print("Entering wheight set creation for", lista)
+    w = {}
+    for el in lista:
+        while True:
+            flag = True
+            print("Please input wheight of", el)
+            print("Qq - Quit")
+            inp = input(">")
+            if inp in "Qq":
+                return None
+            for i in inp:
+                if not i in "0123456789":
+                    flag = False
+            if flag:
+                w[el] = eval(inp)
+                break
+    while True:
+        print("Your weight set:", w)
+        print("Accept? Yy Nn")
+        inp = input(">")
+        if inp in "Yy":
+            return w
+        elif inp in "Nn":
+            return None
                     
 def idMenu(): # Request int id, return None if failed
     while True:
@@ -338,7 +378,7 @@ def chordMenu(scale): # Request chord3 generation, return None if failed
         print("Input first note in chord")
         print("Rr - Generate")
         print("Aa - Generate with restraints")
-        print("Ii - Scale info")
+        print("Ii - Scale Info")
         print("Qq - Quit")
         inp = input(">")
         if inp in "Rr":
@@ -370,12 +410,7 @@ def chordMenu(scale): # Request chord3 generation, return None if failed
                 elif inp2 in "Nn":
                     break
         elif inp in "Ii":
-            print ("Your scale: "+str(scale)[2:-2])
-            pianoprinter.octoPrint(scale._notes)
-            print("Chords |Short  |Normal |Large  ")
-            print("Minor  |" + str(len(scale.getChords("minor", "short"))) + "      |" + str(len(scale.getChords("minor", "normal"))) + "      |" + str(len(scale.getChords("minor", "large"))) + "      ")
-            print("Weird  |" + str(len(scale.getChords("weird", "short"))) + "      |" + str(len(scale.getChords("weird", "normal"))) + "      |" + str(len(scale.getChords("weird", "large"))) + "      ")
-            print("Major  |" + str(len(scale.getChords("major", "short"))) + "      |" + str(len(scale.getChords("major", "normal"))) + "      |" + str(len(scale.getChords("major", "large"))) + "      ")
+            scaleInfo(scale)
         elif inp in "Qq":
             return None
         else:
