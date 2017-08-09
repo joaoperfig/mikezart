@@ -209,7 +209,6 @@ def paletteEdit(pal, name): # Main palette edition thing, can enter theme or pro
             print ("Warning: undefined Theme: Bridge!")
         if pal._ge == None:
             print ("Warning: undefined Theme: General!")
-        print("DEBUG", cprogCH)
         print("Cc - Define chord Progressions")
         print("Tt - Create a Theme")
         print("Ee - Edit a Theme")
@@ -226,7 +225,7 @@ def paletteEdit(pal, name): # Main palette edition thing, can enter theme or pro
             elif res[0] == "n2":
                 cprogN2 = res[1]
             elif res[0] == "ch":
-                crpogCH = res[1] #BUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                cprogCH = res[1] 
     
 def cprogMenu(pal, cprogN1, cprogN2, cprogCH): # Edit progressions for palette, returns ("ch", prog) or False if failed
     while True:
@@ -262,7 +261,6 @@ def cprogMenu(pal, cprogN1, cprogN2, cprogCH): # Edit progressions for palette, 
             if prog == None:
                 prog = False
             else:
-                print("DEBUG: returning ch",prog)
                 return ("ch", prog)   
         elif inp in "Qq":
             return False
