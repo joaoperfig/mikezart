@@ -722,6 +722,7 @@ class palette:
         self._ch = None #Chorus
         self._ge = None #General
         
+        self._bpm = 110 # DEFAUL BPM MAYBE CHANGE THIS.....
         self._scale = scale
         self._progsize = progsize #chords in progression
         self._progcount = progcount #progressions in voice

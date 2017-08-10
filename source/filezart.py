@@ -2,6 +2,7 @@ from pydub import AudioSegment
 import glob
 import os
 import pickle
+import shutil
 
 class instrument:
     def __init__(self, name):
@@ -37,6 +38,22 @@ class instrument:
         noteaudio = AudioSegment.from_file("../resources/"+self._dir1 + formatedName + self._dir2)
         noteaudio = noteaudio.pan(self._dpan) + self._dvol
         return noteaudio
+
+def palNames():  #Return names of existing palettes in /exports/
+    files = glob.glob("../exports/*")
+    names = ()
+    for i in files:
+        names = names + (cutafter(i, "exports/"),)
+    return names
+
+def deletePalette(name):    #Deletes all files related to palette name
+    shutil.rmtree("../exports/"+name)
+    
+def openPal(name): #Returns palette saved under this name
+    f = open("../exports/"+name+"/pickle.pi", "rb")
+    pal= pickle.load(f)
+    f.close()
+    return pal
 
 def cutafter(string, find):                                                     #returns string cut after first instance of find. cutafter("43211234", "12") -> "34"
     def aux(s1, s2):
