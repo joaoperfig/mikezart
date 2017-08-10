@@ -2,6 +2,7 @@ import musictheory
 import random
 import operator
 import pianoprinter
+import filezart
 
 # rselect RandomSelect returns random element of list
 def rselect(lista):
@@ -36,9 +37,38 @@ def mainMenu():
         if inp in "Pp":
             paletteMenu()
         
+        elif inp in "Ee":
+            res = openPalettMenu()
+            if res != None:
+                pal = res[0]
+                name = res[1]
+                paletteEdit(pal, name)
+        
         elif inp in "Qq":
             return
 
+def openPalettMenu(): # Open existing palette, returns None if failed
+    print("Opening Palette from file")
+    while True:
+        pals = existingPalNames()
+        print("Existing Palettes:")
+        for paln in pals:
+            print ("    "+paln)
+        print("Please type the name of the palette you want to open or Qq to quit")
+        inp = input(">")
+        if inp in "Qq":
+            return None
+        else:
+            for paln in pals:
+                if inp == paln:
+                    pal = getPalette(paln)
+                    return (pal, paln)
+                
+def existingPalNames():
+    return filezart.palNames()
+
+def getPalette(name):
+    return filezart.openPal(name)                
     
 def bpmMenu():
     while True:
@@ -154,6 +184,7 @@ def paletteMenu():
         progcount = progcMenu()
         scale = scaleMenu()
         pal = musictheory.palette(scale, progsize, progcount, csize)
+        pal._bpm = bpm
         while True:
             print("Palette created, Accept? Yy Nn(redo) Qq(quit):")
             inp = input(">")
@@ -171,6 +202,10 @@ def nameMenu():
     while True:
         print("Name this palette (will be used as filename):")
         name = input(">")
+        if name in existingPalNames():
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            print("WARNING: this name already existis in saved palettes, using it and saving will delete the old palette")
+            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         while True:
             print(name + ", is this name ok? Yy Nn:")
             inp = input(">")
@@ -233,15 +268,86 @@ def paletteEdit(pal, name): # Main palette edition thing, can enter theme or pro
         elif inp in "Tt":
             createThemeMenu(pal, cprogN1, cprogN2, cprogCH)
         elif inp in "Ee":
-            raise ValueError("poop")
+            chooseThemeEditMenu(pal)
         elif inp in "Dd":
-            dispPropMenu(pal, name)
-        elif inp in "Ii":
+            dispPropMenu(pal, name) 
+        elif inp in "Ii": 
             scaleInfo(pal._scale)
+        elif inp in "Ss":
+            savePalette(pal, name)
+        elif inp in "Qq":
+            print("Warning: Unsaved Changes will be LOST: use Qq to quit or anything else to return to menu")
+            inp = input(">")
+            if inp == "q" or inp == "Q" or inp == "Qq" or inp == "qQ":
+                print("Exiting palette edition interface")
+                return
+            print("Returning to menu")
+            
+def savePalette(pal, name):
+    if name in existingPalNames():
+        print("There is already a saveFile with this name, are you sure you want to delete it? Yy-Delete Nn/Qq-Return")
+        while True:
+            inp = input(">")
+            if inp in "QqNn":
+                print("Canceling save Palette")
+                return
+            elif inp in "Yy":
+                print("Existing palette is being deleted, do not close this program now or you will lose both palettes!")
+                filezart.deletePalette(name)
+                break        
+    print("Saving palette to folder: "+"/exports/"+name+"/")
+    filezart.makeFolder("../exports/" + name)
+    pal.infoToFolder(pal._bpm, "../exports/" + name)
+            
+def chooseThemeEditMenu(pal):
+    if (pal._n1 == None and pal._n2 == None and pal._ch == None and pal._bg == None and pal._ge == None):
+        print()
+        print("No created Themes to edit!")
+        print("Use 't' to create a Theme")
+        print("Returning")
+        print()
+        return
+    while True:
+        print("Choose Theme to edit:")
+        if pal._n1 != None:
+            print ("n1 - Verses 1")
+        if pal._n2 != None:
+            print ("n2 - Verses 2")
+        if pal._ch != None:
+            print ("ch - Chorus")
+        if pal._bg != None:
+            print ("bg - Bridge")
+        if pal._ge != None:
+            print ("ge - General")
+        print("Qq - Quit")
+        inp = input(">")
+        if inp in "Qq":
+            return
+        elif inp == "n1":
+            if pal._n1 != None:
+                themeEdit(pal._n1, "Editing Verses type 1")
+                return
+        elif inp == "n2":
+            if pal._n2 != None:
+                themeEdit(pal._n2, "Editing Verses type 2")
+                return
+        elif inp == "ch":
+            if pal._ch != None:
+                themeEdit(pal._ch, "Editing Chorus")
+                return
+        elif inp == "ge":
+            if pal._ge != None:
+                themeEdit(pal._ge, "Editing General lines")
+                return
+        elif inp == "bg":
+            if pal._bg != None:
+                themeEdit(pal._ge, "Editing Bridge")
+                return
             
 def dispPropMenu(pal, name):
     print()
     print("Displaying Properties of Palette: "+name)
+    print("BPM:", pal._bpm)
     print("Csize:", pal._csize)
     print("Progsize:", pal._progsize)
     print("Progcount:", pal._progcount)
@@ -264,9 +370,11 @@ def dispPropMenu(pal, name):
             
 def createThemeMenu(pal, cprogN1, cprogN2, cprogCH):
     if (cprogN1 == None and cprogN2==None and cprogCH==None):
+        print()
         print("No chord progression defined, cannot create Themes!")
         print("Please define CProgs with 'c'")
         print("Returning to main Palette Menu")
+        print()
         return
     while True:
         print("Creating Themes")
@@ -296,20 +404,25 @@ def createThemeMenu(pal, cprogN1, cprogN2, cprogCH):
         if inp in "Qq":
             return
         elif inp == "n1":
-            print("Creating Verses 1 Theme")
-            pal._n1 = musictheory.theme(pal._scale, cprogN1, pal._progcount, pal._csize)
+            if cprogN1 != None:
+                print("Creating Verses 1 Theme")
+                pal._n1 = musictheory.theme(pal._scale, cprogN1, pal._progcount, pal._csize)
         elif inp == "ge":
-            print("Creating General Theme")
-            pal._ge = musictheory.theme(pal._scale, cprogN1, pal._progcount, pal._csize)
+            if cprogN1 != None:
+                print("Creating General Theme")
+                pal._ge = musictheory.theme(pal._scale, cprogN1, pal._progcount, pal._csize)
         elif inp == "n2":
-            print("Creating Verses 2 Theme")
-            pal._n2 = musictheory.theme(pal._scale, cprogN2, pal._progcount, pal._csize)
+            if cprogN2 != None:
+                print("Creating Verses 2 Theme")
+                pal._n2 = musictheory.theme(pal._scale, cprogN2, pal._progcount, pal._csize)
         elif inp == "bg":
-            print("Creating Bridge Theme")
-            pal._bg = musictheory.theme(pal._scale, cprogCH, pal._progcount, pal._csize)
+            if cprogCH != None:
+                print("Creating Bridge Theme")
+                pal._bg = musictheory.theme(pal._scale, cprogCH, pal._progcount, pal._csize)
         elif inp == "ch":
-            print("Creating Chorus Theme")
-            pal._ch = musictheory.theme(pal._scale, cprogCH, pal._progcount, pal._csize)
+            if cprogCH != None:
+                print("Creating Chorus Theme")
+                pal._ch = musictheory.theme(pal._scale, cprogCH, pal._progcount, pal._csize)
     
 def cprogMenu(pal, cprogN1, cprogN2, cprogCH): # Edit progressions for palette, returns (id, prog) or False if failed
     while True:
