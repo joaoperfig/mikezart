@@ -230,10 +230,88 @@ def paletteEdit(pal, name): # Main palette edition thing, can enter theme or pro
                 cprogN2 = res[1]
             elif res[0] == "ch":
                 cprogCH = res[1] 
+        elif inp in "Tt":
+            createThemeMenu(pal, cprogN1, cprogN2, cprogCH)
+        elif inp in "Ee":
+            raise ValueError("poop")
+        elif inp in "Dd":
+            dispPropMenu(pal, name)
         elif inp in "Ii":
             scaleInfo(pal._scale)
+            
+def dispPropMenu(pal, name):
+    print()
+    print("Displaying Properties of Palette: "+name)
+    print("Csize:", pal._csize)
+    print("Progsize:", pal._progsize)
+    print("Progcount:", pal._progcount)
+    print("Scale:", pal._scale)
+    print ("Created Themes:")
+    if pal._n1 != None:
+        print ("Verses 1")
+    if pal._n2 != None:
+        print ("Verses 2")
+    if pal._ch != None:
+        print ("Chorus")
+    if pal._bg != None:
+        print ("Bridge")
+    if pal._ge != None:
+        print ("General")
+    print()
+    return
     
-def cprogMenu(pal, cprogN1, cprogN2, cprogCH): # Edit progressions for palette, returns ("ch", prog) or False if failed
+    
+            
+def createThemeMenu(pal, cprogN1, cprogN2, cprogCH):
+    if (cprogN1 == None and cprogN2==None and cprogCH==None):
+        print("No chord progression defined, cannot create Themes!")
+        print("Please define CProgs with 'c'")
+        print("Returning to main Palette Menu")
+        return
+    while True:
+        print("Creating Themes")
+        if(pal._n1 != None or pal._n2 != None or pal._ch != None or pal._ge != None or pal._bg != None):
+            print ("Created Themes:")
+            if pal._n1 != None:
+                print ("Verses 1")
+            if pal._n2 != None:
+                print ("Verses 2")
+            if pal._ch != None:
+                print ("Chorus")
+            if pal._bg != None:
+                print ("Bridge")
+            if pal._ge != None:
+                print ("General")
+        print("WARNING: Creating existing Themes will delete old ones")
+        if cprogN1 != None:
+            print("n1 - Create Verses 1 Theme")
+            print("ge - Create General Theme (will have n1 cprog but should not have chordic mmovs)")
+        if cprogN2 != None:
+            print("n2 - Create Verses 2 Theme")
+        if cprogCH != None:
+            print("bg - Create Bridge Theme")
+            print("ch - Create Chorus Theme")
+        print("Qq - Quit")
+        inp = input(">")
+        if inp in "Qq":
+            return
+        elif inp == "n1":
+            print("Creating Verses 1 Theme")
+            pal._n1 = musictheory.theme(pal._scale, cprogN1, pal._progcount, pal._csize)
+        elif inp == "ge":
+            print("Creating General Theme")
+            pal._ge = musictheory.theme(pal._scale, cprogN1, pal._progcount, pal._csize)
+        elif inp == "n2":
+            print("Creating Verses 2 Theme")
+            pal._n2 = musictheory.theme(pal._scale, cprogN2, pal._progcount, pal._csize)
+        elif inp == "bg":
+            print("Creating Bridge Theme")
+            pal._bg = musictheory.theme(pal._scale, cprogCH, pal._progcount, pal._csize)
+        elif inp == "ch":
+            print("Creating Chorus Theme")
+            pal._ch = musictheory.theme(pal._scale, cprogCH, pal._progcount, pal._csize)
+    
+def cprogMenu(pal, cprogN1, cprogN2, cprogCH): # Edit progressions for palette, returns (id, prog) or False if failed
     while True:
         print("Note: changed progressions are only taken into effect if their themes are recreated")
         if cprogN1 == None:
@@ -243,27 +321,27 @@ def cprogMenu(pal, cprogN1, cprogN2, cprogCH): # Edit progressions for palette, 
         if cprogN2 == None:
             print ("n2 - Define Verses 2 chord Progresion (undefined!)")
         else:
-            print ("n2 - Define Verses 2 chord Progresion")
+            print ("n2 - Define Verses 2 chord Progression")
         if cprogCH == None:
             print ("ch - Define Chorus/Bridge chord Progresion (undefined!)")
         else:
-            print ("ch - Define Chorus/Bridge chord Progresion")
+            print ("ch - Define Chorus/Bridge chord Progression")
         print ("Ii - Scale Info")
         print ("Qq - Quit")
         inp = input(">")
-        if inp in "n1":
+        if inp == "n1":
             prog = makeProgMenu(pal)
             if prog == None:
                 prog = False
             else:
                 return ("n1", prog)
-        elif inp in "n2":
+        elif inp == "n2":
             prog = makeProgMenu(pal)
             if prog == None:
                 prog = False
             else:
                 return ("n2", prog)   
-        elif inp in "ch":
+        elif inp == "ch":
             prog = makeProgMenu(pal)
             if prog == None:
                 prog = False
