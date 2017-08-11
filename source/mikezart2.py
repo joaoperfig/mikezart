@@ -1,3 +1,4 @@
+from musictheory import palette
 from random import random
 from pydub import AudioSegment
 from pydub.playback import play

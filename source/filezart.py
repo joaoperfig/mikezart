@@ -4,6 +4,7 @@ import os
 import pickle
 import shutil
 
+
 class instrument:
     def __init__(self, name):
         self._name = name
@@ -43,7 +44,7 @@ def palNames():  #Return names of existing palettes in /exports/
     files = glob.glob("../exports/*")
     names = ()
     for i in files:
-        names = names + (cutafter(i, "exports/"),)
+        names = names + (cutafter(i, "exports")[1:],)
     return names
 
 def deletePalette(name):    #Deletes all files related to palette name

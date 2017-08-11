@@ -1,3 +1,4 @@
+from musictheory import *
 import musictheory
 import random
 import operator
@@ -51,7 +52,7 @@ def openPalettMenu(): # Open existing palette, returns None if failed
     print("Opening Palette from file")
     while True:
         pals = existingPalNames()
-        print("Existing Palettes:")
+        print("Existing Palettes (all files in /exports/):")
         for paln in pals:
             print ("    "+paln)
         print("Please type the name of the palette you want to open or Qq to quit")
@@ -231,6 +232,11 @@ def paletteEdit(pal, name): # Main palette edition thing, can enter theme or pro
     if pal._bg != None:
         cprogCH = pal._bg._cprog
     while True:
+        try:
+            bpm = pal._bpm
+        except:
+            print("Warning: this palette is from an old version of the mikezart environement and does not have an assotitated bpm value!")
+            print("Please define bpm in the palette edit menu")            
         if cprogN1 == None:
             print ("Warning: undefined chord progression: Verses 1!")
         if cprogN2 == None:
@@ -253,6 +259,8 @@ def paletteEdit(pal, name): # Main palette edition thing, can enter theme or pro
         print("Dd - Display Palette Properties")
         print("Ii - Scale Info")
         print("Ss - Save Palette")
+        print("Nn - Change Name/filename")
+        print("Bb - Change Song BPM")
         print("Qq - Quit")
         inp = input(">")                                #UNDEFINED OPTIONS
         if inp in "Cc":
@@ -275,6 +283,15 @@ def paletteEdit(pal, name): # Main palette edition thing, can enter theme or pro
             scaleInfo(pal._scale)
         elif inp in "Ss":
             savePalette(pal, name)
+        elif inp in "Nn":
+            print("Old name: "+name)
+            name = nameMenu()
+        elif inp in "Bb":
+            try:
+                print("Old BPM:", pal._bpm)
+            except:
+                print("This palette did not have an assiciated bpm value")
+            pal._bpm = bpmMenu()
         elif inp in "Qq":
             print("Warning: Unsaved Changes will be LOST: use Qq to quit or anything else to return to menu")
             inp = input(">")
@@ -347,7 +364,11 @@ def chooseThemeEditMenu(pal):
 def dispPropMenu(pal, name):
     print()
     print("Displaying Properties of Palette: "+name)
-    print("BPM:", pal._bpm)
+    try:
+        print("BPM:", pal._bpm)
+    except:
+        print("Warning: this palette is from an old version of the mikezart environement and does not have an assotitated bpm value!")
+        print("Please define bpm in the palette edit menu")
     print("Csize:", pal._csize)
     print("Progsize:", pal._progsize)
     print("Progcount:", pal._progcount)
