@@ -23,5 +23,7 @@ Mikezario is a tool for lazy musicians
 - [x] tweights and mweights as arguments for voice.autoprogs 
 - [x] add theme line sorting
 - [ ] pallette and struct joiner 
+- [ ] mikezario show chord ids
+- [ ] mikezario choose chords by ids
 - [ ] finish mikezario 
 - [ ] finish mikezart 
