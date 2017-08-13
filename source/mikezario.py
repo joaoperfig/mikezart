@@ -657,5 +657,12 @@ def chordMenu(scale): # Request chord3 generation, return None if failed
                         break
     
         
+def themeEdit(theme, introSentence="Editing undefined Theme"):
+    while True:
+        print(introSentence)
+        print("")
+        print("Dd - Display Theme Properties") #UNDEFINED 
+        print("Ii - Scale Info") #UNDEFINED
+
             
 mainMenu()

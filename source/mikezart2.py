@@ -41,6 +41,7 @@ def palFromInsts(cinsts, sminsts, lminsts, pinsts):
     print("making",name)
     
     palett = musictheory.palette(scale, progsize, progcount, csize)
+    palett._bpm = bpm
     palett.autoProgs()
     themes = (palett._n1, palett._n2, palett._bg, palett._ch, palett._ge)
     
@@ -70,6 +71,11 @@ def palFromInsts(cinsts, sminsts, lminsts, pinsts):
             
     filezart.makeFolder("../exports/song_" + name)
     palett.infoToFolder(bpm, "../exports/song_" + name)
+    
+    play(palett._n1.previewAudio(bpm))
+    play(palett._n2.previewAudio(bpm))
+    play(palett._bg.previewAudio(bpm))
+    play(palett._ch.previewAudio(bpm))
     
     print("done with", name)
             
