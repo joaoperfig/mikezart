@@ -17,11 +17,16 @@ class instrument:
         self._dvol = 0
         self._dpan = 0
         self._noteslist = ()
+        
+        self._base = ""                                                         # base note name for modulation
+        self._rang = ""                                                         # modulation range
 
     def __repr__(self):
         return "!"+self._name+"!"
 
     def getNoteNames(self):                                                     #return list of names of notes in audio file
+        if self._type == "modulation":
+            raise ValueError("Cannot get notenames of modulation instrument")
         if self._type == "percussion":
             return ("C0", "Db0", "D0", "Eb0", "E0", "F0", "Gb0", "G0", "Ab0", "A0", "Bb0", "B0")
         files = glob.glob("../resources/" + self._dir1 + "*" + self._dir2)
@@ -32,8 +37,13 @@ class instrument:
         return notenames
 
     def getAudio(self, formatedName):
+        if self._type == "modulation":
+            noteaudio = AudioSegment.from_file("../resources/"+self._dir1)
+            noteaudio = noteaudio.pan(self._dpan) + self._dvol
+            return noteaudio            
         if self._type == "percussion":
             noteaudio = AudioSegment.from_file("../resources/"+self._dir1)
+            noteaudio = noteaudio.pan(self._dpan) + self._dvol
             return noteaudio
         print("../resources/"+self._dir1 + formatedName + self._dir2)
         noteaudio = AudioSegment.from_file("../resources/"+self._dir1 + formatedName + self._dir2)
@@ -148,6 +158,10 @@ def parceMkzrt(filename):
                 inst._dvol = eval(content)
             elif head == "<DPan> ":
                 inst._dpan = eval(content)
+            elif head == "<Base> ":
+                inst._base = content
+            elif head == "<Rang> ":
+                inst._rang = content
             else:
                 raise ValueError("Invalid line header: "+head)
         instruments = instruments + (inst,)
