@@ -1,0 +1,42 @@
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Musical Sample Directories File For Mikezart2
+
+Instruments sample files must be located in 
+../resources in a file with the same name as
+its .mkzrt file
+
+Files must have this header, then an empty line,
+then each instrument separated by an empty line
+
+Instruments are described by the following parameters:
+
+<Name> Name of the instrument for identification
+<Type> melodic / percussion / (upcoming) modulation
+<Nclt> (nomenclature) name_octave / octave_name
+	(order in which the note names appear in file)
+	( Cs2 or 2Cs) (optional for percussion)
+<Case> upper / lower ( Db1 or db1 )
+	(optional for percussion)
+<BmSp> bemol / sharp / esse ( Db2 or C#2 or Cs2)
+	(optional for percussion)
+<FDir> formatted directory from the file with the
+	same name as the .mrkrt file.
+	start with "/"
+	replace notename with "@"
+	dont use "@" if percussion
+	(percussion instruments have a single audio file)
+<DVol> default volume change, decibel change from file
+	use +int or -int
+<DPan> defult left/right audio pan
+	use +int or -int
+
+Have fun!
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
+
+<Name> Dove_1
+<Type> modulation
+<FDir> /dove_1_F5.wav
+<Base> F5
+<Rang> F4-F6
+<DVol> +0
+<DPan> +0
