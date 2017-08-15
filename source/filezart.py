@@ -92,6 +92,9 @@ def getInstrument(name):
             return inst
     raise ValueError ("Instrument not found in local mkzrt files: " + name)
 
+def getPack(name):
+    return parceMkzrt("../configuration/"+name+".mkzrt")
+
 def listbylines(text):                                                          #returns tuple of separate lines in text
     lista = ()
     currtext = ""
