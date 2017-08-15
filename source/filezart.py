@@ -38,6 +38,7 @@ class instrument:
 
     def getAudio(self, formatedName):
         if self._type == "modulation":
+            print("../resources/"+self._dir1)
             noteaudio = AudioSegment.from_file("../resources/"+self._dir1)
             noteaudio = noteaudio.pan(self._dpan) + self._dvol
             return noteaudio            

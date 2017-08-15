@@ -99,6 +99,69 @@ def pooptest2():
     sminsts = (filezart.getInstrument("Vibraphone_dampen"),)
     return palFromInsts(cinsts, sminsts, lminsts, pinsts)
 
+def birdtest():
+    birds = filezart.getPack("birds")
+    special = (filezart.getInstrument("Cello_forte_arco_normal_1"),)
+    cinsts = (rselect(birds), rselect(birds))
+    sminsts = (rselect(birds), rselect(birds))
+    lminsts = ()
+    pinsts = ()
+    
+    scale = musictheory.scale7()
+    progsize = rselect((3,4,5))
+    progcount = rselect((2,3,4))
+    csize = wselect({2:5, 3:10, 4:20, 5:10, 6:5})
+    bpm = wselect({80:19, 100:20, 120:20, 140:10, 160:2, 180:1})
+    name = "birds_"+naming.name()
+    print("making",name)
+    
+    palett = musictheory.palette(scale, progsize, progcount, csize)
+    palett._bpm = bpm
+    palett.autoProgs()
+    themes = (palett._n1, palett._n2, palett._bg, palett._ch, palett._ge)
+    
+    for inst in special:
+        for them in themes:
+            centre = rselect(musictheory.listNotes(inst))
+            ncount = rselect((2,3,4,5,6))
+            them.addVoice(inst, centre, "chordic", ncount)        
+    
+    for inst in cinsts:
+        for them in themes:
+            centre = rselect(musictheory.listNotes(inst))
+            ncount = rselect((1,1,2))
+            them.addVoice(inst, centre, "chordic", ncount)
+            
+    for inst in sminsts:
+        for them in themes:
+            centre = rselect(musictheory.listNotes(inst))
+            ncount = rselect((1,1,2))
+            them.addVoice(inst, centre, "smelodic", ncount)
+            
+    for inst in lminsts:
+        for them in themes:
+            centre = rselect(musictheory.listNotes(inst))
+            ncount = rselect((1,1,2))
+            them.addVoice(inst, centre, "lmelodic", ncount)
+            
+    for inst in pinsts:
+        for them in themes:
+            centre = rselect(musictheory.listNotes(inst))
+            ncount = rselect((1,1,2))
+            them.addVoice(inst, centre, "percussion", ncount)
+            
+    filezart.makeFolder("../exports/song_" + name)
+    palett.infoToFolder(bpm, "../exports/song_" + name)
+    
+    play(palett._n1.previewAudio(bpm))
+    play(palett._n2.previewAudio(bpm))
+    play(palett._bg.previewAudio(bpm))
+    play(palett._ch.previewAudio(bpm))
+    
+    print("done with", name)
+            
+    return palett    
+
 print("This is just a test \nA palette file will appear on mikezart/exports,\ncheck out how the themes sound on each folder")
 pooptest2()
 print("This is just a test \nA palette file will appear on mikezart/exports,\ncheck out how the themes sound on each folder")
