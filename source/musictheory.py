@@ -953,6 +953,17 @@ def noteSort(notes):
 
 # List available notes of instrument
 def listNotes(inst):
+    if inst._type == "modulation":
+        r = inst._rang
+        notens = str.split(r, "-")
+        first = mnote.fromName(notens[0])
+        last = mnote.fromName(notens[1])
+        v = first._value
+        ns = ()
+        while v <= last._value:
+            ns = ns + (mnote(v),)
+            v = v+1
+        return ns
     if (inst._noteslist == ()):
         notes = ()
         notenames = inst.getNoteNames()
@@ -964,6 +975,10 @@ def listNotes(inst):
 
 # Get Audiosegment object of instrument note
 def getNote(instrument, note):
+    if instrument._type == "modulation":
+        base = instrument.getAudio(None)
+        aud = modulateAudio(base, mnote.fromName(instrument._base), note)
+        return aud
     if instrument._type == "percussion":
         return instrument.getAudio(None)
     if instrument._bmsp == "bemol":
@@ -993,6 +1008,19 @@ def getNote(instrument, note):
         raise ValueError(instrument._nclt + " is not a valid nomenclatureType!")    
     
     return instrument.getAudio(final)
+
+# Modulate Audio, returns audio of audionote sped up or slowed down to be objetive note
+def modulateAudio(audio, audionote, objective):
+    
+    octaves = (objective._value - audionote._value)/12 
+    
+    new_sample_rate = int(audio.frame_rate * (2.0 ** octaves))
+
+    new = audio._spawn(audio.raw_data, overrides={'frame_rate': new_sample_rate})
+    
+    new = new.set_frame_rate(44100)
+ 
+    return new
 
 def sampleCProg(cprog, inst = filezart.getInfo()[2]):
     audio = AudioSegment.silent((len(cprog)*1000) + 3000)
@@ -1235,3 +1263,11 @@ def fitest():
     play(n)
     
     
+def modtest():
+    n = AudioSegment.silent(5000)
+    t = 0
+    for i in ("C3","D3","E3","F3","G3","A3","B3","C4"):
+        a = modulateAudio(getNote(filezart.getInfo()[6], mnote.fromName("C3")),mnote.fromName("C3"),mnote.fromName(i))
+        n = n.overlay(a,t*500)
+        t=t+1
+    play(n)
