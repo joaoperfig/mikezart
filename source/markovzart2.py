@@ -1,4 +1,9 @@
 import random
+import musictheory
+import filezart
+import math
+from pydub import AudioSegment
+from pydub.playback import play
 
 class Part:
 
@@ -42,6 +47,53 @@ class Part:
         gen = eval(valstrings[2])
         cho = eval(valstrings[3])
         return cls(typ, inten, size, gen, cho)
+    
+    def getTheme(self, pal):
+        if self._type == "n1":
+            return pal._n1
+        if self._type == "n2":
+            return pal._n2
+        if self._type == "bg":
+            return pal._bg
+        if self._type == "ch":
+            return pal._ch
+        if self._type == "ge":
+            return pal._ge
+    
+    def getAudio(self, pal, bpm):
+        base = self.baseDur(pal, bpm)
+        total = base + 3000 #extra time for last note to play
+        nvoic = math.ceil(self._intensity * self.getTheme(pal).countVoices())
+        ngeno = math.ceil(self._genover * pal._ge.countVoices())
+        nchoo = math.ceil(self._chover * pal._ch.countVoices())
+        
+        sound = AudioSegment.silent(total)
+        them = self.getTheme(pal)
+        for i in range(nvoic):
+            voic = them._sorting[i].getVoice(them)
+            print(them._sorting[i].indicationStr(them)) #DEBUG !!
+            vsound = voic.partialAudio(self._size, bpm)
+            sound = sound.overlay(vsound)
+            
+        them = pal._ge
+        for i in range(ngeno):
+            voic = them._sorting[i].getVoice(them)
+            print(them._sorting[i].indicationStr(them)) #DEBUG !!
+            vsound = voic.partialAudio(self._size, bpm)
+            sound = sound.overlay(vsound)        
+        
+        them = pal._ch
+        for i in range(nchoo):
+            voic = them._sorting[i].getVoice(them)
+            print(them._sorting[i].indicationStr(them)) #DEBUG !!
+            vsound = voic.partialAudio(self._size, bpm)
+            sound = sound.overlay(vsound)        
+            
+        return sound
+                
+    
+    def baseDur(self, pal, bpm):                                                #get the base duration of this part of the song
+        return self.getTheme(pal).baseDurForStruct(self._size, bpm)
 
 
 class Structure:
@@ -55,11 +107,26 @@ class Structure:
     def __repr__(self):
         return "@STRUCTURE:" + str(self._parts) 
     
-    def song(self, pal):
-        song = ()
+    def baseDur(self, pal, bpm=None):
+        if bpm == None:
+            bpm = pal._bpm
+        curTime = 0
         for p in self._parts:
-            song = song + (p.piece(pal))
-        return song
+            curTime = curTime + p.baseDur(pal, bpm)
+        return curTime
+    
+    def songAudio(self, pal, bpm=None):
+        if bpm == None:
+            bpm = pal._bpm
+        total = self.baseDur(pal, bpm) + 3000
+        sound = AudioSegment.silent(total)
+        curTime = 0
+        for p in self._parts:
+            paudio = p.getAudio(pal, bpm)
+            sound = sound.overlay(paudio, curTime)
+            curTime = curTime + p.baseDur(pal, bpm)
+            print("curTime:",curTime)
+        return sound
     
 # wselect WeightedSelect returns element of dictionary based on dict weights {element:weight}
 def wselect(dicti):
@@ -176,11 +243,11 @@ def joinSeqs(types, inten, sizes, overl):
     struct = Structure()
     for i in range(len(types)):
         if types[i]=="bg":
-            string = "["+types[i]+"-"+str(inten[i])+"-"+str(sizes[i])+"-"+"0"+"-"+str(overl[i])+"]"
+            string = "["+types[i]+"-"+str(inten[i])+"-"+str(sizes[i])+"-"+"0"+"-"+str(overl[i])+"]" # If its a bridge it has chord overlay
             pt = Part.fromString(string)
             struct.add(pt)
         else:
-            string = "["+types[i]+"-"+str(inten[i])+"-"+str(sizes[i])+"-"+str(overl[i])+"-"+"0"+"]"
+            string = "["+types[i]+"-"+str(inten[i])+"-"+str(sizes[i])+"-"+str(overl[i])+"-"+"0"+"]" # Else it has gen overlay
             pt = Part.fromString(string)
             struct.add(pt)
     return struct
