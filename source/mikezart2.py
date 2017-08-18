@@ -9,6 +9,7 @@ import filezart
 import copy
 from filezart import instrument
 import musictheory
+import markovzart2
 
 # rselect RandomSelect returns random element of list
 def rselect  (lista):
@@ -30,14 +31,14 @@ def wselect(dicti):
     raise ValueError ("something went wrong")
 
 # Make random song with selected instruments
-def palFromInsts(cinsts, sminsts, lminsts, pinsts):
-    
+def palFromInsts(cinsts, sminsts, lminsts, pinsts, name=None):
+    if name == None:
+        name = naming.name()
     scale = musictheory.scale7()
     progsize = rselect((2,3,4,5,6))
     progcount = rselect((1,2,3,4,5))
     csize = wselect({2:5, 3:10, 4:20, 5:10, 6:5})
     bpm = wselect({80:5, 100:10, 120:20, 140:10, 160:5, 180:5})
-    name = naming.name()
     print("making",name)
     
     palett = musictheory.palette(scale, progsize, progcount, csize)
@@ -69,13 +70,16 @@ def palFromInsts(cinsts, sminsts, lminsts, pinsts):
             ncount = wselect(musictheory.percussionCWeights())
             them.addVoice(inst, centre, "percussion", ncount)
             
+    for t in themes:
+        t.shuffleSort()
+            
     filezart.makeFolder("../exports/song_" + name)
     palett.infoToFolder(bpm, "../exports/song_" + name)
     
-    play(palett._n1.previewAudio(bpm))
-    play(palett._n2.previewAudio(bpm))
-    play(palett._bg.previewAudio(bpm))
-    play(palett._ch.previewAudio(bpm))
+    #play(palett._n1.previewAudio(bpm))
+    #play(palett._n2.previewAudio(bpm))
+    #play(palett._bg.previewAudio(bpm))
+    #play(palett._ch.previewAudio(bpm))
     
     print("done with", name)
             
@@ -87,17 +91,32 @@ def palFromInsts(cinsts, sminsts, lminsts, pinsts):
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 def pooptest1():
     cinsts = (filezart.getInstrument("Vibraphone_bow"), filezart.getInstrument("Vibraphone_dampen"),filezart.getInstrument("Piano_original"),)
-    pinsts =  ()#(filezart.getInstrument("Wood_Pipe_h10"),)
+    pinsts =  (filezart.getInstrument("Wood_Pipe_h10"),)
     lminsts = ()
-    sminsts = ()#(filezart.getInstrument("Piano_original"),)
+    sminsts = (filezart.getInstrument("Piano_original"),)
     return palFromInsts(cinsts, sminsts, lminsts, pinsts)
 
-def pooptest2():
+def pooptest2(name):
     cinsts = (filezart.getInstrument("Cello_pianissimo_arco_normal_05"),filezart.getInstrument("Piano_original"),)
-    pinsts =  ()#(filezart.getInstrument("Wood_Pipe_h10"),)
+    pinsts =  (filezart.getInstrument("Wood_Pipe_h10"),)
     lminsts = ()
     sminsts = (filezart.getInstrument("Vibraphone_dampen"),)
-    return palFromInsts(cinsts, sminsts, lminsts, pinsts)
+    return palFromInsts(cinsts, sminsts, lminsts, pinsts, name)
+
+def ttest():
+    name = naming.name()
+    pal = pooptest2(name)
+    struct = markovzart2.makeStruct()
+    print(struct)
+    print(struct.baseDur(pal, pal._bpm))
+    print((struct.baseDur(pal, pal._bpm)/1000)//60,":",(struct.baseDur(pal, pal._bpm)/1000)%60)
+    a = struct.songAudio(pal)
+    a.export("../exports/fullSongs/song_"+name+".mp3", format = "mp3")
+    print(struct)
+    print(struct.baseDur(pal, pal._bpm))
+    print((struct.baseDur(pal, pal._bpm)/1000)//60,":",(struct.baseDur(pal, pal._bpm)/1000)%60)
+    print("Really done with "+name)
+    
 
 def birdtest():
     birds = filezart.getPack("birds")
@@ -162,6 +181,8 @@ def birdtest():
             
     return palett    
 
+
 print("This is just a test \nA palette file will appear on mikezart/exports,\ncheck out how the themes sound on each folder")
-pooptest2()
+ttest()
 print("This is just a test \nA palette file will appear on mikezart/exports,\ncheck out how the themes sound on each folder")
+print("A structure was also generated and a full song is located in /exports/fullSongs")
