@@ -706,11 +706,32 @@ class voice:
         
         return sound
     
-    def toTab(self):                                                             # return Tab string
+    def toTab(self):                                                            # return Tab string
         stri = ""
         for pr in self._progs:
             stri = stri + "\n" + pr.toTab()
         return stri
+    
+    def partialAudio(self, size, bpm):                                          # Partial audio to be requested by markovzart2 part
+        partialProg = math.ceil(size*len(self._progs)) #number of progressions
+        base = self.partialDur(size, bpm)
+        progdur = self._progs[0].baseDuration(bpm)
+        total = 3000 + base
+        sound = AudioSegment.silent(total)
+        for progt in range(partialProg):
+            paudio = (self._progs[progt]).getAudio(self._inst, bpm)
+            sound = sound.overlay(paudio, progt*progdur)
+        sound = sound.pan(self._pan) + self._vol
+        return sound
+        
+        
+    def partialDur(self, size, bpm):                                           # Partial audio duration to be requested by markovzart2 part
+        beat = bpmToBeat(bpm) #duration of a beat
+        progdur = self._progs[0].baseDuration(bpm) #duration of a progression
+        partialProg = math.ceil(size*len(self._progs)) #number of progressions
+        base = partialProg*progdur
+        return base         
+    
         
 # Palette class, list of themes for song
 #
@@ -810,11 +831,14 @@ class theme:
         for tvi in self._sorting:
             string = string + tvi.indicationStr(self) + "\n"
         return string
+    
+    def countVoices(self):                                                      # Get number of voices in sorting
+        return len(self._sorting)
                 
-    def baseDurForStruct(self, size, bpm):                                            # Duration to be requested by a markovzart2 Part
-        beat = bpmToBeat(bpm)
-        progdur = beat*self._csize*len(self._cprog)
-        partialProg = math.ceil(size*progcount)
+    def baseDurForStruct(self, size, bpm):                                      # Duration to be requested by a markovzart2 Part
+        beat = bpmToBeat(bpm) #duration of a beat
+        progdur = beat*self._csize*len(self._cprog) #duration of a progression
+        partialProg = math.ceil(size*self._progc) #number of progressions
         base = partialProg*progdur
         return base 
         
@@ -822,11 +846,13 @@ class theme:
         self._sorting = ()
         for mt in list(self._voices):
             for i in range(len(self._voices[mt])):
-                self._sorting = self._sorting + tvindicator(mt, i)
+                self._sorting = self._sorting + (tvindicator(mt, i),)
     
     def shuffleSort(self):
         self.resetSort()
-        self._sorting = random.shuffle(self._sorting)
+        l = list(self._sorting)
+        random.shuffle(l)
+        self._sorting = tuple(l)
         
         
         
