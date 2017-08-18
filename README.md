@@ -22,7 +22,8 @@ Mikezario is a tool for lazy musicians
 - [x] Last note on note selection wil not be on same tempo 
 - [x] tweights and mweights as arguments for voice.autoprogs 
 - [x] add theme line sorting
-- [ ] pallette and struct joiner 
+- [x] pallette and struct joiner 
+- [ ] randomize pan and vol on mikezart2
 - [ ] mikezario show chord ids
 - [ ] mikezario choose chords by ids
 - [ ] finish mikezario 
