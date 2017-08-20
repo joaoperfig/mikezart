@@ -31,7 +31,7 @@ def wselect(dicti):
     raise ValueError ("something went wrong")
 
 # Make random song with selected instruments
-def palFromInsts(cinsts, sminsts, lminsts, pinsts, name=None):
+def palFromInsts(cinsts, sminsts, lminsts, pinsts, ginsts, name=None):
     if name == None:
         name = naming.name()
     scale = musictheory.scale7()
@@ -70,6 +70,12 @@ def palFromInsts(cinsts, sminsts, lminsts, pinsts, name=None):
             ncount = wselect(musictheory.percussionCWeights())
             them.addVoice(inst, centre, "percussion", ncount)
             
+    for inst in ginsts:
+        for them in themes:
+            centre = rselect(musictheory.listNotes(inst))
+            ncount = wselect(musictheory.genericCWeights())
+            them.addVoice(inst, centre, "generic", ncount)    
+            
     for t in themes:
         t.shuffleSort()
             
@@ -89,19 +95,21 @@ def palFromInsts(cinsts, sminsts, lminsts, pinsts, name=None):
 
 
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-def pooptest1():
+def pooptest1(name):
     cinsts = (filezart.getInstrument("Vibraphone_bow"), filezart.getInstrument("Vibraphone_dampen"),filezart.getInstrument("Piano_original"),)
     pinsts =  (filezart.getInstrument("Wood_Pipe_h10"),)
     lminsts = ()
     sminsts = (filezart.getInstrument("Piano_original"),)
-    return palFromInsts(cinsts, sminsts, lminsts, pinsts)
+    ginsts = ()
+    return palFromInsts(cinsts, sminsts, lminsts, pinsts, ginsts, name)
 
 def pooptest2(name):
     cinsts = (filezart.getInstrument("Cello_pianissimo_arco_normal_05"),filezart.getInstrument("Piano_original"),)
-    pinsts =  (filezart.getInstrument("Wood_Pipe_h10"),)
+    pinsts =  (filezart.getInstrument("BassDrum_9"), filezart.getInstrument("Egg_3"))
     lminsts = ()
-    sminsts = (filezart.getInstrument("Vibraphone_dampen"),)
-    return palFromInsts(cinsts, sminsts, lminsts, pinsts, name)
+    sminsts = ()
+    ginsts = (filezart.getInstrument("Piano_original"),)
+    return palFromInsts(cinsts, sminsts, lminsts, pinsts, ginsts, name)
 
 def ttest():
     name = naming.name()
@@ -117,7 +125,15 @@ def ttest():
     print((struct.baseDur(pal, pal._bpm)/1000)//60,":",(struct.baseDur(pal, pal._bpm)/1000)%60)
     print("Really done with "+name)
     
-
+def adjustTest():
+    for i in filezart.getInfo():
+        clip = musictheory.getNote(i, musictheory.listNotes(i)[len(musictheory.listNotes(i))//2])
+        dest = -30
+        play(clip)
+        play(clip+(dest-clip.max_dBFS))
+        print(clip.max_dBFS)
+        print(dest-clip.max_dBFS)
+        
 def birdtest():
     birds = filezart.getPack("birds")
     special = (filezart.getInstrument("Cello_forte_arco_normal_1"),)

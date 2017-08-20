@@ -43,6 +43,7 @@ class instrument:
             noteaudio = noteaudio.pan(self._dpan) + self._dvol
             return noteaudio            
         if self._type == "percussion":
+            print("../resources/"+self._dir1)
             noteaudio = AudioSegment.from_file("../resources/"+self._dir1)
             noteaudio = noteaudio.pan(self._dpan) + self._dvol
             return noteaudio

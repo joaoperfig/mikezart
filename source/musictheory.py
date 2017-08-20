@@ -789,7 +789,7 @@ class theme:
         self._cprog = cprog # chord progression, list of chord3
         self._progc = progcount # number of progressions in Voice
         self._csize = csize #sixe of chunk
-        self._voices = {"general": (), "chordic":(), "smelodic":(), "lmelodic":(), "percussion":()}
+        self._voices = {"generic": (), "chordic":(), "smelodic":(), "lmelodic":(), "percussion":()}
         self._sorting = () # List of tvindicator
         
     def addVoice(self, inst, centre, mtype, ncount=None, tweights=None, mweights=None):   # Creates voice and generates progressions for it
@@ -860,7 +860,7 @@ class theme:
 # Initialized with voice mtype and voice id (index on theme mtype list)  
 class tvindicator:
     def __init__(self, mtype, index):
-        if not mtype in ("general", "chordic", "smelodic", "lmelodic", "percussion"):
+        if not mtype in ("generic", "chordic", "smelodic", "lmelodic", "percussion"):
             raise ValueError ("Invalid mtype: "+str(mtype))
         self._mtype = mtype
         self._index = index
