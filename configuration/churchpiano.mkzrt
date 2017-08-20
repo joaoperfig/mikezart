@@ -39,7 +39,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 <Case> lower
 <BmSp> sharp
 <FDir> /Church_Piano_Staccs.wve/grand f @.wav
-<DVol> -15
+<DVol> -30
 <DPan> +0
 
 <Name> Church_Piano_piano
@@ -48,7 +48,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 <Case> lower
 <BmSp> sharp
 <FDir> /Church_Piano_Staccs.wve/grand p @.wav
-<DVol> -10
+<DVol> -30
 <DPan> +0
 
 <Name> Piano_original
@@ -57,6 +57,6 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 <Case> upper
 <BmSp> bemol
 <FDir> /piano/Piano.mf.@.mp3
-<DVol> +15
+<DVol> -5
 <DPan> +0
 

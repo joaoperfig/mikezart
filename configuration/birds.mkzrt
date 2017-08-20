@@ -38,7 +38,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 <FDir> /dove_1_F5.wav
 <Base> F5
 <Rang> F4-F6
-<DVol> +0
+<DVol> -17
 <DPan> +0
 
 <Name> Owl_1
@@ -46,7 +46,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 <FDir> /owl_slow_A5.wav
 <Base> A5
 <Rang> A4-A6
-<DVol> +0
+<DVol> -18
 <DPan> +0
 
 <Name> Owl_2
@@ -54,7 +54,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 <FDir> /owl_slow_G5.wav
 <Base> G5
 <Rang> G4-G6
-<DVol> +0
+<DVol> -25
 <DPan> +0
 
 <Name> Owl_Fast
@@ -62,7 +62,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 <FDir> /owl_fast_Gb5.wav
 <Base> Gb5
 <Rang> Gb4-Gb6
-<DVol> +0
+<DVol> -21
 <DPan> +0
 
 <Name> Bird_Repeat
@@ -70,7 +70,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 <FDir> /repeat_bird_B7.wav
 <Base> B7
 <Rang> B6-B8
-<DVol> +0
+<DVol> -15
 <DPan> +0
 
 <Name> Bird_Single_1
@@ -78,7 +78,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 <FDir> /single_bird_B7.wav
 <Base> B7
 <Rang> B6-B8
-<DVol> +0
+<DVol> -17
 <DPan> +0
 
 <Name> Bird_Short_1
@@ -86,7 +86,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 <FDir> /bird_short_F8.wav
 <Base> F8
 <Rang> F7-F9
-<DVol> +0
+<DVol> -10
 <DPan> +0
 
 <Name> Bird_Single_2
@@ -94,7 +94,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 <FDir> /single_bird_F7.wav
 <Base> F7
 <Rang> F6-F8
-<DVol> +0
+<DVol> -17
 <DPan> +0
 
 <Name> Bird_Single_3
@@ -102,7 +102,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 <FDir> /single_bird_Gb8.wav
 <Base> Gb8
 <Rang> Gb7-Gb9
-<DVol> +0
+<DVol> +2
 <DPan> +0
 
 <Name> Bird_Repeat_2
@@ -110,5 +110,5 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 <FDir> /repeat_bird_Bb7.wav
 <Base> Bb7
 <Rang> Bb6-Bb8
-<DVol> +0
+<DVol> -17
 <DPan> +0

@@ -39,7 +39,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 <Case> upper
 <BmSp> esse
 <FDir> /pihlharmonia_cello/cello_@_1_forte_arco-normal.mp3
-<DVol> +0
+<DVol> -16
 <DPan> +0
 
 <Name> Cello_forte_arco_normal_025
@@ -48,7 +48,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 <Case> upper
 <BmSp> esse
 <FDir> /pihlharmonia_cello/cello_@_025_forte_arco-normal.mp3
-<DVol> +0
+<DVol> -15
 <DPan> +0
 
 <Name> Cello_pianissimo_arco_normal_05
@@ -57,7 +57,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 <Case> upper
 <BmSp> esse
 <FDir> /pihlharmonia_cello/cello_@_05_pianissimo_arco-normal.mp3
-<DVol> +0
+<DVol> -7
 <DPan> +0
 
 <Name> Cello_fingered
@@ -66,7 +66,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 <Case> upper
 <BmSp> esse
 <FDir> /pihlharmonia_cello/cello_@_025_mezzo-forte_arco-col-legno-battuto.mp3
-<DVol> +10
+<DVol> +0
 <DPan> +0
 
 <Name> Cello_pizzicato
@@ -75,5 +75,5 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
 <Case> lower
 <BmSp> bemol
 <FDir> /cello_pizzicato/corsica-s__c-s-cello-@.mp3
-<DVol> +0
+<DVol> -20
 <DPan> +0
