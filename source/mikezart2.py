@@ -160,7 +160,19 @@ def testPack(name):
 
 
 
-print("This is just a test \nA palette file will appear on mikezart/exports,\ncheck out how the themes sound on each folder")
-ttest()
-print("This is just a test \nA palette file will appear on mikezart/exports,\ncheck out how the themes sound on each folder")
-print("A structure was also generated and a full song is located in /exports/fullSongs")
+
+print("Write 'y' to generate a song or the name of a pack or instrument to preview it")
+inp = input(">") 
+if inp == "y":
+    print("This is just a test \nA palette file will appear on mikezart/exports,\ncheck out how the themes sound on each folder")
+    ttest()
+    print("This is just a test \nA palette file will appear on mikezart/exports,\ncheck out how the themes sound on each folder")
+    print("A structure was also generated and a full song is located in /exports/fullSongs")
+else:
+    try:
+        testPack(inp)
+    except:
+        try:
+            testInst(inp)
+        except:
+            raise ValueError("no such instrument or pack: "+inp)
