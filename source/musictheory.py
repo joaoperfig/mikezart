@@ -208,7 +208,7 @@ class scale7:
         elif (len(notes)==0):
             self._notes = sorted(self.randnotes(), key=operator.attrgetter('_value'))
         elif (len(notes)>7):
-                  raise ValueError("Generate keys with 7 notes at most")
+            raise ValueError("Generate keys with 7 notes at most")
         else:                                                                   # Can autocomplete smaller list of notes
             self._notes = sorted(self.randcnotes(notes), key=operator.attrgetter('_value'))
             
