@@ -226,8 +226,8 @@ class scale7:
             n5 = self.rand5notes(ns)
             c = c+1
         if n5 == "fail":
-             print("WARNING: Could not generate a valid Scale from input, generating from random.")
-             n5 = self.rand5notes()
+            print("WARNING: Could not generate a valid Scale from input, generating from random.")
+            n5 = self.rand5notes()
         nf= removeElsList(firstOctave(), n5, lambda x,y: (x._value == y._value))
         return nf
             
@@ -897,9 +897,13 @@ def rselect(lista):
 
 # wselect WeightedSelect returns element of dictionary based on dict weights {element:weight}
 def wselect(dicti):
+    if len(list(dicti))==0:
+        raise ValueError ("cannot select from empty dict")
     total=0
     for i in list(dicti):
         total = total + dicti[i]
+    if total <= 0:
+        raise ValueError ("total must be larger than zero")
     indice = total*random.random()
     for i in list(dicti):
         if dicti[i]>=indice:
