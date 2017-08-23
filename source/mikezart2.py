@@ -91,7 +91,21 @@ def palFromInsts(cinsts, sminsts, lminsts, pinsts, ginsts, name=None):
             
     return palett
 
-
+def testInst(name):
+    inst = filezart.getInstrument(name)
+    scale = musictheory.scale7()
+    progsize = rselect((2,3,4,5,6))
+    progcount = rselect((1,2,3,4,5))
+    csize = wselect({2:5, 3:10, 4:20, 5:10, 6:5})
+    bpm = wselect({80:5, 100:10, 120:20, 140:10, 160:5, 180:5})   
+    palett = musictheory.palette(scale, progsize, progcount, csize)
+    palett._bpm = bpm
+    palett.autoProgs()    
+    for i in range(2):
+        centre = rselect(musictheory.listNotes(inst))
+        ncount = wselect(musictheory.chordicCWeights())
+        palett._n1.addVoice(inst, centre, "chordic", ncount)    
+    play(palett._n1.previewAudio(bpm))
 
 
 #XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -125,77 +139,25 @@ def ttest():
     print((struct.baseDur(pal, pal._bpm)/1000)//60,":",(struct.baseDur(pal, pal._bpm)/1000)%60)
     print("Really done with "+name)
     
-def adjustTest():
-    for i in filezart.getInfo():
+def adjustTest(pack = None, splay=True):
+    if pack == None:
+        pack = filezart.getInfo()
+    else:
+        pack = filezart.getPack(pack)
+    for i in pack:
         clip = musictheory.getNote(i, musictheory.listNotes(i)[len(musictheory.listNotes(i))//2])
         dest = -30
-        play(clip)
-        play(clip+(dest-clip.max_dBFS))
-        print(clip.max_dBFS)
-        print(dest-clip.max_dBFS)
+        if splay:
+            play(clip)
+        print("audio:",clip.max_dBFS)
+        print("delta:",dest-clip.max_dBFS)
         
-def birdtest():
-    birds = filezart.getPack("birds")
-    special = (filezart.getInstrument("Cello_forte_arco_normal_1"),)
-    cinsts = (rselect(birds), rselect(birds))
-    sminsts = (rselect(birds), rselect(birds))
-    lminsts = ()
-    pinsts = ()
-    
-    scale = musictheory.scale7()
-    progsize = rselect((3,4,5))
-    progcount = rselect((2,3,4))
-    csize = wselect({2:5, 3:10, 4:20, 5:10, 6:5})
-    bpm = wselect({80:19, 100:20, 120:20, 140:10, 160:2, 180:1})
-    name = "birds_"+naming.name()
-    print("making",name)
-    
-    palett = musictheory.palette(scale, progsize, progcount, csize)
-    palett._bpm = bpm
-    palett.autoProgs()
-    themes = (palett._n1, palett._n2, palett._bg, palett._ch, palett._ge)
-    
-    for inst in special:
-        for them in themes:
-            centre = rselect(musictheory.listNotes(inst))
-            ncount = rselect((2,3,4,5,6))
-            them.addVoice(inst, centre, "chordic", ncount)        
-    
-    for inst in cinsts:
-        for them in themes:
-            centre = rselect(musictheory.listNotes(inst))
-            ncount = rselect((1,1,2))
-            them.addVoice(inst, centre, "chordic", ncount)
-            
-    for inst in sminsts:
-        for them in themes:
-            centre = rselect(musictheory.listNotes(inst))
-            ncount = rselect((1,1,2))
-            them.addVoice(inst, centre, "smelodic", ncount)
-            
-    for inst in lminsts:
-        for them in themes:
-            centre = rselect(musictheory.listNotes(inst))
-            ncount = rselect((1,1,2))
-            them.addVoice(inst, centre, "lmelodic", ncount)
-            
-    for inst in pinsts:
-        for them in themes:
-            centre = rselect(musictheory.listNotes(inst))
-            ncount = rselect((1,1,2))
-            them.addVoice(inst, centre, "percussion", ncount)
-            
-    filezart.makeFolder("../exports/song_" + name)
-    palett.infoToFolder(bpm, "../exports/song_" + name)
-    
-    play(palett._n1.previewAudio(bpm))
-    play(palett._n2.previewAudio(bpm))
-    play(palett._bg.previewAudio(bpm))
-    play(palett._ch.previewAudio(bpm))
-    
-    print("done with", name)
-            
-    return palett    
+def testPack(name):
+    for inst in filezart.getPack(name):
+        testInst(inst._name)
+        
+
+
 
 
 print("This is just a test \nA palette file will appear on mikezart/exports,\ncheck out how the themes sound on each folder")
