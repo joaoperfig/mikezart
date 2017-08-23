@@ -1,0 +1,149 @@
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Musical Sample Directories File For Mikezart2
+
+Instruments sample files must be located in 
+../resources in a file with the same name as
+its .mkzrt file
+
+Files must have this header, then an empty line,
+then each instrument separated by an empty line
+
+Instruments are described by the following parameters:
+
+<Name> Name of the instrument for identification
+<Type> melodic / percussion / (upcoming) modulation
+<Nclt> (nomenclature) name_octave / octave_name
+	(order in which the note names appear in file)
+	( Cs2 or 2Cs) (optional for percussion)
+<Case> upper / lower ( Db1 or db1 )
+	(optional for percussion)
+<BmSp> bemol / sharp / esse ( Db2 or C#2 or Cs2)
+	(optional for percussion)
+<FDir> formatted directory from the file with the
+	same name as the .mrkrt file.
+	start with "/"
+	replace notename with "@"
+	dont use "@" if percussion
+	(percussion instruments have a single audio file)
+<DVol> default volume change, decibel change from file
+	use +int or -int
+<DPan> defult left/right audio pan
+	use +int or -int
+
+Have fun!
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
+
+<Name> Acoustic_Guitar
+<Type> melodic
+<Nclt> name_octave
+<Case> upper
+<BmSp> sharp
+<FDir> /acoustic_guitar_pack/@.wav
+<DVol> -26
+<DPan> +0
+
+<Name> Bass
+<Type> melodic
+<Nclt> name_octave
+<Case> upper
+<BmSp> esse
+<FDir> /bass/@_1.wav
+<DVol> -29
+<DPan> +0
+
+<Name> Electric_Guitar
+<Type> melodic
+<Nclt> name_octave
+<Case> lower
+<BmSp> sharp
+<FDir> /elec gtr/@d.wav
+<DVol> -29
+<DPan> +0
+
+<Name> Distortion_M
+<Type> modulation
+<FDir> /distortion_bass_F2.wav
+<Base> F2
+<Rang> F1-F3
+<DVol> -28
+<DPan> +0
+
+<Name> Soft_Bass_M
+<Type> modulation
+<FDir> /electric_bass_F2.wav
+<Base> F2
+<Rang> F1-F3
+<DVol> -24
+<DPan> +0
+
+<Name> Snap_Bass_M
+<Type> modulation
+<FDir> /electric_bass_snappy_F1.wav
+<Base> F1
+<Rang> F0-F2
+<DVol> -20
+<DPan> +0
+
+<Name> Acoustic_Guitar_M
+<Type> modulation
+<FDir> /guitar_G2.wav
+<Base> G2
+<Rang> G1-G3
+<DVol> -22
+<DPan> +0
+
+<Name> Acoustic_Octave_M
+<Type> modulation
+<FDir> /guitar_octave_A3.wav
+<Base> A3
+<Rang> A2-A4
+<DVol> -22
+<DPan> +0
+
+<Name> Guitar_Slap_M
+<Type> modulation
+<FDir> /guitar_slap_E2.wav
+<Base> E2
+<Rang> E1-E3
+<DVol> -25
+<DPan> +0
+
+<Name> Slappy_Guitar_M
+<Type> modulation
+<FDir> /slap_electric_short_E2.wav
+<Base> E2
+<Rang> E1-E3
+<DVol> -29
+<DPan> +0
+
+<Name> Long_Guitar_1_M
+<Type> modulation
+<FDir> /soft_electric_long_A2.wav
+<Base> A2
+<Rang> A1-A3
+<DVol> -21
+<DPan> +0
+
+<Name> Long_Guitar_2_M
+<Type> modulation
+<FDir> /soft_electric_medium_E2.wav
+<Base> E2
+<Rang> E1-E3
+<DVol> -21
+<DPan> +0
+
+<Name> Long_Guitar_3_M
+<Type> modulation
+<FDir> /softer_electric_long_G2.wav
+<Base> G2
+<Rang> G1-G3
+<DVol> -20
+<DPan> +0
+
+<Name> Short_Guitar_3_M
+<Type> modulation
+<FDir> /softer_electric_short_G2.wav
+<Base> G2
+<Rang> G1-G3
+<DVol> -20
+<DPan> +0
