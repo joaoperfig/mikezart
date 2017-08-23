@@ -156,7 +156,11 @@ class mmov:
                 return wselect(weights)
             else:
                 d = filterCopyDict(weights, chord, lambda x,y: (not x.inChord(y)))
-                return wselect(d)                
+                try:
+                    return wselect(d)
+                except:
+                    print("Warning, this song might sound bad, a non choridc note had to be chosen as there were none available")
+                    return wselect(weights)
             
         if(self._utype == "repeat"):
             return previous
