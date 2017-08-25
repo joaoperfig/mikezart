@@ -118,7 +118,7 @@ class Structure:
     def songAudio(self, pal, bpm=None):
         if bpm == None:
             bpm = pal._bpm
-        total = self.baseDur(pal, bpm) + 3000
+        total = self.baseDur(pal, bpm) + 3000 # 3 seconds for last note to play
         sound = AudioSegment.silent(total)
         curTime = 0
         for p in self._parts:

@@ -3,6 +3,7 @@ import glob
 import os
 import pickle
 import shutil
+import random
 
 
 class instrument:
@@ -29,6 +30,8 @@ class instrument:
             raise ValueError("Cannot get notenames of modulation instrument")
         if self._type == "percussion":
             return ("C0", "Db0", "D0", "Eb0", "E0", "F0", "Gb0", "G0", "Ab0", "A0", "Bb0", "B0")
+        if self._type == "randper":
+            return ("C0", "Db0", "D0", "Eb0", "E0", "F0", "Gb0", "G0", "Ab0", "A0", "Bb0", "B0")        
         files = glob.glob("../resources/" + self._dir1 + "*" + self._dir2)
         notenames = ()
         for i in files:
@@ -47,6 +50,12 @@ class instrument:
             noteaudio = AudioSegment.from_file("../resources/"+self._dir1)
             noteaudio = noteaudio.pan(self._dpan) + self._dvol
             return noteaudio
+        if self._type == "randper":
+            fname = "../resources/"+self._dir1 + str(rselect(range(self._rands))+1)+self._dir2
+            print(fname)
+            noteaudio = AudioSegment.from_file(fname)
+            noteaudio = noteaudio.pan(self._dpan) + self._dvol
+            return noteaudio            
         print("../resources/"+self._dir1 + formatedName + self._dir2)
         noteaudio = AudioSegment.from_file("../resources/"+self._dir1 + formatedName + self._dir2)
         noteaudio = noteaudio.pan(self._dpan) + self._dvol
@@ -167,6 +176,8 @@ def parceMkzrt(filename):
                 inst._base = content
             elif head == "<Rang> ":
                 inst._rang = content
+            elif head == "<Rand> ":
+                inst._rands = eval(content)
             else:
                 raise ValueError("Invalid line header: "+head)
         instruments = instruments + (inst,)
@@ -212,3 +223,24 @@ def getMarkov():
 
 def saveMarkov(markov):
     pickleObject("../configuration/data.mrkv", markov)
+
+# rselect RandomSelect returns random element of list
+def rselect(lista):
+    return random.choice(lista)
+
+
+# wselect WeightedSelect returns element of dictionary based on dict weights {element:weight}
+def wselect(dicti):
+    if len(list(dicti))==0:
+        raise ValueError ("cannot select from empty dict")
+    total=0
+    for i in list(dicti):
+        total = total + dicti[i]
+    if total <= 0:
+        raise ValueError ("total must be larger than zero")
+    indice = total*random.random()
+    for i in list(dicti):
+        if dicti[i]>=indice:
+            return i
+        indice = indice - dicti[i]
+    raise ValueError ("something went wrong")

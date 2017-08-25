@@ -1015,6 +1015,8 @@ def getNote(instrument, note):
         return aud
     if instrument._type == "percussion":
         return instrument.getAudio(None)
+    if instrument._type == "randper":
+        return instrument.getAudio(None)    
     if instrument._bmsp == "bemol":
         typen = note._typename
     elif instrument._bmsp == "sharp":
