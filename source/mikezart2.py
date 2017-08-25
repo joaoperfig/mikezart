@@ -125,9 +125,23 @@ def pooptest2(name):
     ginsts = (filezart.getInstrument("Piano_original"),)
     return palFromInsts(cinsts, sminsts, lminsts, pinsts, ginsts, name)
 
+def rocktest(name):
+    cinsts = (rselect((ins("Bass"), ins("Soft_Bass_M"), ins("Snap_Bass_M"))), rselect((ins("Acoustic_Guitar"), ins("Electric_Guitar"), ins("Long_Guitar_2_M"))),  rselect((ins("Long_Guitar_3_M"), ins("Short_Guitar_3_M"), ins("Long_Guitar_2_M"))))
+    pinsts =  (rselect(ipack("drumkit")), rselect(ipack("drumkit")), rselect(ipack("drumkit")), rselect(ipack("drumkit")), rselect(ipack("drumkit")))
+    lminsts = ()
+    sminsts = ()
+    ginsts = (rselect((ins("Piano_original"), ins("Short_Guitar_3_M"))),)
+    return palFromInsts(cinsts, sminsts, lminsts, pinsts, ginsts, name)
+
+def ins(name):
+    return filezart.getInstrument(name)
+
+def ipack(name):
+    return filezart.getPack(name)
+
 def ttest():
     name = naming.name()
-    pal = pooptest2(name)
+    pal = rocktest(name)
     struct = markovzart2.makeStruct()
     print(struct)
     print(struct.baseDur(pal, pal._bpm))
@@ -162,12 +176,16 @@ def testPack(name):
 
 
 print("Write 'y' to generate a song or the name of a pack or instrument to preview it")
+print("'m' for mega generation")
 inp = input(">") 
 if inp == "y":
     print("This is just a test \nA palette file will appear on mikezart/exports,\ncheck out how the themes sound on each folder")
     ttest()
     print("This is just a test \nA palette file will appear on mikezart/exports,\ncheck out how the themes sound on each folder")
     print("A structure was also generated and a full song is located in /exports/fullSongs")
+if inp == "m":
+    for i in range(20):
+        ttest()
 else:
     try:
         testPack(inp)
