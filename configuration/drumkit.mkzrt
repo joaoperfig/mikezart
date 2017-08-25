@@ -1,0 +1,100 @@
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Musical Sample Directories File For Mikezart2
+
+Instruments sample files must be located in 
+../resources in a file with the same name as
+its .mkzrt file
+
+Files must have this header, then an empty line,
+then each instrument separated by an empty line
+
+Instruments are described by the following parameters:
+
+<Name> Name of the instrument for identification
+<Type> melodic / percussion / (upcoming) modulation
+<Nclt> (nomenclature) name_octave / octave_name
+	(order in which the note names appear in file)
+	( Cs2 or 2Cs) (optional for percussion)
+<Case> upper / lower ( Db1 or db1 )
+	(optional for percussion)
+<BmSp> bemol / sharp / esse ( Db2 or C#2 or Cs2)
+	(optional for percussion)
+<FDir> formatted directory from the file with the
+	same name as the .mrkrt file.
+	start with "/"
+	replace notename with "@"
+	dont use "@" if percussion
+	(percussion instruments have a single audio file)
+<DVol> default volume change, decibel change from file
+	use +int or -int
+<DPan> defult left/right audio pan
+	use +int or -int
+
+Have fun!
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX%
+
+<Name> Drum_Crash_1
+<Type> randper
+<FDir> /Rock-Kit-Crash-1-@.mp3
+<Rand> 2
+<DVol> -26
+<DPan> +0
+
+<Name> Drum_Crash_2
+<Type> randper
+<FDir> /Rock-Kit-Crash-2-@.mp3
+<Rand> 2
+<DVol> -27
+<DPan> +0
+
+<Name> Drum_Floor
+<Type> randper
+<FDir> /Rock-Kit-Floor-@.mp3
+<Rand> 2
+<DVol> -24
+<DPan> +0
+
+<Name> Hihat
+<Type> percussion
+<FDir> /Rock-Kit-HiHat-Open.mp3
+<DVol> -25
+<DPan> +0
+
+<Name> Drum_Kick
+<Type> randper
+<FDir> /Rock-Kit-Kick-pp-@.mp3
+<Rand> 2
+<DVol> -23
+<DPan> +0
+
+<Name> Drum_Rack
+<Type> randper
+<FDir> /Rock-Rack-@.mp3
+<Rand> 2
+<DVol> -27
+<DPan> +0
+
+<Name> Drum_Bell
+<Type> percussion
+<FDir> /Rock-Ride-Bell.mp3
+<DVol> -22
+<DPan> +0
+
+<Name> Drum_Shank
+<Type> percussion
+<FDir> /Rock-Ride-Shank.mp3
+<DVol> -24
+<DPan> +0
+
+<Name> Drum_Tip
+<Type> percussion
+<FDir> /Rock-Ride-Tip.mp3
+<DVol> -26
+<DPan> +0
+
+<Name> Drum_Snare
+<Type> randper
+<FDir> /Rock-Snare-ff-@.mp3
+<Rand> 3
+<DVol> -28
+<DPan> +0
