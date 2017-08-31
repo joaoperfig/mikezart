@@ -125,6 +125,18 @@ class mnote:
     def getAudio(self, inst, bpm):                                              # returns AudioSegment
         return getNote(inst, self)
      
+    def approximated(self, other):                                              # returns new note with same type as self but closest to other
+        under = mnote((other._octave-1)*12 + self._type)
+        same = mnote((other._octave)*12 + self._type)
+        over = mnote((other._octave+1)*12 + self._type)
+        mdist = min((other.distance(under), other.distance(over), other.distance(same)))
+        if other.distance(same) == mdist:
+            return same
+        if other.distance(over)== mdist:
+            return over
+        return under
+            
+     
 # MMov beat notation class
 # Initialized with movement description
 class mmov:
@@ -682,6 +694,39 @@ class voice:
         
         else:
             raise ValueError("Invalid mtype: " + self._mtype + ".")
+    
+    def mimic(self, other):                                                     # Fills voice with lines mimicking other
+        tempCentre = other._cent.approximated(self._cent) # new centre of this voice will be same note as of other but close to original
+        delta = tempCentre._value - other._cent._value # how notes of other need to be changed to fit this
+        for pro in other._progs:
+            newpro = progression(pro._csize)
+            for chu in pro._chunks:
+                newchu = chunk(chu._size, chu._chord)
+                newchu._content = []
+                for con in chu._content:
+                    beat = ()
+                    for note in con:
+                        newnote = mnote(note._value+delta) 
+                        if newnote in list(self._weights):
+                            beat = beat + (newnote,)
+                        else:
+                            print("Cannot direct mimicm trying other octaves")
+                            up = mnote(newnote._value+12)
+                            down = mnote(newnote._value-12)
+                            if up in list(self._weights):
+                                beat = beat + (up,)
+                            elif down in list(self._weights):
+                                beat = beat + (down,)
+                            else:
+                                raise ValueError("Cannot force mimic,",newnote,"cannot be forced onto",self._inst)
+                    newchu._content = newchu._content+[beat]
+                newpro._chunks = newpro._chunks+(newchu,)
+            self._progs = self._+progs+(newpro,)
+            
+
+                    
+                                
+        return
     
     def baseDuration(self, bpm):                                                # Duration of chunk without extra time for last note to play
         sample = self._progs[0]
