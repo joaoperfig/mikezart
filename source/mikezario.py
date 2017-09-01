@@ -22,7 +22,14 @@ def wselect(dicti):
         indice = indice - dicti[i]
     raise ValueError ("something went wrong")
 
-
+def usrinp(acceptEmpty = False):
+    while True:
+        inp = input(">")
+        print("")
+        if acceptEmpty == True:
+            return inp
+        elif inp != "":
+            return inp
 
 def mainMenu():
     print("\nWelcome to the MikezarIO music creation interface (art by Forrest Cook & Alexander Craxton)")
@@ -34,7 +41,7 @@ def mainMenu():
         print("Cc - Create a Song from a Palette and a Structure")    #UNDEFINED OPTIONS
         print("Qq - Quit")
         
-        inp = input(">")
+        inp = usrinp()
         if inp in "Pp":
             paletteMenu()
         
@@ -56,7 +63,7 @@ def openPalettMenu(): # Open existing palette, returns None if failed
         for paln in pals:
             print ("    "+paln)
         print("Please type the name of the palette you want to open or Qq to quit")
-        inp = input(">")
+        inp = usrinp()
         if inp in "Qq":
             return None
         else:
@@ -74,14 +81,14 @@ def getPalette(name):
 def bpmMenu():
     while True:
         print("Please input the number of beats per minute for this Palette (write G or g for random):")
-        bpmt = input(">")
+        bpmt = usrinp()
         if bpmt in "Gg":
             bpm = wselect({80:5, 100:10, 120:20, 140:10, 160:5, 180:5})
         else:
             bpm = eval(bpmt)
         while True:
             print(str(bpm) + " beats per minute. Accept? (Yy, Nn, Pp(preview)):")
-            inp = input(">")
+            inp = usrinp()
             if inp in "Yy":
                 return bpm
             elif inp in "Nn":
@@ -92,14 +99,14 @@ def bpmMenu():
 def csizeMenu():
     while True:
         print("Please input the number of beats in a chunk for this Palette (write G or g for random):")
-        ct = input(">")
+        ct = usrinp()
         if ct in "Gg":
             cs = wselect({2:5, 3:10, 4:20, 5:10, 6:5})
         else:
             cs = eval(ct)
         while True:
             print(str(cs) + " (x4 quarter) beats in a chunk. Accept? (Yy, Nn, Pp(preview)):")
-            inp = input(">")
+            inp = usrinp()
             if inp in "Yy":
                 return cs
             elif inp in "Nn":
@@ -110,14 +117,14 @@ def csizeMenu():
 def psizeMenu():
     while True:
         print("Please input the number of chunks in a progression for this Palette (write G or g for random):")
-        pt = input(">")
+        pt = usrinp()
         if pt in "Gg":
             ps = rselect((2,3,4,5,6))
         else:
             ps = eval(pt)
         while True:
             print(str(ps) + " chunks in a progression. Accept? (Yy, Nn, Pp(preview)):")
-            inp = input(">")
+            inp = usrinp()
             if inp in "Yy":
                 return ps
             elif inp in "Nn":
@@ -128,14 +135,14 @@ def psizeMenu():
 def progcMenu():
     while True:
         print("Please input the number of progressions in a voice for this Palette (write G or g for random):")
-        pt = input(">")
+        pt = usrinp()
         if pt in "Gg":
             pc = rselect((2,3,4,5,6))
         else:
             pc = eval(pt)
         while True:
             print(str(pc) + " progressions in a voice. Accept? (Yy, Nn, Pp(preview)):")
-            inp = input(">")
+            inp = usrinp()
             if inp in "Yy":
                 return pc
             elif inp in "Nn":
@@ -154,7 +161,7 @@ def scaleInfo(scale):
 def scaleMenu():
     while True:
         print("Please input the list of 7 notes in the Scale (ex: 'C Ds E ...'), a smaller list to autocomplete, or write G or g for random:")
-        scalet = input(">")
+        scalet = usrinp()
         if scalet in "Gg":
             scale = musictheory.scale7()
         else:
@@ -168,7 +175,7 @@ def scaleMenu():
             scaleInfo(scale)
             print()
             print ("Accept? (Yy, Nn, Pp(preview)):")
-            inp = input(">")
+            inp = usrinp()
             if inp in "Yy":
                 return scale
             elif inp in "Nn":
@@ -188,7 +195,7 @@ def paletteMenu():
         pal._bpm = bpm
         while True:
             print("Palette created, Accept? Yy Nn(redo) Qq(quit):")
-            inp = input(">")
+            inp = usrinp()
             if inp in "Yy":
                 name = nameMenu()
                 paletteEdit(pal, name)
@@ -202,14 +209,14 @@ def paletteMenu():
 def nameMenu():
     while True:
         print("Name this palette (will be used as filename):")
-        name = input(">")
+        name = usrinp()
         if name in existingPalNames():
             print("!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             print("WARNING: this name already existis in saved palettes, using it and saving will delete the old palette")
             print("!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         while True:
             print(name + ", is this name ok? Yy Nn:")
-            inp = input(">")
+            inp = usrinp()
             if inp in "Yy":
                 return name
             elif inp in "Nn":
@@ -262,7 +269,7 @@ def paletteEdit(pal, name): # Main palette edition thing, can enter theme or pro
         print("Nn - Change Name/filename")
         print("Bb - Change Song BPM")
         print("Qq - Quit")
-        inp = input(">")                                #UNDEFINED OPTIONS
+        inp = usrinp()                       
         if inp in "Cc":
             res = cprogMenu(pal, cprogN1, cprogN2, cprogCH)
             if res == False:
@@ -294,7 +301,7 @@ def paletteEdit(pal, name): # Main palette edition thing, can enter theme or pro
             pal._bpm = bpmMenu()
         elif inp in "Qq":
             print("Warning: Unsaved Changes will be LOST: use Qq to quit or anything else to return to menu")
-            inp = input(">")
+            inp = usrinp()
             if inp == "q" or inp == "Q" or inp == "Qq" or inp == "qQ":
                 print("Exiting palette edition interface")
                 return
@@ -304,7 +311,7 @@ def savePalette(pal, name):
     if name in existingPalNames():
         print("There is already a saveFile with this name, are you sure you want to delete it? Yy-Delete Nn/Qq-Return")
         while True:
-            inp = input(">")
+            inp = usrinp()
             if inp in "QqNn":
                 print("Canceling save Palette")
                 return
@@ -337,7 +344,7 @@ def chooseThemeEditMenu(pal):
         if pal._ge != None:
             print ("ge - General")
         print("Qq - Quit")
-        inp = input(">")
+        inp = usrinp()
         if inp in "Qq":
             return
         elif inp == "n1":
@@ -421,7 +428,7 @@ def createThemeMenu(pal, cprogN1, cprogN2, cprogCH):
             print("bg - Create Bridge Theme")
             print("ch - Create Chorus Theme")
         print("Qq - Quit")
-        inp = input(">")
+        inp = usrinp()
         if inp in "Qq":
             return
         elif inp == "n1":
@@ -462,7 +469,7 @@ def cprogMenu(pal, cprogN1, cprogN2, cprogCH): # Edit progressions for palette, 
             print ("ch - Define Chorus/Bridge chord Progression")
         print ("Ii - Scale Info")
         print ("Qq - Quit")
-        inp = input(">")
+        inp = usrinp()
         if inp == "n1":
             prog = makeProgMenu(pal)
             if prog == None:
@@ -507,7 +514,7 @@ def makeProgMenu(pal): # Request progression generation, returns None if failed
         print("Ii - Scale Info")
         print("Ff - Use Progression as is")
         print("Qq - Quit")
-        inp = input(">")
+        inp = usrinp()
         if inp in "Dd":
             print("Requesting id in range [0-"+str(progsize-1)+"]")
             cid = idMenu()
@@ -552,7 +559,7 @@ def customWeightMenu(lista): # Create custom weight set for lista, return None i
             flag = True
             print("Please input wheight of", el)
             print("Qq - Quit")
-            inp = input(">")
+            inp = usrinp()
             if inp in "Qq":
                 return None
             for i in inp:
@@ -564,7 +571,7 @@ def customWeightMenu(lista): # Create custom weight set for lista, return None i
     while True:
         print("Your weight set:", w)
         print("Accept? Yy Nn")
-        inp = input(">")
+        inp = usrinp()
         if inp in "Yy":
             return w
         elif inp in "Nn":
@@ -573,7 +580,7 @@ def customWeightMenu(lista): # Create custom weight set for lista, return None i
 def idMenu(): # Request int id, return None if failed
     while True:
         print("Please input id: (Qq-quit)")
-        inp = input(">")
+        inp = usrinp()
         flag = True
         if inp in "Qq":
             return None
@@ -592,31 +599,31 @@ def chordMenu(scale): # Request chord3 generation, return None if failed
         print("Aa - Generate with restraints")
         print("Ii - Scale Info")
         print("Qq - Quit")
-        inp = input(">")
+        inp = usrinp()
         if inp in "Rr":
             chord = musictheory.chord3.fromScale(scale)
             pianoprinter.octoPrint(chord._types)
             while True:
                 print(str(chord)+", accept? Yy Nn")
-                inp2 = input(">")
+                inp2 = usrinp()
                 if inp2 in "Yy":
                     return chord
                 elif inp2 in "Nn":
                     break
         elif inp in "Aa":
             print("Input restraint 1 (leave empty for NONE)")
-            res1 = input(">")
+            res1 = usrinp(True)
             if res1 == "":
                 res1 = None
             print("Input restraint 2 (leave empty for NONE)")
-            res2 = input(">")
+            res2 = usrinp(True)
             if res2 == "":
                 res2 = None
             chord = rselect(scale.getChords(res1, res2))
             pianoprinter.octoPrint(chord._types)
             while True:
                 print(str(chord)+", accept? Yy Nn")
-                inp2 = input(">")
+                inp2 = usrinp()
                 if inp2 in "Yy":
                     return chord
                 elif inp2 in "Nn":
@@ -639,18 +646,18 @@ def chordMenu(scale): # Request chord3 generation, return None if failed
                 pianoprinter.octoPrint(chord._types)
                 while True:
                     print(str(chord)+", accept? Yy Nn")
-                    inp2 = input(">")
+                    inp2 = usrinp()
                     if inp2 in "Yy":
                         return chord
                     elif inp2 in "Nn":
                         break
                 
             elif len(notes) == 3:
-                chord = musictheory.chord3(notes)
+                chord = musictheory.chord3(notes[0], notes[1], notes[2])
                 pianoprinter.octoPrint(chord._types)
                 while True:
                     print(str(chord)+", accept? Yy Nn")
-                    inp2 = input(">")
+                    inp2 = usrinp()
                     if inp2 in "Yy":
                         return chord
                     elif inp2 in "Nn":
@@ -660,9 +667,11 @@ def chordMenu(scale): # Request chord3 generation, return None if failed
 def themeEdit(theme, introSentence="Editing undefined Theme"):
     while True:
         print(introSentence)
-        print("")
+        print("Vv - Create a Voice") #UNDEFINED 
+        print("Ee - Edit a Voice") #UNDEFINED 
+        print("Aa - Preview Audio") #UNDEFINED 
         print("Dd - Display Theme Properties") #UNDEFINED 
         print("Ii - Scale Info") #UNDEFINED
-
+        
             
 mainMenu()
