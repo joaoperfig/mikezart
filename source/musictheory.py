@@ -721,7 +721,7 @@ class voice:
                                 raise ValueError("Cannot force mimic,",newnote,"cannot be forced onto",self._inst)
                     newchu._content = newchu._content+[beat]
                 newpro._chunks = newpro._chunks+(newchu,)
-            self._progs = self._+progs+(newpro,)
+            self._progs = self._progs+(newpro,)
             
 
                     
