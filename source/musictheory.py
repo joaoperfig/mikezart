@@ -722,11 +722,6 @@ class voice:
                     newchu._content = newchu._content+[beat]
                 newpro._chunks = newpro._chunks+(newchu,)
             self._progs = self._progs+(newpro,)
-            
-
-                    
-                                
-        return
     
     def baseDuration(self, bpm):                                                # Duration of chunk without extra time for last note to play
         sample = self._progs[0]
