@@ -133,6 +133,29 @@ def rocktest(name):
     ginsts = (rselect((ins("Piano_original"), ins("Short_Guitar_3_M"))),)
     return palFromInsts(cinsts, sminsts, lminsts, pinsts, ginsts, name)
 
+def mtest():
+    inst = ins("Piano_original")
+    scale = musictheory.scale7()
+    progsize = rselect((2,3,4,5,6))
+    progcount = rselect((1,2,3,4,5))
+    csize = wselect({2:5, 3:10, 4:20, 5:10, 6:5})
+    bpm = wselect({80:5, 100:10, 120:20, 140:10, 160:5, 180:5})   
+    palett = musictheory.palette(scale, progsize, progcount, csize)
+    palett._bpm = bpm
+    palett.autoProgs()    
+    centre = rselect(musictheory.listNotes(inst))
+    ncount = wselect(musictheory.chordicCWeights())
+    palett._n1.addVoice(inst, centre, "chordic", ncount)  
+    
+    inst = ins("Long_Guitar_3_M")
+    centre = rselect(musictheory.listNotes(inst))
+    ncount = wselect(musictheory.chordicCWeights())
+    voic = musictheory.voice(inst, centre, scale, "chordic", 0, 0)
+    voic.mimic(palett._n1._voices["chordic"][0])
+    palett._n1.addVoiceAsIs(voic)      
+    
+    play(palett._n1.previewAudio(bpm))    
+
 def ins(name):
     return filezart.getInstrument(name)
 
