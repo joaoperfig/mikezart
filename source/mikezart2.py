@@ -126,10 +126,10 @@ def pooptest2(name):
     return palFromInsts(cinsts, sminsts, lminsts, pinsts, ginsts, name)
 
 def rocktest(name):
-    cinsts = (rselect((ins("Bass"), ins("Soft_Bass_M"), ins("Snap_Bass_M"))), rselect((ins("Acoustic_Guitar"), ins("Electric_Guitar"), ins("Long_Guitar_2_M"))),  rselect((ins("Long_Guitar_3_M"), ins("Short_Guitar_3_M"), ins("Long_Guitar_2_M"))))
+    cinsts = (rselect((ins("Bass"), ins("Soft_Bass_M"), ins("Snap_Bass_M"))), rselect((ins("Acoustic_Guitar"), ins("Electric_Guitar"), ins("Long_Guitar_2_M"))))
     pinsts =  (rselect(ipack("drumkit")), rselect(ipack("drumkit")), rselect(ipack("drumkit")), rselect(ipack("drumkit")), rselect(ipack("drumkit")))
     lminsts = ()
-    sminsts = ()
+    sminsts = (rselect((ins("Long_Guitar_3_M"), ins("Short_Guitar_3_M"), ins("Long_Guitar_2_M"))),)
     ginsts = (rselect((ins("Piano_original"), ins("Short_Guitar_3_M"))),)
     return palFromInsts(cinsts, sminsts, lminsts, pinsts, ginsts, name)
 
