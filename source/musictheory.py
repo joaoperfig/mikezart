@@ -248,7 +248,10 @@ class scale7:
         return nf
             
     def randnotes(self):
-        return removeElsList(firstOctave(), self.rand5notes(), lambda x,y: (x._value == y._value))
+        try:
+            return removeElsList(firstOctave(), self.rand5notes(), lambda x,y: (x._value == y._value))
+        except:
+            self.randnotes()
     
     def rand5notes(self, possibilities = False, count=0):
         if (count == 700):
@@ -710,12 +713,14 @@ class voice:
                         if newnote in list(self._weights):
                             beat = beat + (newnote,)
                         else:
-                            print("Cannot direct mimicm trying other octaves")
+                            print("Cannot direct mimic trying other octaves")
                             up = mnote(newnote._value+12)
                             down = mnote(newnote._value-12)
                             if up in list(self._weights):
+                                print(newnote, "->", up)
                                 beat = beat + (up,)
                             elif down in list(self._weights):
+                                print(newnote, "->", down)
                                 beat = beat + (down,)
                             else:
                                 raise ValueError("Cannot force mimic,",newnote,"cannot be forced onto",self._inst)
