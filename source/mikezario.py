@@ -24,7 +24,10 @@ def wselect(dicti):
 
 def usrinp(acceptEmpty = False):
     while True:
-        inp = input(">")
+        try:
+            inp = input(">")
+        except:
+            raise ValueError("Terminated by user!")
         print("")
         if acceptEmpty == True:
             return inp
