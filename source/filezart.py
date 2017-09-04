@@ -96,6 +96,13 @@ def getInfo():
         instruments = instruments + parceMkzrt(mkzrt)
     return instruments
 
+def getPacks():                                                                 #get names of packs
+    mkzrts = glob.glob("../configuration/*.mkzrt")
+    lista = ()
+    for mkzrt in mkzrts:
+        lista = lista + (cutafter(mkzrt, "configuration")[1:-6],)
+    return lista
+
 def getInstrument(name):
     insts = getInfo()
     for inst in insts:
