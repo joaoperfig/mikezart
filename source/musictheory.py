@@ -52,6 +52,9 @@ class mnote:
             return (self._value != other._value)
         return True
     
+    def __lt__(self, other):
+        return self._value < other._value
+    
     @classmethod
     def fromName(cls, name):                                                    # can create as mnote.fromName(noteNameString)
         if "s" in name:
