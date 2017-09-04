@@ -687,7 +687,7 @@ class voice:
             if ncount == None:
                 ncount = wselect(percussionCWeights())
             rithm = chunk(csize)
-            rithm.randMovs(ncount, tweights, mweights) # percussion mtypes repeat chunks, use smlodic or lmelodic for different percussion types
+            rithm.randMovs(ncount, tweights, mweights) # percussion mtypes repeat chunks, use smelodic or lmelodic for different percussion types
             rithm._chord = cprog[0] #chord of all generic is the first chord in prog but there should be no chordic mmovs and mnotes
             rithm.applyToMovs(self) #sets notes based on scale
             prog = progression(csize)
@@ -845,8 +845,8 @@ class theme:
         self._sorting = () # List of tvindicator
         
     def addVoice(self, inst, centre, mtype, ncount=None, tweights=None, mweights=None):   # Creates voice and generates progressions for it
-        nvoice = voice(inst, centre, self._scale, mtype)     ### ncount was here????                                        
-        nvoice.autoProg(self._cprog, self._progc, self._csize, ncount, tweights, mweights) ###ncount wasnt here???
+        nvoice = voice(inst, centre, self._scale, mtype)                                   ### ncount was here????!             
+        nvoice.autoProg(self._cprog, self._progc, self._csize, ncount, tweights, mweights) ### ncount wasnt here?!?
         self._voices[mtype] = self._voices[mtype] + (nvoice,)
         self._sorting = self._sorting + (tvindicator(mtype, len(self._voices[mtype])-1),)
         
