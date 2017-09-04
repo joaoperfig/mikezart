@@ -459,11 +459,11 @@ def cprogMenu(pal, cprogN1, cprogN2, cprogCH): # Edit progressions for palette, 
     while True:
         print("Note: changed progressions are only taken into effect if their themes are recreated")
         if cprogN1 == None:
-            print ("n1 - Define Verses 1 chord Progression (undefined!)")
+            print ("n1 - Define Verses 1 chord Progression     (undefined!)")
         else:
             print ("n1 - Define Verses 1 chord Progression")
         if cprogN2 == None:
-            print ("n2 - Define Verses 2 chord Progresion (undefined!)")
+            print ("n2 - Define Verses 2 chord Progresion      (undefined!)")
         else:
             print ("n2 - Define Verses 2 chord Progression")
         if cprogCH == None:
@@ -670,7 +670,7 @@ def chordMenu(scale): # Request chord3 generation, return None if failed
                         break
 
 
-def themeEdit(theme, pal, introSentence="Editing undefined Theme"):
+def themeEdit(theme, pal, introSentence="Editing undefined Theme"): # Edit an existing theme
     while True:
         print(introSentence)
         print("Chordic Voices:", len(theme._voices["chordic"]))
@@ -678,16 +678,28 @@ def themeEdit(theme, pal, introSentence="Editing undefined Theme"):
         print("Large Melodic Voices:", len(theme._voices["lmelodic"]))
         print("Percussion Voices:", len(theme._voices["percussion"]))
         print("Generic Voices:", len(theme._voices["generic"]))
-        print("Vv - Create a Voice") #UNDEFINED 
-        print("Ee - Edit a Voice") #UNDEFINED 
+        print("Vv - Create a Voice")
+        print("Ee - Edit a Voice")
         print("Aa - Preview Audio") #UNDEFINED 
         print("Dd - Display Theme Properties") #UNDEFINED 
         print("Ii - Scale Info") #UNDEFINED
         inp =  usrinp()
         if inp in "Vv":
-            typ = requestTypeMenu(theme)
+            print("Choose the type of the voice you are going to create:")
+            typ = requestTypeMenu() 
+            if typ == None:
+                print("Returning")
+            else:
+                inst = chooseInstMenu() 
+                centre = chooseCentreMenu(musictheory.listNotes(inst)) ####
+                mtype = typ
+                print("Creating Voice")
+                print("...")
+                voic = musictheory.voice(inst, centre, them._scale, mtype)
+                print("Your Voice", voic, "was created, are you sure you want to add it?")
         elif inp in "Ee":
-            typ = requestTypeMenu(theme)
+            print("Choose the type and ID of the voice you are going to open")
+            typ = requestTypeMenu()
             if typ == None:
                 print("Returning")
             elif len(them._voices[typ]) == 0:
@@ -698,8 +710,65 @@ def themeEdit(theme, pal, introSentence="Editing undefined Theme"):
                 if vid >= len(them._voices[typ]):
                     print("ID out of range")
                 else:
-                    editVoicMenu(them._voices[typ][vid])
+                    editVoiceMenu(them._voices[typ][vid]) #####
 
+def requestTypeMenu(): # Request mtype for voice creation or selection, returns None if canceled
+    print("Requesting Voice Type")
+    print("(Note that there can be percussion voices listed as smelodic or lmelodic)")
+    print("Cc - Chordic    (lines repeat once for every chunk but adjusted to chord)")
+    print("Ss - SMelodic   (lines repeat once for every progression)")
+    print("Ll - LMelodic   (lines repeat once for every voice)")
+    print("Pp - Percussion (lines repeat every chunk)")
+    print("Gg - Generic    (lines repeat every chunk)")
+    print("Qq - Quit")
+    while True:
+        inp = usrinp()
+        if inp in "Cc":
+            return "chordic"
+        if inp in "Ss":
+            return "smelodic"
+        if inp in "Ll":
+            return "lmelodic"
+        if inp in "Pp":
+            return "percussion"
+        if inp in "Gg":
+            return "generic"
+        if inp in "Qq":
+            return None
+    
+def chooseInstMenu():
+    while True:
+        print("Please choose the instrument you want to use:")
+        print("Write the name of the instrument to select it")
+        print("Write the name of a pack to list all instruments in it")
+        print("Ii - Show all isntruments")
+        print("Pp - Show all packs")
+        inp = usrinp()
+        if inp in "Ii":
+            printInsts(filezart.getInfo())
+        if inp in "Pp":
+            printPacks()
+        else:
+            try:
+                inst = filezart.getInstrument(inp)
+                print("Found instrument:", inst, ", use this? Yy, Nn")
+                while True:
+                    inp = usrinp()
+                    if inp in "Yy":
+                        return inst
+                    elif inp in "Nn":
+                        break
+            except:
+                try:
+                    pack = filezart.getPack(inp)
+                    printInsts(insts)
+                except:
+                    print("No pack or instrument found:", inp)
+                    
+def printInsts(insts):
+    return
+    
+        
 
 
 mainMenu()
