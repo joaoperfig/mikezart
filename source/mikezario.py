@@ -724,14 +724,19 @@ def requestTypeMenu(): # Request mtype for voice creation or selection, returns 
     while True:
         inp = usrinp()
         if inp in "Cc":
+            print("Selected type: Chordic")
             return "chordic"
         if inp in "Ss":
+            print("Selected type: SMelodic")
             return "smelodic"
         if inp in "Ll":
+            print("Selected type: LMelodic")
             return "lmelodic"
         if inp in "Pp":
+            print("Selected type: Percussion")
             return "percussion"
         if inp in "Gg":
+            print("Selected type: Generic")
             return "generic"
         if inp in "Qq":
             return None
@@ -741,12 +746,12 @@ def chooseInstMenu():
         print("Please choose the instrument you want to use:")
         print("Write the name of the instrument to select it")
         print("Write the name of a pack to list all instruments in it")
-        print("Ii - Show all isntruments")
+        print("Ii - Show all instruments")
         print("Pp - Show all packs")
         inp = usrinp()
         if inp in "Ii":
             printInsts(filezart.getInfo())
-        if inp in "Pp":
+        elif inp in "Pp":
             printPacks()
         else:
             try:
@@ -760,13 +765,27 @@ def chooseInstMenu():
                         break
             except:
                 try:
+                    print(inp)
                     pack = filezart.getPack(inp)
-                    printInsts(insts)
+                    printInsts(pack)
                 except:
                     print("No pack or instrument found:", inp)
                     
 def printInsts(insts):
+    print("Selected instruments:")
+    for inst in insts:
+        notes = musictheory.listNotes(inst)
+        bot = min(notes)
+        top = max(notes)
+        print(inst._name)
+        print(inst._type)
+        print(bot, "-", top)
+        print()
     return
+
+def printPacks():
+    for i in filezart.getPacks():
+        print(i + " "+" "*(14-len(i))+str(len(filezart.getPack(i))))
     
         
 
