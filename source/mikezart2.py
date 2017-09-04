@@ -91,6 +91,65 @@ def palFromInsts(cinsts, sminsts, lminsts, pinsts, ginsts, name=None):
             
     return palett
 
+def palFromInstsAndMimics(cinsts, sminsts, lminsts, pinsts, ginsts, miminsts, name=None):
+    if name == None:
+        name = naming.name()
+    scale = musictheory.scale7()
+    progsize = rselect((2,3,4,5,6))
+    progcount = rselect((1,2,3,4,5))
+    csize = wselect({2:5, 3:10, 4:20, 5:10, 6:5})
+    bpm = wselect({80:5, 100:10, 120:20, 140:10, 160:5, 180:5})
+    print("making",name)
+    palett = musictheory.palette(scale, progsize, progcount, csize)
+    palett._bpm = bpm
+    palett.autoProgs()
+    themes = (palett._n1, palett._n2, palett._bg, palett._ch, palett._ge)
+    for inst in cinsts:
+        for them in themes:
+            centre = rselect(musictheory.listNotes(inst))
+            ncount = wselect(musictheory.chordicCWeights())
+            them.addVoice(inst, centre, "chordic", ncount)  
+    for inst in sminsts:
+        for them in themes:
+            centre = rselect(musictheory.listNotes(inst))
+            ncount = wselect(musictheory.smelodicCWeights())
+            them.addVoice(inst, centre, "smelodic", ncount)
+    for inst in lminsts:
+        for them in themes:
+            centre = rselect(musictheory.listNotes(inst))
+            ncount = wselect(musictheory.lmelodicCWeights())
+            them.addVoice(inst, centre, "lmelodic", ncount)
+    for inst in pinsts:
+        for them in themes:
+            centre = rselect(musictheory.listNotes(inst))
+            ncount = wselect(musictheory.percussionCWeights())
+            them.addVoice(inst, centre, "percussion", ncount)
+    for inst in ginsts:
+        for them in themes:
+            centre = rselect(musictheory.listNotes(inst))
+            ncount = wselect(musictheory.genericCWeights())
+            them.addVoice(inst, centre, "generic", ncount)    
+    for inst in miminsts:
+        for them in themes:
+            toCopy = rselect(them._voices["chordic"] + them._voices["smelodic"])
+            centre = rselect(musictheory.listNotes(inst))
+            ncount = wselect(musictheory.chordicCWeights())
+            voic = musictheory.voice(inst, centre, scale, "chordic", 0, 0)
+            try:
+                voic.mimic(toCopy)
+                them.addVoiceAsIs(voic)                  
+            except:
+                print("could not mimic!")
+    for t in themes:
+        t.shuffleSort()
+            
+    filezart.makeFolder("../exports/song_" + name)
+    palett.infoToFolder(bpm, "../exports/song_" + name)
+
+    print("done with", name)
+            
+    return palett    
+
 def testInst(name):
     inst = filezart.getInstrument(name)
     scale = musictheory.scale7()
@@ -133,6 +192,15 @@ def rocktest(name):
     ginsts = (rselect((ins("Piano_original"), ins("Short_Guitar_3_M"))),)
     return palFromInsts(cinsts, sminsts, lminsts, pinsts, ginsts, name)
 
+def mimirocktest(name):
+    cinsts = (rselect((ins("Bass"), ins("Soft_Bass_M"), ins("Snap_Bass_M"))), rselect((ins("Acoustic_Guitar"), ins("Electric_Guitar"), ins("Long_Guitar_2_M"))))
+    pinsts =  (rselect(ipack("drumkit")), rselect(ipack("drumkit")), rselect(ipack("drumkit")), rselect(ipack("drumkit")), rselect(ipack("drumkit")))
+    lminsts = ()
+    sminsts = (rselect((ins("Long_Guitar_3_M"), ins("Short_Guitar_3_M"), ins("Long_Guitar_2_M"))),)
+    ginsts = (rselect((ins("Piano_original"), ins("Short_Guitar_3_M"))),)
+    miminsts = (rselect((ins("Piano_original"), ins("Short_Guitar_3_M"))),)
+    return palFromInstsAndMimics(cinsts, sminsts, lminsts, pinsts, ginsts, miminsts, name)    
+
 def mtest():
     inst = rselect(ipack("churchpiano"))
     scale = musictheory.scale7()
@@ -171,7 +239,7 @@ def ipack(name):
 
 def ttest():
     name = naming.name()
-    pal = rocktest(name)
+    pal = mimirocktest(name)
     struct = markovzart2.makeStruct()
     print(struct)
     print(struct.baseDur(pal, pal._bpm))
