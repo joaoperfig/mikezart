@@ -349,23 +349,23 @@ def chooseThemeEditMenu(pal):
             return
         elif inp == "n1":
             if pal._n1 != None:
-                themeEdit(pal._n1, "Editing Verses type 1")
+                themeEdit(pal._n1, pal, "Editing Verses type 1")
                 return
         elif inp == "n2":
             if pal._n2 != None:
-                themeEdit(pal._n2, "Editing Verses type 2")
+                themeEdit(pal._n2, pal, "Editing Verses type 2")
                 return
         elif inp == "ch":
             if pal._ch != None:
-                themeEdit(pal._ch, "Editing Chorus")
+                themeEdit(pal._ch, pal, "Editing Chorus")
                 return
         elif inp == "ge":
             if pal._ge != None:
-                themeEdit(pal._ge, "Editing General lines")
+                themeEdit(pal._ge, pal, "Editing General lines")
                 return
         elif inp == "bg":
             if pal._bg != None:
-                themeEdit(pal._ge, "Editing Bridge")
+                themeEdit(pal._ge, pal, "Editing Bridge")
                 return
             
 def dispPropMenu(pal, name):
@@ -547,7 +547,10 @@ def makeProgMenu(pal): # Request progression generation, returns None if failed
         elif inp in "Ii":
             scaleInfo(pal._scale)
         elif inp in "Ff":
-            return prog
+            if "<UNDEFINED>" in prog:
+                print("Cannot use a progression with undefined chords!")
+            else:
+                return prog
         elif inp in "Qq":
             return None
         
@@ -662,16 +665,38 @@ def chordMenu(scale): # Request chord3 generation, return None if failed
                         return chord
                     elif inp2 in "Nn":
                         break
-    
-        
-def themeEdit(theme, introSentence="Editing undefined Theme"):
+
+
+def themeEdit(theme, pal, introSentence="Editing undefined Theme"):
     while True:
         print(introSentence)
+        print("Chordic Voices:", len(theme._voices["chordic"]))
+        print("Small Melodic Voices:", len(theme._voices["smelodic"]))
+        print("Large Melodic Voices:", len(theme._voices["lmelodic"]))
+        print("Percussion Voices:", len(theme._voices["percussion"]))
+        print("Generic Voices:", len(theme._voices["generic"]))
         print("Vv - Create a Voice") #UNDEFINED 
         print("Ee - Edit a Voice") #UNDEFINED 
         print("Aa - Preview Audio") #UNDEFINED 
         print("Dd - Display Theme Properties") #UNDEFINED 
         print("Ii - Scale Info") #UNDEFINED
-        
-            
+        inp =  usrinp()
+        if inp in "Vv":
+            typ = requestTypeMenu(theme)
+        elif inp in "Ee":
+            typ = requestTypeMenu(theme)
+            if typ == None:
+                print("Returning")
+            elif len(them._voices[typ]) == 0:
+                print("You have not created Voices Here!")
+            else:
+                print("Please input an ID in range [0-"+str(len(them._voices[typ])-1)+"]")
+                vid = idMenu()
+                if vid >= len(them._voices[typ]):
+                    print("ID out of range")
+                else:
+                    editVoicMenu(them._voices[typ][vid])
+
+
+
 mainMenu()
