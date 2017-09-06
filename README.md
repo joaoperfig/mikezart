@@ -24,7 +24,8 @@ Mikezario is a tool for lazy musicians
 - [x] add theme line sorting
 - [x] pallette and struct joiner 
 - [ ] randomize pan and vol on mikezart2
-- [ ] random source instruments
+- [x] random source percussion instruments
+- [ ] random source modulation instruments
 - [ ] first note probability
 - [ ] mikezario show chord ids
 - [ ] mikezario choose chords by ids
