@@ -602,7 +602,7 @@ def chordMenu(scale): # Request chord3 generation, return None if failed
         print("Input list of 3 notes, separated by spaces")
         print("Input first note in chord")
         print("Rr - Generate")
-        print("Aa - Generate with restraints")
+        print("Aa - Generate With Restraints")
         print("Ii - Scale Info")
         print("Qq - Quit")
         inp = usrinp()
@@ -691,12 +691,23 @@ def themeEdit(theme, pal, introSentence="Editing undefined Theme"): # Edit an ex
                 print("Returning")
             else:
                 inst = chooseInstMenu() 
-                centre = chooseCentreMenu(musictheory.listNotes(inst)) ####
+                centre = chooseCentreMenu(musictheory.listNotes(inst))
                 mtype = typ
                 print("Creating Voice")
                 print("...")
                 voic = musictheory.voice(inst, centre, them._scale, mtype)
-                print("Your Voice", voic, "was created, are you sure you want to add it?")
+                print("Your Voice,", voic, ", was created, are you sure you want to add it? Yy Nn")
+                while True:
+                    inp = usrinp()
+                    if inp in "Yy":
+                        print("Adding voice")
+                        theme.addVoiceAsIs(voic)
+                        print("Voice Added")
+                        print("Last Voice in its category")
+                        print("Last Voice in sorting")
+                        break
+                    elif inp in "Nn":
+                        break
         elif inp in "Ee":
             print("Choose the type and ID of the voice you are going to open")
             typ = requestTypeMenu()
@@ -746,8 +757,8 @@ def chooseInstMenu():
         print("Please choose the instrument you want to use:")
         print("Write the name of the instrument to select it")
         print("Write the name of a pack to list all instruments in it")
-        print("Ii - Show all instruments")
-        print("Pp - Show all packs")
+        print("Ii - Show All Instruments")
+        print("Pp - Show All Packs")
         inp = usrinp()
         if inp in "Ii":
             printInsts(filezart.getInfo())
@@ -786,8 +797,44 @@ def printInsts(insts):
 def printPacks():
     for i in filezart.getPacks():
         print(i + " "+" "*(14-len(i))+str(len(filezart.getPack(i))))
-    
         
+def chooseCentreMenu(notes):
+    bot = min(notes)
+    top = max(notes)
+    while True:
+        print("Please choose the central note of your Voice")
+        print("If this is a percussion instrument you can choose any note")
+        print("Highest Note:", top)
+        print("Lowest Note:", bot)
+        print("Write the note you want")
+        print("Ss - Show All Notes")
+        print("Mm - Select Middle Note")
+        print("Rr - Select Random Note")
+        inp = usrinp()
+        if inp in "Ss":
+            for note in notes:
+                print(note)
+            selected = None
+        elif inp in "Mm":
+            selected = notes[len(notes)//2]            
+        elif inp in "Rr":
+            selected = rselect(notes)
+        else:
+            try:
+                selected = mnote.fromName(inp)
+            except:
+                selected = None
+                print("Invalid note: "+inp)
+        if selected != None:
+            while True:
+                print("Your Note:",selected)
+                print("Use this? Yy Nn")
+                inp = usrinp()
+                if inp in "Yy":
+                    return selected
+                if inp in "Nn":
+                    break
+
 
 
 mainMenu()
