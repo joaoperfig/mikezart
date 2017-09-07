@@ -878,19 +878,25 @@ class theme:
         return sound                
         
     def infoToFolder(self, bpm, folder): # Exports various information about this theme to a folder
-        filezart.makeTextFile(folder + "/prog.txt", str(self._cprog))
-        filezart.makeTextFile(folder + "/sorting.txt", self.sortingString())
-        (self.previewAudio(bpm)).export(folder + "/preview.mp3", format = "mp3")
+        try:
+            filezart.makeTextFile(folder + "/prog.txt", str(self._cprog))
+            filezart.makeTextFile(folder + "/sorting.txt", self.sortingString())
+            (self.previewAudio(bpm)).export(folder + "/preview.mp3", format = "mp3")
+        except:
+            print("Could not fully export theme")
         
         for mtype in list(self._voices):
             thisfolder = folder + "/" + mtype
             filezart.makeFolder(thisfolder)
             for i in range(len(self._voices[mtype])):
-                vfolder = thisfolder+ "/" + str(i)
-                voic = self._voices[mtype][i]
-                filezart.makeFolder(vfolder)
-                filezart.makeTextFile(vfolder + "/tab.txt", voic.toTab())
-                (voic._progs[0].getAudio(voic._inst, bpm)).export(vfolder + "/preview.mp3", format = "mp3")
+                try:
+                    vfolder = thisfolder+ "/" + str(i)
+                    voic = self._voices[mtype][i]
+                    filezart.makeFolder(vfolder)
+                    filezart.makeTextFile(vfolder + "/tab.txt", voic.toTab())
+                    (voic._progs[0].getAudio(voic._inst, bpm)).export(vfolder + "/preview.mp3", format = "mp3")
+                except:
+                    print("Could not fully export voice")
                 
     def sortingString(self):
         string = ""
