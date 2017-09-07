@@ -28,10 +28,11 @@ def usrinp(acceptEmpty = False):
             inp = input(">")
         except:
             raise ValueError("Terminated by user!")
-        print("")
         if acceptEmpty == True:
+            print("")
             return inp
         elif inp != "":
+            print("")
             return inp
 
 def mainMenu():
@@ -437,23 +438,83 @@ def createThemeMenu(pal, cprogN1, cprogN2, cprogCH):
         elif inp == "n1":
             if cprogN1 != None:
                 print("Creating Verses 1 Theme")
-                pal._n1 = musictheory.theme(pal._scale, cprogN1, pal._progcount, pal._csize)
+                if pal._n1 != None:
+                    print("This theme already exists, are you sure you want to override? Yy Nn")
+                    while True:
+                        inp = usrinp()
+                        if inp in "Yy":
+                            print("Overriding")
+                            pal._n1 = musictheory.theme(pal._scale, cprogN1, pal._progcount, pal._csize)
+                            break
+                        elif inp in "Nn":
+                            print("Canceling")
+                            break
+                else:
+                    pal._n1 = musictheory.theme(pal._scale, cprogN1, pal._progcount, pal._csize)
         elif inp == "ge":
             if cprogN1 != None:
                 print("Creating General Theme")
-                pal._ge = musictheory.theme(pal._scale, cprogN1, pal._progcount, pal._csize)
+                if pal._ge != None:
+                    print("This theme already exists, are you sure you want to override? Yy Nn")
+                    while True:
+                        inp = usrinp()
+                        if inp in "Yy":
+                            print("Overriding")
+                            pal._ge = musictheory.theme(pal._scale, cprogN1, pal._progcount, pal._csize)
+                            break
+                        elif inp in "Nn":
+                            print("Canceling")
+                            break
+                else:
+                    pal._ge = musictheory.theme(pal._scale, cprogN1, pal._progcount, pal._csize)
         elif inp == "n2":
             if cprogN2 != None:
                 print("Creating Verses 2 Theme")
-                pal._n2 = musictheory.theme(pal._scale, cprogN2, pal._progcount, pal._csize)
+                if pal._n2 != None:
+                    print("This theme already exists, are you sure you want to override? Yy Nn")
+                    while True:
+                        inp = usrinp()
+                        if inp in "Yy":
+                            print("Overriding")
+                            pal._n2 = musictheory.theme(pal._scale, cprogN2, pal._progcount, pal._csize)
+                            break
+                        elif inp in "Nn":
+                            print("Canceling")
+                            break
+                else:
+                    pal._n2 = musictheory.theme(pal._scale, cprogN2, pal._progcount, pal._csize)
         elif inp == "bg":
             if cprogCH != None:
                 print("Creating Bridge Theme")
-                pal._bg = musictheory.theme(pal._scale, cprogCH, pal._progcount, pal._csize)
+                if pal._bg != None:
+                    print("This theme already exists, are you sure you want to override? Yy Nn")
+                    while True:
+                        inp = usrinp()
+                        if inp in "Yy":
+                            print("Overriding")
+                            pal._bg = musictheory.theme(pal._scale, cprogCH, pal._progcount, pal._csize)
+                            break
+                        elif inp in "Nn":
+                            print("Canceling")
+                            break
+                else:
+                    pal._bg = musictheory.theme(pal._scale, cprogCH, pal._progcount, pal._csize)
         elif inp == "ch":
             if cprogCH != None:
                 print("Creating Chorus Theme")
-                pal._ch = musictheory.theme(pal._scale, cprogCH, pal._progcount, pal._csize)
+                if pal._ch != None:
+                    print("This theme already exists, are you sure you want to override? Yy Nn")
+                    while True:
+                        inp = usrinp()
+                        if inp in "Yy":
+                            print("Overriding")
+                            pal._ch = musictheory.theme(pal._scale, cprogCH, pal._progcount, pal._csize)
+                            break
+                        elif inp in "Nn":
+                            print("Canceling")
+                            break
+                else:
+                    pal._ch = musictheory.theme(pal._scale, cprogCH, pal._progcount, pal._csize)
     
 def cprogMenu(pal, cprogN1, cprogN2, cprogCH): # Edit progressions for palette, returns (id, prog) or False if failed
     while True:
@@ -680,9 +741,11 @@ def themeEdit(theme, pal, introSentence="Editing undefined Theme"): # Edit an ex
         print("Generic Voices:", len(theme._voices["generic"]))
         print("Vv - Create a Voice")
         print("Ee - Edit a Voice")
+        print("Ss - Edit Voice Sorting") #UNDEFINED
         print("Aa - Preview Audio") #UNDEFINED 
         print("Dd - Display Theme Properties") #UNDEFINED 
         print("Ii - Scale Info") #UNDEFINED
+        print("Qq - Quit")
         inp =  usrinp()
         if inp in "Vv":
             print("Choose the type of the voice you are going to create:")
@@ -695,7 +758,7 @@ def themeEdit(theme, pal, introSentence="Editing undefined Theme"): # Edit an ex
                 mtype = typ
                 print("Creating Voice")
                 print("...")
-                voic = musictheory.voice(inst, centre, them._scale, mtype)
+                voic = musictheory.voice(inst, centre, theme._scale, mtype)
                 print("Your Voice,", voic, ", was created, are you sure you want to add it? Yy Nn")
                 while True:
                     inp = usrinp()
@@ -713,15 +776,17 @@ def themeEdit(theme, pal, introSentence="Editing undefined Theme"): # Edit an ex
             typ = requestTypeMenu()
             if typ == None:
                 print("Returning")
-            elif len(them._voices[typ]) == 0:
+            elif len(theme._voices[typ]) == 0:
                 print("You have not created Voices Here!")
             else:
-                print("Please input an ID in range [0-"+str(len(them._voices[typ])-1)+"]")
+                print("Please input an ID in range [0-"+str(len(theme._voices[typ])-1)+"]")
                 vid = idMenu()
-                if vid >= len(them._voices[typ]):
+                if vid >= len(theme._voices[typ]):
                     print("ID out of range")
                 else:
-                    editVoiceMenu(them._voices[typ][vid]) #####
+                    editVoiceMenu(theme._voices[typ][vid], theme, pal)
+        elif inp in "Qq":
+            return
 
 def requestTypeMenu(): # Request mtype for voice creation or selection, returns None if canceled
     print("Requesting Voice Type")
@@ -835,6 +900,23 @@ def chooseCentreMenu(notes):
                 if inp in "Nn":
                     break
 
+def editVoiceMenu(voice, theme, pal):
+    while True:
+        print("Gg - Full Auto-Generation") #UNDEFINED 
+        print("Mm - Mimic") #UNDEFINED 
+        print("Ee - Add/Edit Notes/MMovs") #UNDEFINED 
+        print("Aa - Apply Notes to MMovs") #UNDEFINED 
+        print("Tt - Tab") #UNDEFINED 
+        print("Pp - Preview Voice") #UNDEFINED 
+        print("Cc - Preview in Context") #UNDEFINED 
+        print("Qq - Quit")
+        inp = usrinp()
+        
+        if inp in "Gg":
+            autoGen(voice) ####
+        
+        elif inp in "Qq":
+            reuturn
 
 
 mainMenu()
