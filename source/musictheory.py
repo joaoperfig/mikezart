@@ -819,20 +819,31 @@ class palette:
         filezart.pickleObject(folder + "/pickle.pi", self)
         filezart.makeTextFile(folder + "/scale.txt", str(self._scale))
         
-        filezart.makeFolder(folder + "/n1")
-        self._n1.infoToFolder(bpm, folder + "/n1")
-        
-        filezart.makeFolder(folder + "/n2")
-        self._n2.infoToFolder(bpm, folder + "/n2")   
-        
-        filezart.makeFolder(folder + "/bg")
-        self._bg.infoToFolder(bpm, folder + "/bg")      
-        
-        filezart.makeFolder(folder + "/ch")
-        self._ch.infoToFolder(bpm, folder + "/ch")        
-        
-        filezart.makeFolder(folder + "/ge")
-        self._ge.infoToFolder(bpm, folder + "/ge")            
+        try:
+            filezart.makeFolder(folder + "/n1")
+            self._n1.infoToFolder(bpm, folder + "/n1")
+        except:
+            print("Could not create info of theme n1, palette is saved anyway")
+        try:
+            filezart.makeFolder(folder + "/n2")
+            self._n2.infoToFolder(bpm, folder + "/n2")   
+        except:
+            print("Could not create info of theme n2, palette is saved anyway")
+        try:
+            filezart.makeFolder(folder + "/bg")
+            self._bg.infoToFolder(bpm, folder + "/bg")     
+        except:        
+            print("Could not create info of theme bg, palette is saved anyway")
+        try:
+            filezart.makeFolder(folder + "/ch")
+            self._ch.infoToFolder(bpm, folder + "/ch")        
+        except:
+            print("Could not create info of theme ch, palette is saved anyway")
+        try:
+            filezart.makeFolder(folder + "/ge")
+            self._ge.infoToFolder(bpm, folder + "/ge")            
+        except:
+            print("Could not create info of theme ge, palette is saved anyway")
         
         
         
