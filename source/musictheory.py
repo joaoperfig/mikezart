@@ -164,6 +164,26 @@ class mmov:
     def __repr__(self):
         return self._symbol
     
+    @classmethod
+    def fromName(cls, name):                                                    # can create as mmov.fromName(movNameString)
+        if len(name) != 2:
+            raise ValueError(name+ " is not a valid MMov name")
+        if name[0] in "Tt":
+            ctype = "chordic"
+        elif name[0] in "Ss":
+            ctype = "general"
+        else:
+            raise ValueError(name+ " is not a valid MMov name")
+        if name[1] in "Uu":
+            utype = "rise"
+        elif name[1] in "Vv":
+            utype = "lower"
+        elif name[1] in "Rr":
+            utype = "repeat"
+        else:
+            raise ValueError(name+ " is not a valid MMov name")
+        return cls(ctype, utype)
+    
     def select(self, previous, weights, chord):                                 # returns note to replace this mmov, needs weights of possible notes, last note played, and current chord
         # If there is no previous, select random note from weights or chordic notes
         if(previous == None):
