@@ -779,6 +779,11 @@ def themeEdit(theme, pal, introSentence="Editing undefined Theme"): # Edit an ex
             elif len(theme._voices[typ]) == 0:
                 print("You have not created Voices Here!")
             else:
+                print("You have", len(theme._voices[typ]), "created voices")
+                counter = 0
+                for voic in theme._voices[typ]:
+                    print(counter, "->", voic)
+                    couter = counter+1
                 print("Please input an ID in range [0-"+str(len(theme._voices[typ])-1)+"]")
                 vid = idMenu()
                 if vid >= len(theme._voices[typ]):
@@ -902,21 +907,43 @@ def chooseCentreMenu(notes):
 
 def editVoiceMenu(voice, theme, pal):
     while True:
-        print("Gg - Full Auto-Generation") #UNDEFINED 
+        print("Editing",voice)
+        print("Rr - Full Auto-Generation") 
+        print("Gg - Custom Auto-Generation") #UNDEFINED
         print("Mm - Mimic") #UNDEFINED 
         print("Ee - Add/Edit Notes/MMovs") #UNDEFINED 
         print("Aa - Apply Notes to MMovs") #UNDEFINED 
+        print("Ii - Show Info") #UNDEFINED
+        print("Vv - Change Volume") #UNDEFINED
+        print("Pp - Change Pan") #UNDEFINED
         print("Tt - Tab") #UNDEFINED 
         print("Pp - Preview Voice") #UNDEFINED 
         print("Cc - Preview in Context") #UNDEFINED 
         print("Qq - Quit")
         inp = usrinp()
         
-        if inp in "Gg":
-            autoGen(voice) ####
+        if inp in "Rr":
+            autoGen(voice, theme, pal)
+        
+        elif inp in "Tt":
+            print(voice.toTab())
         
         elif inp in "Qq":
-            reuturn
+            return
 
+
+def autoGen(voice, theme, pal):
+    typ = voice._mtype
+    if typ == "chordic":
+        ncount = wselect(musictheory.chordicCWeights())
+    elif typ == "percussion":
+        ncount = wselect(musictheory.percussionCWeights())
+    elif typ == "smelodic":
+        ncount = wselect(musictheory.smelodicCWeights())
+    elif typ == "lmelodic":
+        ncount = wselect(musictheory.lmelodicCWeights())
+    elif typ == "generic":
+        ncount = wselect(musictheory.genericCWeights())
+    voice.autoProg(theme._cprog, theme._progc, theme._csize, ncount, None, None)
 
 mainMenu()
