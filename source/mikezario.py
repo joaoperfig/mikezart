@@ -243,6 +243,7 @@ def paletteEdit(pal, name): # Main palette edition thing, can enter theme or pro
     if pal._bg != None:
         cprogCH = pal._bg._cprog
     while True:
+        print("Editing palette: "+name)
         try:
             bpm = pal._bpm
         except:
@@ -759,6 +760,7 @@ def themeEdit(theme, pal, introSentence="Editing undefined Theme"): # Edit an ex
                 print("Creating Voice")
                 print("...")
                 voic = musictheory.voice(inst, centre, theme._scale, mtype)
+                voic.autoProg(theme._cprog, theme._progc, theme._csize, 0, None, None)
                 print("Your Voice,", voic, ", was created, are you sure you want to add it? Yy Nn")
                 while True:
                     inp = usrinp()
@@ -916,7 +918,7 @@ def editVoiceMenu(voice, theme, pal):
         print("Ii - Show Info") #UNDEFINED
         print("Vv - Change Volume") #UNDEFINED
         print("Pp - Change Pan") #UNDEFINED
-        print("Tt - Tab") #UNDEFINED 
+        print("Tt - Tab")
         print("Pp - Preview Voice") #UNDEFINED 
         print("Cc - Preview in Context") #UNDEFINED 
         print("Qq - Quit")
@@ -924,9 +926,12 @@ def editVoiceMenu(voice, theme, pal):
         
         if inp in "Rr":
             autoGen(voice, theme, pal)
+            
+        elif inp in "Gg":
+            customGen(voice, theme, pal)
         
         elif inp in "Tt":
-            print(voice.toTab())
+            print(voice.toTab()+"\n")
         
         elif inp in "Qq":
             return
@@ -945,5 +950,8 @@ def autoGen(voice, theme, pal):
     elif typ == "generic":
         ncount = wselect(musictheory.genericCWeights())
     voice.autoProg(theme._cprog, theme._progc, theme._csize, ncount, None, None)
+
+def customGen(voice, theme, pal):
+    return #UNDEFINED
 
 mainMenu()
