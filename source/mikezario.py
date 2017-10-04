@@ -4,6 +4,8 @@ import random
 import operator
 import pianoprinter
 import filezart
+from pydub.playback import play
+from musictheory import sidePlay
 
 # rselect RandomSelect returns random element of list
 def rselect(lista):
@@ -99,7 +101,14 @@ def bpmMenu():
                 break
             elif inp in "Pp":
                 previewbpm(bpm)
-
+                
+def previewbpm(bpm):
+    c = musictheory.chunk(5)
+    ins = filezart.getInstrument("Drum_Snare")
+    for i in c.wholes():
+        c.add(i, mnote.fromName("C0"))
+    sidePlay(c.getAudio(ins, bpm))
+    
 def csizeMenu():
     while True:
         print("Please input the number of beats in a chunk for this Palette (write G or g for random):")
@@ -118,6 +127,9 @@ def csizeMenu():
             elif inp in "Pp":
                 previewcs(cs)
                 
+def previewcs(cs):
+    print("No preview available for beat count.")
+                
 def psizeMenu():
     while True:
         print("Please input the number of chunks in a progression for this Palette (write G or g for random):")
@@ -135,6 +147,9 @@ def psizeMenu():
                 break
             elif inp in "Pp":
                 previewps(ps)
+                
+def previewps(ps):
+    print("No preview available for progression size.")
     
 def progcMenu():
     while True:
@@ -153,6 +168,9 @@ def progcMenu():
                 break
             elif inp in "Pp":
                 previewpc(pc)
+                
+def previewpc(pc):
+    print("No preview available for voice size.")
     
 def scaleInfo(scale):
     print ("Your scale: "+str(scale)[2:-2])
@@ -186,6 +204,9 @@ def scaleMenu():
                 break
             elif inp in "Pp":
                 previewscale(scale)
+                
+def previewscale(scale):
+    sidePlay(scale.sample())
             
 def paletteMenu():
     while True:
@@ -398,8 +419,6 @@ def dispPropMenu(pal, name):
         print ("General")
     print()
     return
-    
-    
             
 def createThemeMenu(pal, cprogN1, cprogN2, cprogCH):
     if (cprogN1 == None and cprogN2==None and cprogCH==None):
@@ -618,6 +637,16 @@ def makeProgMenu(pal): # Request progression generation, returns None if failed
                 return prog
         elif inp in "Qq":
             return None
+        
+def previewProg(prog):
+    audiolen = (1000*len(prog))+3000
+    audio = AudioSegment.silent(audiolen)
+    for i in range(len(prog)):
+        try:
+            audio = audio.overlay(prog[i].sampleAudio(), i*1000)
+        except:
+            print("Error: non chord in progression!")
+    sidePlay(audio)
         
 def customWeightMenu(lista): # Create custom weight set for lista, return None if failed
     print("Entering wheight set creation for", lista)
