@@ -8,6 +8,8 @@ import filezart
 import copy
 import math
 from filezart import instrument
+#from multiprocessing import Pool
+import threading
 
 def notenames():
     return ("C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B")
@@ -333,7 +335,7 @@ class scale7:
             prog = prog + (ch,)
         return prog
     
-    def sample(self, inst = filezart.getInfo()[2]):
+    def sample(self, inst = filezart.getInstrument("Piano_original")):
         total = (500 * 7) + 3000
         notes = listNotes(inst)
         mednote = notes[len(notes)//2]
@@ -345,7 +347,6 @@ class scale7:
             noteaudio = newn.getAudio(inst, 60)
             audio = audio.overlay(noteaudio, t)
             t= t+500
-        play(audio)
         return audio        
         
     
@@ -439,7 +440,7 @@ class chord3:
             self._happ = "weird"
         return
     
-    def sampleAudio(self, inst):
+    def sampleAudio(self, inst = filezart.getInstrument("Piano_original")):
         notes = listNotes(inst)
         mednote = notes[len(notes)//2]
         medoct = mednote._octave
@@ -1132,6 +1133,12 @@ def getNote(instrument, note):
         raise ValueError(instrument._nclt + " is not a valid nomenclatureType!")    
     
     return instrument.getAudio(final)
+
+# Side Play plays audio on parallel process
+def sidePlay(audio):
+    threading.Thread(target=play, args=(audio,)).start()
+    #pool = Pool()
+    #pool.apply_async(play, (audio,))  
 
 # Modulate Audio, returns audio of audionote sped up or slowed down to be objetive note
 def modulateAudio(audio, audionote, objective):
