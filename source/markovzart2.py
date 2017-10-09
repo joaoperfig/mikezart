@@ -64,8 +64,14 @@ class Part:
         base = self.baseDur(pal, bpm)
         total = base + 3000 #extra time for last note to play
         nvoic = math.ceil(self._intensity * self.getTheme(pal).countVoices())
-        ngeno = math.ceil(self._genover * pal._ge.countVoices())
-        nchoo = math.ceil(self._chover * pal._ch.countVoices())
+        try:
+            ngeno = math.ceil(self._genover * pal._ge.countVoices())
+        except:
+            ngeno = 0
+        try:
+            nchoo = math.ceil(self._chover * pal._ch.countVoices())
+        except:
+            nchoo = 0
         
         sound = AudioSegment.silent(total)
         them = self.getTheme(pal)
