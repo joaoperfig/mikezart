@@ -6,6 +6,7 @@ import pianoprinter
 import filezart
 from pydub.playback import play
 from musictheory import sidePlay
+import markovzart2
 
 # rselect RandomSelect returns random element of list
 def rselect(lista):
@@ -375,23 +376,23 @@ def chooseThemeEditMenu(pal):
             return
         elif inp == "n1":
             if pal._n1 != None:
-                themeEdit(pal._n1, pal, "Editing Verses type 1")
+                themeEdit(pal._n1, pal, "Editing Verses type 1", "n1")
                 return
         elif inp == "n2":
             if pal._n2 != None:
-                themeEdit(pal._n2, pal, "Editing Verses type 2")
+                themeEdit(pal._n2, pal, "Editing Verses type 2", "n2")
                 return
         elif inp == "ch":
             if pal._ch != None:
-                themeEdit(pal._ch, pal, "Editing Chorus")
+                themeEdit(pal._ch, pal, "Editing Chorus", "ch")
                 return
         elif inp == "ge":
             if pal._ge != None:
-                themeEdit(pal._ge, pal, "Editing General lines")
+                themeEdit(pal._ge, pal, "Editing General lines", "ge")
                 return
         elif inp == "bg":
             if pal._bg != None:
-                themeEdit(pal._ge, pal, "Editing Bridge")
+                themeEdit(pal._ge, pal, "Editing Bridge", "bg")
                 return
             
 def dispPropMenu(pal, name):
@@ -408,15 +409,15 @@ def dispPropMenu(pal, name):
     print("Scale:", pal._scale)
     print ("Created Themes:")
     if pal._n1 != None:
-        print ("Verses 1")
+        print ("    Verses 1")
     if pal._n2 != None:
-        print ("Verses 2")
+        print ("    Verses 2")
     if pal._ch != None:
-        print ("Chorus")
+        print ("    Chorus")
     if pal._bg != None:
-        print ("Bridge")
+        print ("    Bridge")
     if pal._ge != None:
-        print ("General")
+        print ("    General")
     print()
     return
             
@@ -555,19 +556,19 @@ def cprogMenu(pal, cprogN1, cprogN2, cprogCH): # Edit progressions for palette, 
         print ("Qq - Quit")
         inp = usrinp()
         if inp == "n1":
-            prog = makeProgMenu(pal)
+            prog = makeProgMenu(pal, cprogN1)
             if prog == None:
                 prog = False
             else:
                 return ("n1", prog)
         elif inp == "n2":
-            prog = makeProgMenu(pal)
+            prog = makeProgMenu(pal, cprogN2)
             if prog == None:
                 prog = False
             else:
                 return ("n2", prog)   
         elif inp == "ch":
-            prog = makeProgMenu(pal)
+            prog = makeProgMenu(pal, cprogCH)
             if prog == None:
                 prog = False
             else:
@@ -578,11 +579,12 @@ def cprogMenu(pal, cprogN1, cprogN2, cprogCH): # Edit progressions for palette, 
             return False
         
         
-def makeProgMenu(pal): # Request progression generation, returns None if failed
+def makeProgMenu(pal, prog): # Request progression generation, returns None if failed
     progsize = pal._progsize
-    prog = [] # list of chord3
-    for i in range(progsize):
-        prog = prog + ["<UNDEFINED>"]
+    if prog == None:
+        prog = [] # list of chord3
+        for i in range(progsize):
+            prog = prog + ["<UNDEFINED>"]
     while True:
         string = ""
         for chord in prog:
@@ -693,7 +695,7 @@ def chordMenu(scale): # Request chord3 generation, return None if failed
         print("Input list of 3 notes, separated by spaces")
         print("Input first note in chord")
         print("Rr - Generate")
-        print("Aa - Generate With Restraints")
+        print("Tt - Generate With Restraints")
         print("Ii - Scale Info")
         print("Qq - Quit")
         inp = usrinp()
@@ -707,7 +709,7 @@ def chordMenu(scale): # Request chord3 generation, return None if failed
                     return chord
                 elif inp2 in "Nn":
                     break
-        elif inp in "Aa":
+        elif inp in "Tt":
             print("Input restraint 1 (leave empty for NONE)")
             res1 = usrinp(True)
             if res1 == "":
@@ -719,12 +721,14 @@ def chordMenu(scale): # Request chord3 generation, return None if failed
             chord = rselect(scale.getChords(res1, res2))
             pianoprinter.octoPrint(chord._types)
             while True:
-                print(str(chord)+", accept? Yy Nn")
+                print(str(chord)+", accept? Yy Nn (Pp-Preview)")
                 inp2 = usrinp()
                 if inp2 in "Yy":
                     return chord
                 elif inp2 in "Nn":
                     break
+                elif inp2 in "Pp":
+                    previewChord(chord)
         elif inp in "Ii":
             scaleInfo(scale)
         elif inp in "Qq":
@@ -760,8 +764,10 @@ def chordMenu(scale): # Request chord3 generation, return None if failed
                     elif inp2 in "Nn":
                         break
 
+def previewChord(chord):
+    sidePlay(chord.sampleAudio())
 
-def themeEdit(theme, pal, introSentence="Editing undefined Theme"): # Edit an existing theme
+def themeEdit(theme, pal, introSentence="Editing undefined Theme", tag=None): # Edit an existing theme
     while True:
         print(introSentence)
         print("Chordic Voices:", len(theme._voices["chordic"]))
@@ -772,7 +778,7 @@ def themeEdit(theme, pal, introSentence="Editing undefined Theme"): # Edit an ex
         print("Vv - Create a Voice")
         print("Ee - Edit a Voice")
         print("Ss - Edit Voice Sorting") #UNDEFINED
-        print("Aa - Preview Audio") #UNDEFINED 
+        print("Aa - Preview Audio")
         print("Dd - Display Theme Properties") #UNDEFINED 
         print("Ii - Scale Info") #UNDEFINED
         print("Qq - Quit")
@@ -814,15 +820,35 @@ def themeEdit(theme, pal, introSentence="Editing undefined Theme"): # Edit an ex
                 counter = 0
                 for voic in theme._voices[typ]:
                     print(counter, "->", voic)
-                    couter = counter+1
+                    counter = counter+1
                 print("Please input an ID in range [0-"+str(len(theme._voices[typ])-1)+"]")
                 vid = idMenu()
                 if vid >= len(theme._voices[typ]):
                     print("ID out of range")
                 else:
                     editVoiceMenu(theme._voices[typ][vid], theme, pal)
+        elif inp in "Aa":
+            previewThemeAudioMenu(theme, pal, tag)
         elif inp in "Qq":
             return
+        
+def previewThemeAudioMenu(theme, pal, tag): #UNDEFINED OPTIONS
+    try:
+        print("Please specify parameters:")
+        print("Input intensity [0-1]")
+        intensity=eval(usrinp())
+        print("Input size [0-1]")
+        size=eval(usrinp())
+        print("Input general lines overlay [0-1]")
+        gen=eval(usrinp())
+        print("Input chorus lines overlay [0-1]")
+        cho=eval(usrinp())
+        part = markovzart2.Part(tag, intensity, size, gen, cho)
+        sidePlay(part.getAudio(pal, pal._bpm))
+    except Exception as e:
+        print("Something went very wrong")
+        print("Your exception:", e)
+        print("...\nReturning\n...")
 
 def requestTypeMenu(): # Request mtype for voice creation or selection, returns None if canceled
     print("Requesting Voice Type")
