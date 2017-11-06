@@ -264,76 +264,91 @@ def paletteEdit(pal, name): # Main palette edition thing, can enter theme or pro
         cprogCH = pal._ch._cprog
     if pal._bg != None:
         cprogCH = pal._bg._cprog
-    while True:
-        print("Editing palette: "+name)
-        try:
-            bpm = pal._bpm
-        except:
-            print("Warning: this palette is from an old version of the mikezart environement and does not have an assotitated bpm value!")
-            print("Please define bpm in the palette edit menu")            
-        if cprogN1 == None:
-            print ("Warning: undefined chord progression: Verses 1!")
-        if cprogN2 == None:
-            print ("Warning: undefined chord progression: Verses 2!")
-        if cprogCH == None:
-            print ("Warning: undefined chord progression: Chorus/Bridge!")
-        if pal._n1 == None:
-            print ("Warning: undefined Theme: Verses 1!")
-        if pal._n2 == None:
-            print ("Warning: undefined Theme: Verses 2!")
-        if pal._ch == None:
-            print ("Warning: undefined Theme: Chorus!")
-        if pal._bg == None:
-            print ("Warning: undefined Theme: Bridge!")
-        if pal._ge == None:
-            print ("Warning: undefined Theme: General!")
-        print("Cc - Define chord Progressions")
-        print("Tt - Create a Theme")
-        print("Ee - Edit a Theme")
-        print("Dd - Display Palette Properties")
-        print("Ii - Scale Info")
-        print("Ss - Save Palette")
-        print("Nn - Change Name/filename")
-        print("Bb - Change Song BPM")
-        print("Qq - Quit")
-        inp = usrinp()                       
-        if inp in "Cc":
-            res = cprogMenu(pal, cprogN1, cprogN2, cprogCH)
-            if res == False:
-                res = False
-            elif res[0] == "n1":
-                cprogN1 = res[1]
-            elif res[0] == "n2":
-                cprogN2 = res[1]
-            elif res[0] == "ch":
-                cprogCH = res[1] 
-        elif inp in "Tt":
-            createThemeMenu(pal, cprogN1, cprogN2, cprogCH)
-        elif inp in "Ee":
-            chooseThemeEditMenu(pal)
-        elif inp in "Dd":
-            dispPropMenu(pal, name) 
-        elif inp in "Ii": 
-            scaleInfo(pal._scale)
-        elif inp in "Ss":
-            savePalette(pal, name)
-        elif inp in "Nn":
-            print("Old name: "+name)
-            name = nameMenu()
-        elif inp in "Bb":
+    try:
+        while True:
+            print("Editing palette: "+name)
             try:
-                print("Old BPM:", pal._bpm)
+                bpm = pal._bpm
             except:
-                print("This palette did not have an assiciated bpm value")
-            pal._bpm = bpmMenu()
-        elif inp in "Qq":
-            print("Warning: Unsaved Changes will be LOST: use Qq to quit or anything else to return to menu")
-            inp = usrinp()
-            if inp == "q" or inp == "Q" or inp == "Qq" or inp == "qQ":
-                print("Exiting palette edition interface")
-                return
-            print("Returning to menu")
-            
+                print("Warning: this palette is from an old version of the mikezart environement and does not have an assotitated bpm value!")
+                print("Please define bpm in the palette edit menu")            
+            if cprogN1 == None:
+                print ("Warning: undefined chord progression: Verses 1!")
+            if cprogN2 == None:
+                print ("Warning: undefined chord progression: Verses 2!")
+            if cprogCH == None:
+                print ("Warning: undefined chord progression: Chorus/Bridge!")
+            if pal._n1 == None:
+                print ("Warning: undefined Theme: Verses 1!")
+            if pal._n2 == None:
+                print ("Warning: undefined Theme: Verses 2!")
+            if pal._ch == None:
+                print ("Warning: undefined Theme: Chorus!")
+            if pal._bg == None:
+                print ("Warning: undefined Theme: Bridge!")
+            if pal._ge == None:
+                print ("Warning: undefined Theme: General!")
+            print("Cc - Define chord Progressions")
+            print("Tt - Create a Theme")
+            print("Ee - Edit a Theme")
+            print("Dd - Display Palette Properties")
+            print("Ii - Scale Info")
+            print("Ss - Save Palette")
+            print("Nn - Change Name/filename")
+            print("Bb - Change Song BPM")
+            print("Qq - Quit")
+            inp = usrinp()                       
+            if inp in "Cc":
+                res = cprogMenu(pal, cprogN1, cprogN2, cprogCH)
+                if res == False:
+                    res = False
+                elif res[0] == "n1":
+                    cprogN1 = res[1]
+                elif res[0] == "n2":
+                    cprogN2 = res[1]
+                elif res[0] == "ch":
+                    cprogCH = res[1] 
+            elif inp in "Tt":
+                createThemeMenu(pal, cprogN1, cprogN2, cprogCH)
+            elif inp in "Ee":
+                chooseThemeEditMenu(pal)
+            elif inp in "Dd":
+                dispPropMenu(pal, name) 
+            elif inp in "Ii": 
+                scaleInfo(pal._scale)
+            elif inp in "Ss":
+                savePalette(pal, name)
+            elif inp in "Nn":
+                print("Old name: "+name)
+                name = nameMenu()
+            elif inp in "Bb":
+                try:
+                    print("Old BPM:", pal._bpm)
+                except:
+                    print("This palette did not have an assiciated bpm value")
+                pal._bpm = bpmMenu()
+            elif inp in "Qq":
+                print("Warning: Unsaved Changes will be LOST: use Qq to quit or anything else to return to menu")
+                inp = usrinp()
+                if inp == "q" or inp == "Q" or inp == "Qq" or inp == "qQ":
+                    print("Exiting palette edition interface")
+                    return
+                print("Returning to menu")
+    except Exception as e:
+        skull()
+        print("Something went very wrong during this session of mikezario!")
+        print("Please inform the developers of what happened.")
+        print("This was the thrown exception that caused the program to crash:")
+        print(e)
+        print("You have on last chance to save your work before exiting.")
+        savePalette(pal, name)
+        exit()
+    
+def skull():
+    print('''                   uuuuuuu\n               uu$$$$$$$$$$$uu\n            uu$$$$$$$$$$$$$$$$$uu\n           u$$$$$$$$$$$$$$$$$$$$$u\n          u$$$$$$$$$$$$$$$$$$$$$$$u\n         u$$$$$$$$$$$$$$$$$$$$$$$$$u\n         u$$$$$$$$$$$$$$$$$$$$$$$$$u\n         u$$$$$$"   "$$$"   "$$$$$$u\n         "$$$$"      u$u       $$$$"\n          $$$u       u$u       u$$$\n          $$$u      u$$$u      u$$$\n           "$$$$uu$$$   $$$uu$$$$"
+            "$$$$$$$"   "$$$$$$$"\n              u$$$$$$$u$$$$$$$u\n               u$"$"$"$"$"$"$u\n    uuu        $$u$ $ $ $ $u$$       uuu\n   u$$$$        $$$$$u$u$u$$$       u$$$$\n    $$$$$uu      "$$$$$$$$$"     uu$$$$$$\n  u$$$$$$$$$$$uu    """""    uuuu$$$$$$$$$$\n  $$$$"""$$$$$$$$$$uuu   uu$$$$$$$$$"""$$$"\n   """      ""$$$$$$$$$$$uu ""$"""\n             uuuu ""$$$$$$$$$$uuu\n    u$$$uuu$$$$$$$$$uu ""$$$$$$$$$$$uuu$$$\n    $$$$$$$$$$""""           ""$$$$$$$$$$$"\n     "$$$$$"                      ""$$$$""\n       $$$"                         $$$$"\n''')
+    
+    
 def savePalette(pal, name):
     if name in existingPalNames():
         print("There is already a saveFile with this name, are you sure you want to delete it? Yy-Delete Nn/Qq-Return")
@@ -392,8 +407,43 @@ def chooseThemeEditMenu(pal):
                 return
         elif inp == "bg":
             if pal._bg != None:
-                themeEdit(pal._ge, pal, "Editing Bridge", "bg")
+                themeEdit(pal._bg, pal, "Editing Bridge", "bg")
                 return
+            
+def chooseThemeMenu(pal):
+    if (pal._n1 == None and pal._n2 == None and pal._ch == None and pal._bg == None and pal._ge == None):
+        raise ValueError("No themes to choose from")
+    while True:
+        print("Choose a Theme:")
+        if pal._n1 != None:
+            print ("n1 - Verses 1")
+        if pal._n2 != None:
+            print ("n2 - Verses 2")
+        if pal._ch != None:
+            print ("ch - Chorus")
+        if pal._bg != None:
+            print ("bg - Bridge")
+        if pal._ge != None:
+            print ("ge - General")
+        print("Qq - Quit")
+        inp = usrinp()
+        if inp in "Qq":
+            return None
+        elif inp == "n1":
+            if pal._n1 != None:
+                return pal._n1
+        elif inp == "n2":
+            if pal._n2 != None:
+                return pal._n2
+        elif inp == "ch":
+            if pal._ch != None:
+                return pal._ch
+        elif inp == "ge":
+            if pal._ge != None:
+                return pal._ge
+        elif inp == "bg":
+            if pal._bg != None:
+                return pal._bg
             
 def dispPropMenu(pal, name):
     print()
@@ -770,11 +820,11 @@ def previewChord(chord):
 def themeEdit(theme, pal, introSentence="Editing undefined Theme", tag=None): # Edit an existing theme
     while True:
         print(introSentence)
-        print("Chordic Voices:", len(theme._voices["chordic"]))
+        print("Chordic Voices:      ", len(theme._voices["chordic"]))
         print("Small Melodic Voices:", len(theme._voices["smelodic"]))
         print("Large Melodic Voices:", len(theme._voices["lmelodic"]))
-        print("Percussion Voices:", len(theme._voices["percussion"]))
-        print("Generic Voices:", len(theme._voices["generic"]))
+        print("Percussion Voices:   ", len(theme._voices["percussion"]))
+        print("Generic Voices:      ", len(theme._voices["generic"]))
         print("Vv - Create a Voice")
         print("Ee - Edit a Voice")
         print("Ss - Edit Voice Sorting") #UNDEFINED
@@ -968,7 +1018,7 @@ def editVoiceMenu(voice, theme, pal):
         print("Editing",voice)
         print("Rr - Full Auto-Generation") 
         print("Gg - Custom Auto-Generation") 
-        print("Mm - Mimic") #UNDEFINED 
+        print("Mm - Mimic")
         print("Ee - Add/Edit Notes/MMovs") #UNDEFINED 
         print("Aa - Apply Notes to MMovs") #UNDEFINED 
         print("Ii - Show Info") #UNDEFINED
@@ -993,6 +1043,11 @@ def editVoiceMenu(voice, theme, pal):
             undoer = copy.deepcopy(voice)
             customGen(voice, theme, pal)
             print(voice.toTab()+"\n")
+            
+        elif inp in "Mm":
+            print("Copying to undo clipboard...")
+            undoer = copy.deepcopy(voice)
+            mimicMenu(voice, theme, pal)
         
         elif inp in "Tt":
             print(voice.toTab()+"\n")
@@ -1098,6 +1153,45 @@ def customGen(voice, theme, pal):
     print("Generating")
     voice.autoProg(theme._cprog, theme._progc, theme._csize, ncount, tweights, mweights)
     
+
+    
+def mimicMenu(voice, theme, pal):
+    print("Entering mimicking menu")
+    while True:
+        print("Select Voice from local palette? Yy Nn (Qq-quit)")
+        inp = usrinp()
+        if inp in "Yy":
+            break
+        elif inp in "Nn":
+            print("Please choose a Theme from which to select a voice for mimicking.")
+            theme = chooseThemeMenu(pal)
+            if theme == None:
+                print("Aborting\nReturning")
+        elif inp in "Qq":
+            print("Returning")
+            return
+    while True:
+        print("Choose the type and ID of the voice you are going to open")
+        typ = requestTypeMenu()
+        if typ == None:
+            print("Returning")
+        elif len(theme._voices[typ]) == 0:
+            print("You have not created Voices Here!")
+        else:
+            print("You have", len(theme._voices[typ]), "created voices")
+            counter = 0
+            for voic in theme._voices[typ]:
+                print(counter, "->", voic)
+                counter = counter+1
+                print("Please input an ID in range [0-"+str(len(theme._voices[typ])-1)+"]")
+                vid = idMenu()
+                if vid >= len(theme._voices[typ]):
+                    print("ID out of range")
+                else:
+                    print("Mimicking...")
+                    voice.mimic(theme._voices[typ][vid])
+        
+            
     
         
             
