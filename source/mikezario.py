@@ -651,12 +651,12 @@ def previewProg(prog):
     sidePlay(audio)
         
 def customWeightMenu(lista): # Create custom weight set for lista, return None if failed
-    print("Entering wheight set creation for", lista)
+    print("Entering weight set creation for", lista)
     w = {}
     for el in lista:
         while True:
             flag = True
-            print("Please input wheight of", el)
+            print("Please input weight of", el)
             print("Qq - Quit")
             inp = usrinp()
             if inp in "Qq":
@@ -832,7 +832,7 @@ def themeEdit(theme, pal, introSentence="Editing undefined Theme", tag=None): # 
         elif inp in "Qq":
             return
         
-def previewThemeAudioMenu(theme, pal, tag): #UNDEFINED OPTIONS
+def previewThemeAudioMenu(theme, pal, tag): 
     try:
         print("Please specify parameters:")
         print("Input intensity [0-1]")
@@ -963,10 +963,11 @@ def chooseCentreMenu(notes):
                     break
 
 def editVoiceMenu(voice, theme, pal):
+    undoer = copy.deepcopy(voice)
     while True:
         print("Editing",voice)
         print("Rr - Full Auto-Generation") 
-        print("Gg - Custom Auto-Generation") #UNDEFINED
+        print("Gg - Custom Auto-Generation") 
         print("Mm - Mimic") #UNDEFINED 
         print("Ee - Add/Edit Notes/MMovs") #UNDEFINED 
         print("Aa - Apply Notes to MMovs") #UNDEFINED 
@@ -976,14 +977,22 @@ def editVoiceMenu(voice, theme, pal):
         print("Tt - Tab")
         print("Pp - Preview Voice") #UNDEFINED 
         print("Cc - Preview in Context") #UNDEFINED 
+        print("Uu - Undo (only last state saved)")
+        print("Dd - Delete this Voice") #UNDEFINED
         print("Qq - Quit")
         inp = usrinp()
         
         if inp in "Rr":
+            print("Copying to undo clipboard...")
+            undoer = copy.deepcopy(voice)
             autoGen(voice, theme, pal)
+            print(voice.toTab()+"\n")
             
         elif inp in "Gg":
+            print("Copying to undo clipboard...")
+            undoer = copy.deepcopy(voice)
             customGen(voice, theme, pal)
+            print(voice.toTab()+"\n")
         
         elif inp in "Tt":
             print(voice.toTab()+"\n")
@@ -1005,8 +1014,92 @@ def autoGen(voice, theme, pal):
     elif typ == "generic":
         ncount = wselect(musictheory.genericCWeights())
     voice.autoProg(theme._cprog, theme._progc, theme._csize, ncount, None, None)
+    print("Voice was auto-generated")
 
 def customGen(voice, theme, pal):
-    return #UNDEFINED
+    while True:
+        print("Input number of notes per chunk (Qq-quit)")
+        inp = usrinp()
+        if inp in "Qq":
+            return
+        try:
+            ncount = int(inp)
+            break
+        except:
+            print("Please input a number")
+    while True:
+        print("Use default weights for this type of voice? Yy Nn (Qq-quit)")
+        inp = usrinp()
+        if inp in "Yy":
+            print("Generating")
+            voice.autoProg(theme._cprog, theme._progc, theme._csize, ncount, None, None)
+            return
+        elif inp in "Nn":
+            break
+        elif inp in "Qq":
+            return
+    #User chose custom weights
+    while True:
+        print("Choosing temporal weights")
+        print("C - Use Chordic")
+        print("G - Use Generic")
+        print("S - Use SMelodic")
+        print("L - Use LMelodic")
+        print("P - Use Percussion")
+        print("W - Create custom Weights")
+        inp = usrinp()
+        if inp in "Cc":
+            tweights = chordicTWeights()
+            break
+        elif inp in "Gg":
+            tweights = genericTWeights()
+            break
+        elif inp in "Ss":
+            tweights = smelodicTWeights()
+            break
+        elif inp in "Ll":
+            tweights = lmelodicTWeights()
+            break
+        elif inp in "Pp":
+            tweights = percussionTWeights()
+            break
+        elif inp in "Ww":
+            print("S - Scale   T - Chord")
+            print("R - Repeat  U - Rise    V - Lower")
+            tweights = customWeightMenu(("whole","half","quarter"))
+            break
+    while True:
+        print("Choosing movement weights")
+        print("C - Use Chordic")
+        print("G - Use Generic")
+        print("S - Use SMelodic")
+        print("L - Use LMelodic")
+        print("P - Use Percussion")
+        print("W - Create custom Weights")
+        inp = usrinp()
+        if inp in "Cc":
+            mweights = chordicMWeights()
+            break
+        elif inp in "Gg":
+            mweights = genericMWeights()
+            break
+        elif inp in "Ss":
+            mweights = smelodicMWeights()
+            break
+        elif inp in "Ll":
+            mweights = lmelodicMWeights()
+            break
+        elif inp in "Pp":
+            mweights = percussionMWeights()
+            break
+        elif inp in "Ww":
+            mweights = customWeightMenu((mmov("general", "repeat"),mmov("chordic", "repeat"), mmov("chordic", "rise"), mmov("chordic", "lower"), mmov("general", "rise"), mmov("general", "lower")))
+            break
+    print("Generating")
+    voice.autoProg(theme._cprog, theme._progc, theme._csize, ncount, tweights, mweights)
+    
+    
+        
+            
 
 mainMenu()
