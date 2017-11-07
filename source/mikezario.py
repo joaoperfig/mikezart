@@ -250,6 +250,7 @@ def nameMenu():
             
 def paletteEdit(pal, name): # Main palette edition thing, can enter theme or prog edition
     print("Entering palette edition interface for palette: "+name)
+    path = ">> "+name
     if pal._n1 == None:
         cprogN1 = None
     else:
@@ -266,6 +267,7 @@ def paletteEdit(pal, name): # Main palette edition thing, can enter theme or pro
         cprogCH = pal._bg._cprog
     try:
         while True:
+            print(path)
             print("Editing palette: "+name)
             try:
                 bpm = pal._bpm
@@ -299,7 +301,7 @@ def paletteEdit(pal, name): # Main palette edition thing, can enter theme or pro
             print("Qq - Quit")
             inp = usrinp()                       
             if inp in "Cc":
-                res = cprogMenu(pal, cprogN1, cprogN2, cprogCH)
+                res = cprogMenu(pal, cprogN1, cprogN2, cprogCH, path)
                 if res == False:
                     res = False
                 elif res[0] == "n1":
@@ -309,9 +311,9 @@ def paletteEdit(pal, name): # Main palette edition thing, can enter theme or pro
                 elif res[0] == "ch":
                     cprogCH = res[1] 
             elif inp in "Tt":
-                createThemeMenu(pal, cprogN1, cprogN2, cprogCH)
+                createThemeMenu(pal, cprogN1, cprogN2, cprogCH, path)
             elif inp in "Ee":
-                chooseThemeEditMenu(pal)
+                chooseThemeEditMenu(pal ,path)
             elif inp in "Dd":
                 dispPropMenu(pal, name) 
             elif inp in "Ii": 
@@ -345,7 +347,7 @@ def paletteEdit(pal, name): # Main palette edition thing, can enter theme or pro
         exit()
     
 def skull():
-    print('''                   uuuuuuu\n               uu$$$$$$$$$$$uu\n            uu$$$$$$$$$$$$$$$$$uu\n           u$$$$$$$$$$$$$$$$$$$$$u\n          u$$$$$$$$$$$$$$$$$$$$$$$u\n         u$$$$$$$$$$$$$$$$$$$$$$$$$u\n         u$$$$$$$$$$$$$$$$$$$$$$$$$u\n         u$$$$$$"   "$$$"   "$$$$$$u\n         "$$$$"      u$u       $$$$"\n          $$$u       u$u       u$$$\n          $$$u      u$$$u      u$$$\n           "$$$$uu$$$   $$$uu$$$$"
+    print('''\n                   uuuuuuu\n               uu$$$$$$$$$$$uu\n            uu$$$$$$$$$$$$$$$$$uu\n           u$$$$$$$$$$$$$$$$$$$$$u\n          u$$$$$$$$$$$$$$$$$$$$$$$u\n         u$$$$$$$$$$$$$$$$$$$$$$$$$u\n         u$$$$$$$$$$$$$$$$$$$$$$$$$u\n         u$$$$$$"   "$$$"   "$$$$$$u\n         "$$$$"      u$u       $$$$"\n          $$$u       u$u       u$$$\n          $$$u      u$$$u      u$$$\n           "$$$$uu$$$   $$$uu$$$$"
             "$$$$$$$"   "$$$$$$$"\n              u$$$$$$$u$$$$$$$u\n               u$"$"$"$"$"$"$u\n    uuu        $$u$ $ $ $ $u$$       uuu\n   u$$$$        $$$$$u$u$u$$$       u$$$$\n    $$$$$uu      "$$$$$$$$$"     uu$$$$$$\n  u$$$$$$$$$$$uu    """""    uuuu$$$$$$$$$$\n  $$$$"""$$$$$$$$$$uuu   uu$$$$$$$$$"""$$$"\n   """      ""$$$$$$$$$$$uu ""$"""\n             uuuu ""$$$$$$$$$$uuu\n    u$$$uuu$$$$$$$$$uu ""$$$$$$$$$$$uuu$$$\n    $$$$$$$$$$""""           ""$$$$$$$$$$$"\n     "$$$$$"                      ""$$$$""\n       $$$"                         $$$$"\n''')
     
     
@@ -365,7 +367,7 @@ def savePalette(pal, name):
     filezart.makeFolder("../exports/" + name)
     pal.infoToFolder(pal._bpm, "../exports/" + name)
             
-def chooseThemeEditMenu(pal):
+def chooseThemeEditMenu(pal, path):
     if (pal._n1 == None and pal._n2 == None and pal._ch == None and pal._bg == None and pal._ge == None):
         print()
         print("No created Themes to edit!")
@@ -374,6 +376,7 @@ def chooseThemeEditMenu(pal):
         print()
         return
     while True:
+        print(path + " > Theme Selection")
         print("Choose Theme to edit:")
         if pal._n1 != None:
             print ("n1 - Verses 1")
@@ -391,23 +394,23 @@ def chooseThemeEditMenu(pal):
             return
         elif inp == "n1":
             if pal._n1 != None:
-                themeEdit(pal._n1, pal, "Editing Verses type 1", "n1")
+                themeEdit(pal._n1, pal, "Editing Verses type 1", "n1", path)
                 return
         elif inp == "n2":
             if pal._n2 != None:
-                themeEdit(pal._n2, pal, "Editing Verses type 2", "n2")
+                themeEdit(pal._n2, pal, "Editing Verses type 2", "n2", path)
                 return
         elif inp == "ch":
             if pal._ch != None:
-                themeEdit(pal._ch, pal, "Editing Chorus", "ch")
+                themeEdit(pal._ch, pal, "Editing Chorus", "ch", path)
                 return
         elif inp == "ge":
             if pal._ge != None:
-                themeEdit(pal._ge, pal, "Editing General lines", "ge")
+                themeEdit(pal._ge, pal, "Editing General lines", "ge", path)
                 return
         elif inp == "bg":
             if pal._bg != None:
-                themeEdit(pal._bg, pal, "Editing Bridge", "bg")
+                themeEdit(pal._bg, pal, "Editing Bridge", "bg", path)
                 return
             
 def chooseThemeMenu(pal):
@@ -471,7 +474,8 @@ def dispPropMenu(pal, name):
     print()
     return
             
-def createThemeMenu(pal, cprogN1, cprogN2, cprogCH):
+def createThemeMenu(pal, cprogN1, cprogN2, cprogCH, path):
+    path = path + " > Theme Creation"
     if (cprogN1 == None and cprogN2==None and cprogCH==None):
         print()
         print("No chord progression defined, cannot create Themes!")
@@ -480,6 +484,7 @@ def createThemeMenu(pal, cprogN1, cprogN2, cprogCH):
         print()
         return
     while True:
+        print(path)
         print("Creating Themes")
         if(pal._n1 != None or pal._n2 != None or pal._ch != None or pal._ge != None or pal._bg != None):
             print ("Created Themes:")
@@ -587,8 +592,10 @@ def createThemeMenu(pal, cprogN1, cprogN2, cprogCH):
                 else:
                     pal._ch = musictheory.theme(pal._scale, cprogCH, pal._progcount, pal._csize)
     
-def cprogMenu(pal, cprogN1, cprogN2, cprogCH): # Edit progressions for palette, returns (id, prog) or False if failed
+def cprogMenu(pal, cprogN1, cprogN2, cprogCH, path): # Edit progressions for palette, returns (id, prog) or False if failed
+    path = path + " > Chord Progression creation"
     while True:
+        print(path)
         print("Note: changed progressions are only taken into effect if their themes are recreated")
         if cprogN1 == None:
             print ("n1 - Define Verses 1 chord Progression     (undefined!)")
@@ -606,19 +613,19 @@ def cprogMenu(pal, cprogN1, cprogN2, cprogCH): # Edit progressions for palette, 
         print ("Qq - Quit")
         inp = usrinp()
         if inp == "n1":
-            prog = makeProgMenu(pal, cprogN1)
+            prog = makeProgMenu(pal, cprogN1, path + " > n1")
             if prog == None:
                 prog = False
             else:
                 return ("n1", prog)
         elif inp == "n2":
-            prog = makeProgMenu(pal, cprogN2)
+            prog = makeProgMenu(pal, cprogN2, path + " > n2")
             if prog == None:
                 prog = False
             else:
                 return ("n2", prog)   
         elif inp == "ch":
-            prog = makeProgMenu(pal, cprogCH)
+            prog = makeProgMenu(pal, cprogCH, path + " > ch")
             if prog == None:
                 prog = False
             else:
@@ -629,13 +636,14 @@ def cprogMenu(pal, cprogN1, cprogN2, cprogCH): # Edit progressions for palette, 
             return False
         
         
-def makeProgMenu(pal, prog): # Request progression generation, returns None if failed
+def makeProgMenu(pal, prog, path): # Request progression generation, returns None if failed
     progsize = pal._progsize
     if prog == None:
         prog = [] # list of chord3
         for i in range(progsize):
             prog = prog + ["<UNDEFINED>"]
     while True:
+        print(path)
         string = ""
         for chord in prog:
             string = string + str(chord) + " "
@@ -656,7 +664,7 @@ def makeProgMenu(pal, prog): # Request progression generation, returns None if f
             cid = idMenu()
             if cid in range(progsize):
                 print("Defining chord "+str(cid))
-                chord = chordMenu(pal._scale)
+                chord = chordMenu(pal._scale, path + " > Chord"+str(cid))
                 if chord != None:
                     print("Chord defined!")
                     prog[cid] = chord
@@ -739,8 +747,9 @@ def idMenu(): # Request int id, return None if failed
         if flag:
             return eval(inp)
         
-def chordMenu(scale): # Request chord3 generation, return None if failed
+def chordMenu(scale, path): # Request chord3 generation, return None if failed
     while True:
+        print(path)
         print("Defining chord in scale: "+str(scale))
         print("Input list of 3 notes, separated by spaces")
         print("Input first note in chord")
@@ -817,8 +826,10 @@ def chordMenu(scale): # Request chord3 generation, return None if failed
 def previewChord(chord):
     sidePlay(chord.sampleAudio())
 
-def themeEdit(theme, pal, introSentence="Editing undefined Theme", tag=None): # Edit an existing theme
+def themeEdit(theme, pal, introSentence="Editing undefined Theme", tag=None, path=""): # Edit an existing theme
+    path = path + " > Theme "+tag
     while True:
+        print(path)
         print(introSentence)
         print("Chordic Voices:      ", len(theme._voices["chordic"]))
         print("Small Melodic Voices:", len(theme._voices["smelodic"]))
@@ -834,11 +845,13 @@ def themeEdit(theme, pal, introSentence="Editing undefined Theme", tag=None): # 
         print("Qq - Quit")
         inp =  usrinp()
         if inp in "Vv":
+            print(path + " > Voice Creation")
             print("Choose the type of the voice you are going to create:")
             typ = requestTypeMenu() 
             if typ == None:
                 print("Returning")
             else:
+                print(path + " > "+typ+" Voice Creation")
                 inst = chooseInstMenu() 
                 centre = chooseCentreMenu(musictheory.listNotes(inst))
                 mtype = typ
@@ -859,24 +872,29 @@ def themeEdit(theme, pal, introSentence="Editing undefined Theme", tag=None): # 
                     elif inp in "Nn":
                         break
         elif inp in "Ee":
-            print("Choose the type and ID of the voice you are going to open")
-            typ = requestTypeMenu()
-            if typ == None:
-                print("Returning")
-            elif len(theme._voices[typ]) == 0:
-                print("You have not created Voices Here!")
-            else:
-                print("You have", len(theme._voices[typ]), "created voices")
-                counter = 0
-                for voic in theme._voices[typ]:
-                    print(counter, "->", voic)
-                    counter = counter+1
-                print("Please input an ID in range [0-"+str(len(theme._voices[typ])-1)+"]")
-                vid = idMenu()
-                if vid >= len(theme._voices[typ]):
-                    print("ID out of range")
+            while True:
+                print("Choose the type and ID of the voice you are going to open")
+                typ = requestTypeMenu()
+                if typ == None:
+                    print("Returning")
+                    break
+                elif len(theme._voices[typ]) == 0:
+                    print("You have not created Voices Here!")
                 else:
-                    editVoiceMenu(theme._voices[typ][vid], theme, pal)
+                    print("You have", len(theme._voices[typ]), "created voices")
+                    counter = 0
+                    for voic in theme._voices[typ]:
+                        print(counter, "->", voic)
+                        counter = counter+1
+                    while True:
+                        print("Please input an ID in range [0-"+str(len(theme._voices[typ])-1)+"]")
+                        vid = idMenu()
+                        if vid == None:
+                            break
+                        if vid >= len(theme._voices[typ]):
+                            print("ID out of range")
+                        else:
+                            editVoiceMenu(theme._voices[typ][vid], theme, pal, path)
         elif inp in "Aa":
             previewThemeAudioMenu(theme, pal, tag)
         elif inp in "Qq":
@@ -1012,9 +1030,11 @@ def chooseCentreMenu(notes):
                 if inp in "Nn":
                     break
 
-def editVoiceMenu(voice, theme, pal):
+def editVoiceMenu(voice, theme, pal, path):
+    path = path + " > "+str(voice)
     undoer = copy.deepcopy(voice)
     while True:
+        print(path)
         print("Editing",voice)
         print("Rr - Full Auto-Generation") 
         print("Gg - Custom Auto-Generation") 
@@ -1048,6 +1068,22 @@ def editVoiceMenu(voice, theme, pal):
             print("Copying to undo clipboard...")
             undoer = copy.deepcopy(voice)
             mimicMenu(voice, theme, pal)
+            print(voice.toTab()+"\n")
+        
+        elif inp in "Ii":
+            print("Instrument:", voice._inst)
+            print("Centre    :", voice._cent)
+            print("Vol       :", voice._vol)
+            print("Pan       :", voice._pan)
+            print("Mtype     :", voice._mtype)
+            print("Scale     :", voice._scale)
+            print("WNotes    :", len(voice._weights))
+            if theme._progc != len(voice._progs):
+                warn = "Warning: discrepancy detected!!!"
+            else:
+                warn = ""
+            print("Prog Count:", len(voice._progs))
+            print("Theme PC  :", theme._progc, warn)
         
         elif inp in "Tt":
             print(voice.toTab()+"\n")
@@ -1167,6 +1203,7 @@ def mimicMenu(voice, theme, pal):
             theme = chooseThemeMenu(pal)
             if theme == None:
                 print("Aborting\nReturning")
+            break
         elif inp in "Qq":
             print("Returning")
             return
@@ -1175,25 +1212,35 @@ def mimicMenu(voice, theme, pal):
         typ = requestTypeMenu()
         if typ == None:
             print("Returning")
+            return
         elif len(theme._voices[typ]) == 0:
             print("You have not created Voices Here!")
         else:
+            print(theme._voices[typ])
             print("You have", len(theme._voices[typ]), "created voices")
             counter = 0
             for voic in theme._voices[typ]:
                 print(counter, "->", voic)
                 counter = counter+1
+            while True:
                 print("Please input an ID in range [0-"+str(len(theme._voices[typ])-1)+"]")
                 vid = idMenu()
+                if vid == None:
+                    break
                 if vid >= len(theme._voices[typ]):
                     print("ID out of range")
                 else:
                     print("Mimicking...")
                     voice.mimic(theme._voices[typ][vid])
+                    return
         
             
     
         
             
-
-mainMenu()
+try:
+    mainMenu()
+except:
+    skull()
+    print("Oops")
+    exit()
