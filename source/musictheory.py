@@ -726,6 +726,7 @@ class voice:
             raise ValueError("Invalid mtype: " + self._mtype + ".")
     
     def mimic(self, other):                                                     # Fills voice with lines mimicking other
+        self._progs = ()
         tempCentre = other._cent.approximated(self._cent) # new centre of this voice will be same note as of other but close to original
         delta = tempCentre._value - other._cent._value # how notes of other need to be changed to fit this
         for pro in other._progs:
