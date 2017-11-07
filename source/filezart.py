@@ -103,11 +103,14 @@ def getPacks():                                                                 
         lista = lista + (cutafter(mkzrt, "configuration")[1:-6],)
     return lista
 
-def getInstrument(name):
+def getInstrument(name, lower=False):
     insts = getInfo()
     for inst in insts:
         if inst._name == name:
             return inst
+        if lower:
+            if inst._name.lower() == name.lower():
+                return inst
     raise ValueError ("Instrument not found in local mkzrt files: " + name)
 
 def getPack(name):
