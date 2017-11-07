@@ -961,7 +961,7 @@ def chooseInstMenu():
             printPacks()
         else:
             try:
-                inst = filezart.getInstrument(inp)
+                inst = filezart.getInstrument(inp, True)
                 print("Found instrument:", inst, ", use this? Yy, Nn")
                 while True:
                     inp = usrinp()
@@ -976,6 +976,53 @@ def chooseInstMenu():
                     printInsts(pack)
                 except:
                     print("No pack or instrument found:", inp)
+                    print("Did you mean any of these?:")
+                    top = [(filezart.getInstrument("Bass", True),0)]
+                    for inst in filezart.getInfo():
+                        score = maxComScore(inp.lower(), inst._name.lower())
+                        put = False
+                        for t in range(len(top)):
+                            if top[t][1] < score:
+                                top = top[:t] + [(inst, score)] + top[t:]
+                                put = True
+                                break
+                        if not put:
+                            top = top + [(inst, score)]
+                    realtop = []
+                    for i in range(5):
+                        realtop = realtop + [top[i][0]]
+                    printInsts(realtop)
+                        
+                        
+                        
+def maxComScore(sent1, sent2):
+    if len(sent1) == 0 or len(sent2) == 0:
+        return 0
+    l = longestComSub(sent1, sent2)
+    if len(l) == 0:
+        return 0
+    i1 = sent1.index(l)
+    i2 = sent2.index(l)
+    first1 = sent1[:i1]
+    first2 = sent2[:i2]
+    second1 = sent1[i1+len(l):]
+    second2 = sent2[i2+len(l):]
+    return len(l) + maxComScore(first1, first2) + maxComScore(second1, second2)
+    
+def longestComSub(s1, s2): #not my stuff, got it online
+    m = [[0] * (1 + len(s2)) for i in range(1 + len(s1))]
+    longest, x_longest = 0, 0
+    for x in range(1, 1 + len(s1)):
+        for y in range(1, 1 + len(s2)):
+            if s1[x - 1] == s2[y - 1]:
+                m[x][y] = m[x - 1][y - 1] + 1
+                if m[x][y] > longest:
+                    longest = m[x][y]
+                    x_longest = x
+            else:
+                m[x][y] = 0
+    return s1[x_longest - longest: x_longest]
+                        
                     
 def printInsts(insts):
     print("Selected instruments:")
