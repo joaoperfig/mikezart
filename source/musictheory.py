@@ -527,9 +527,13 @@ class chunk:
             newtemp = ()
             lastcandidate = None
             for mov in self._content[temp]:
-                sel = mov.select(last,voic._weights, self._chord)
-                newtemp = newtemp + (sel,)
-                lastcandidate = sel
+                if(isinstance(mov, mmov)):
+                    sel = mov.select(last,voic._weights, self._chord)
+                    newtemp = newtemp + (sel,)
+                    lastcandidate = sel
+                elif(isinstance(mov, mnote)):
+                    newtemp = newtemp + (mov,) #mov is actually a note here
+                    lastcandidate = mov
             if lastcandidate != None:
                 last = lastcandidate
                 self._content[temp] = newtemp
@@ -724,6 +728,11 @@ class voice:
         
         else:
             raise ValueError("Invalid mtype: " + self._mtype + ".")
+        
+    def applyToMovs(self):                                                      # Finds any movs in chunks and replaces them with appropriate notes
+        for prog in self._progs:
+            for chuc in prog._chunks:
+                chuc.applyToMovs(self) 
     
     def mimic(self, other):                                                     # Fills voice with lines mimicking other
         self._progs = ()
