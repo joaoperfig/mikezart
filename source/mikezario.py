@@ -1094,7 +1094,7 @@ def editVoiceMenu(voice, theme, pal, path):
         print("Tt - Tab")
         print("Pp - Preview Voice") #UNDEFINED 
         print("Cc - Preview in Context") #UNDEFINED 
-        print("Uu - Undo (only last state saved)")
+        print("Uu - Undo (only last state saved)") # TO REDEFINE!!!!!
         print("Dd - Delete this Voice") #UNDEFINED
         print("Qq - Quit")
         inp = usrinp()
@@ -1115,6 +1115,12 @@ def editVoiceMenu(voice, theme, pal, path):
             print("Copying to undo clipboard...")
             undoer = copy.deepcopy(voice)
             mimicMenu(voice, theme, pal)
+            print(voice.toTab()+"\n")
+            
+        elif inp in "Aa":
+            print("Copying to undo clipboard...")
+            undoer = copy.deepcopy(voice)
+            voice.applyToMovs()
             print(voice.toTab()+"\n")
         
         elif inp in "Ii":
