@@ -630,6 +630,9 @@ class voice:
     def __repr__(self):
         return "~" + self._inst._name + "->" + str(self._cent) + "<-" + str(self._scale)[2:-2] + "~"
     
+    def become(self, other):                                                                                               # Becomes copy of other voice
+        self.__dict__ = copy.deepcopy(other.__dict__)
+    
     def autoProg(self, cprog, progcount, csize, ncount=None, tweights=None, mweights=None):                                # Fills voice with progressions
         self._progs = ()
         
