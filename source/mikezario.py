@@ -7,6 +7,21 @@ import filezart
 from pydub.playback import play
 from musictheory import sidePlay
 import markovzart2
+import copy
+
+class Undoer:
+    def __init__(self):
+        self._stack = ()
+        
+    def update(self, status):
+        self._stack = (copy.deepcopy(status),) + self._stack
+        if len(self._stack) > 100:
+            self._stack = self._stack[:100]
+        
+    def revert(self):
+        item = self._stack[0]
+        self._stack = self._stack[1:]
+        return item
 
 # rselect RandomSelect returns random element of list
 def rselect(lista):
@@ -61,6 +76,9 @@ def mainMenu():
         
         elif inp in "Qq":
             return
+        
+        elif inp == "TestDead":
+            return 1 + "1"
 
 def openPalettMenu(): # Open existing palette, returns None if failed
     print("Opening Palette from file")
@@ -347,8 +365,7 @@ def paletteEdit(pal, name): # Main palette edition thing, can enter theme or pro
         exit()
     
 def skull():
-    print('''\n                   uuuuuuu\n               uu$$$$$$$$$$$uu\n            uu$$$$$$$$$$$$$$$$$uu\n           u$$$$$$$$$$$$$$$$$$$$$u\n          u$$$$$$$$$$$$$$$$$$$$$$$u\n         u$$$$$$$$$$$$$$$$$$$$$$$$$u\n         u$$$$$$$$$$$$$$$$$$$$$$$$$u\n         u$$$$$$"   "$$$"   "$$$$$$u\n         "$$$$"      u$u       $$$$"\n          $$$u       u$u       u$$$\n          $$$u      u$$$u      u$$$\n           "$$$$uu$$$   $$$uu$$$$"
-            "$$$$$$$"   "$$$$$$$"\n              u$$$$$$$u$$$$$$$u\n               u$"$"$"$"$"$"$u\n    uuu        $$u$ $ $ $ $u$$       uuu\n   u$$$$        $$$$$u$u$u$$$       u$$$$\n    $$$$$uu      "$$$$$$$$$"     uu$$$$$$\n  u$$$$$$$$$$$uu    """""    uuuu$$$$$$$$$$\n  $$$$"""$$$$$$$$$$uuu   uu$$$$$$$$$"""$$$"\n   """      ""$$$$$$$$$$$uu ""$"""\n             uuuu ""$$$$$$$$$$uuu\n    u$$$uuu$$$$$$$$$uu ""$$$$$$$$$$$uuu$$$\n    $$$$$$$$$$""""           ""$$$$$$$$$$$"\n     "$$$$$"                      ""$$$$""\n       $$$"                         $$$$"\n''')
+    print('''\n                   uuuuuuu\n               uu$$$$$$$$$$$uu\n            uu$$$$$$$$$$$$$$$$$uu\n           u$$$$$$$$$$$$$$$$$$$$$u\n          u$$$$$$$$$$$$$$$$$$$$$$$u\n         u$$$$$$$$$$$$$$$$$$$$$$$$$u\n         u$$$$$$$$$$$$$$$$$$$$$$$$$u\n         u$$$$$$"   "$$$"   "$$$$$$u\n         "$$$$"      u$u       $$$$"\n          $$$u       u$u       u$$$\n          $$$u      u$$$u      u$$$\n           "$$$$uu$$$   $$$uu$$$$"\n            "$$$$$$$"   "$$$$$$$"\n              u$$$$$$$u$$$$$$$u\n               u$"$"$"$"$"$"$u\n    uuu        $$u$ $ $ $ $u$$       uuu\n   u$$$$        $$$$$u$u$u$$$       u$$$$\n    $$$$$uu      "$$$$$$$$$"     uu$$$$$$\n  u$$$$$$$$$$$uu    """""    uuuu$$$$$$$$$$\n  $$$$"""$$$$$$$$$$uuu   uu$$$$$$$$$"""$$$"\n   """      ""$$$$$$$$$$$uu ""$"""\n             uuuu ""$$$$$$$$$$uuu\n    u$$$uuu$$$$$$$$$uu ""$$$$$$$$$$$uuu$$$\n    $$$$$$$$$$""""           ""$$$$$$$$$$$"\n     "$$$$$"                      ""$$$$""\n       $$$"                         $$$$"\n''')
     
     
 def savePalette(pal, name):
@@ -873,6 +890,11 @@ def themeEdit(theme, pal, introSentence="Editing undefined Theme", tag=None, pat
                         break
         elif inp in "Ee":
             while True:
+                print("Chordic Voices:      ", len(theme._voices["chordic"]))
+                print("Small Melodic Voices:", len(theme._voices["smelodic"]))
+                print("Large Melodic Voices:", len(theme._voices["lmelodic"]))
+                print("Percussion Voices:   ", len(theme._voices["percussion"]))
+                print("Generic Voices:      ", len(theme._voices["generic"]))                
                 print("Choose the type and ID of the voice you are going to open")
                 typ = requestTypeMenu()
                 if typ == None:
@@ -1079,7 +1101,8 @@ def chooseCentreMenu(notes):
 
 def editVoiceMenu(voice, theme, pal, path):
     path = path + " > "+str(voice)
-    undoer = copy.deepcopy(voice)
+    undoer = Undoer()
+    print("Reseting undo clipboard!")
     while True:
         print(path)
         print("Editing",voice)
@@ -1087,39 +1110,39 @@ def editVoiceMenu(voice, theme, pal, path):
         print("Gg - Custom Auto-Generation") 
         print("Mm - Mimic")
         print("Ee - Add/Edit Notes/MMovs") #UNDEFINED 
-        print("Aa - Apply Notes to MMovs") #UNDEFINED 
+        print("Aa - Apply Notes to MMovs") 
         print("Ii - Show Info") #UNDEFINED
         print("Vv - Change Volume") #UNDEFINED
         print("Pp - Change Pan") #UNDEFINED
         print("Tt - Tab")
         print("Pp - Preview Voice") #UNDEFINED 
         print("Cc - Preview in Context") #UNDEFINED 
-        print("Uu - Undo (only last state saved)") # TO REDEFINE!!!!!
+        print("Uu - Undo (only last 100 states saved)")
         print("Dd - Delete this Voice") #UNDEFINED
         print("Qq - Quit")
         inp = usrinp()
         
         if inp in "Rr":
             print("Copying to undo clipboard...")
-            undoer = copy.deepcopy(voice)
+            undoer.update(voice)
             autoGen(voice, theme, pal)
             print(voice.toTab()+"\n")
             
         elif inp in "Gg":
             print("Copying to undo clipboard...")
-            undoer = copy.deepcopy(voice)
+            undoer.update(voice)
             customGen(voice, theme, pal)
             print(voice.toTab()+"\n")
             
         elif inp in "Mm":
             print("Copying to undo clipboard...")
-            undoer = copy.deepcopy(voice)
+            undoer.update(voice)
             mimicMenu(voice, theme, pal)
             print(voice.toTab()+"\n")
             
         elif inp in "Aa":
             print("Copying to undo clipboard...")
-            undoer = copy.deepcopy(voice)
+            undoer.update(voice)
             voice.applyToMovs()
             print(voice.toTab()+"\n")
         
@@ -1139,6 +1162,11 @@ def editVoiceMenu(voice, theme, pal, path):
             print("Theme PC  :", theme._progc, warn)
         
         elif inp in "Tt":
+            print(voice.toTab()+"\n")
+            
+        elif inp in "Uu":
+            print("Reverting to previous state...")
+            voice.become(undoer.revert())
             print(voice.toTab()+"\n")
         
         elif inp in "Qq":
@@ -1296,4 +1324,3 @@ try:
 except:
     skull()
     print("Oops")
-    exit()
