@@ -857,8 +857,9 @@ def themeEdit(theme, pal, introSentence="Editing undefined Theme", tag=None, pat
         print("Ee - Edit a Voice")
         print("Ss - Edit Voice Sorting") #UNDEFINED
         print("Aa - Preview Audio")
-        print("Dd - Display Theme Properties") #UNDEFINED 
-        print("Ii - Scale Info") #UNDEFINED
+        print("Ff - Fast Preview")
+        print("Dd - Display Theme Properties") 
+        print("Ii - Scale Info") 
         print("Qq - Quit")
         inp =  usrinp()
         if inp in "Vv":
@@ -919,6 +920,28 @@ def themeEdit(theme, pal, introSentence="Editing undefined Theme", tag=None, pat
                             editVoiceMenu(theme._voices[typ][vid], theme, pal, path)
         elif inp in "Aa":
             previewThemeAudioMenu(theme, pal, tag)
+        elif inp in "Ff":
+            try:
+                part = markovzart2.Part(tag, 1, 1, 0, 0)
+                sidePlay(part.getAudio(pal, pal._bpm))
+            except:
+                "Something went wrong with playing your audio"
+        elif inp in "Dd":
+            print("Theme",tag,"properties:")
+            print("Scale:", theme._scale)
+            print("Progression:", theme._cprog)
+            print("Csize:", theme._csize)
+            print("Voices:")
+            for vt in list(theme._voices):
+                print("    "+vt+":")
+                for vc in theme._voices[vt]:
+                    print("       ",vc)
+            print("Sorting:", theme._sorting)
+        elif inp in "Ii":
+            scaleInfo(pal._scale)
+            print("Your progression:", theme._cprog)
+            for ch in theme._cprog:
+                pianoprinter.octoPrint  (ch._types)
         elif inp in "Qq":
             return
         
