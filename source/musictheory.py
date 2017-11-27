@@ -976,6 +976,9 @@ class tvindicator:
     
     def indicationStr(self, them):
         return "["+self._mtype+"_"+str(self._index)+str(them._voices[self._mtype][self._index])+"]"
+    
+    def __repr__(self):
+        return "indicator:"+self._mtype+"-"+str(self._index)
         
         
         
