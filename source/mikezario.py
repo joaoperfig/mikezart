@@ -19,6 +19,8 @@ class Undoer:
             self._stack = self._stack[:100]
         
     def revert(self):
+        if len(self._stack)==0:
+            return None
         item = self._stack[0]
         self._stack = self._stack[1:]
         return item
@@ -917,7 +919,9 @@ def themeEdit(theme, pal, introSentence="Editing undefined Theme", tag=None, pat
                         if vid >= len(theme._voices[typ]):
                             print("ID out of range")
                         else:
-                            editVoiceMenu(theme._voices[typ][vid], theme, pal, path)
+                            editVoiceMenu(theme._voices[typ][vid], theme, pal, path, tag)
+                            break
+                    break
         elif inp in "Aa":
             previewThemeAudioMenu(theme, pal, tag)
         elif inp in "Ff":
@@ -1122,7 +1126,7 @@ def chooseCentreMenu(notes):
                 if inp in "Nn":
                     break
 
-def editVoiceMenu(voice, theme, pal, path):
+def editVoiceMenu(voice, theme, pal, path, tag=None):
     path = path + " > "+str(voice)
     undoer = Undoer()
     print("Reseting undo clipboard!")
@@ -1134,12 +1138,12 @@ def editVoiceMenu(voice, theme, pal, path):
         print("Mm - Mimic")
         print("Ee - Add/Edit Notes/MMovs") #UNDEFINED 
         print("Aa - Apply Notes to MMovs") 
-        print("Ii - Show Info") #UNDEFINED
+        print("Ii - Show Info")
         print("Vv - Change Volume") #UNDEFINED
         print("Pp - Change Pan") #UNDEFINED
         print("Tt - Tab")
-        print("Pp - Preview Voice") #UNDEFINED 
-        print("Cc - Preview in Context") #UNDEFINED 
+        print("Pp - Preview Voice  (Ss - Short Preview)") 
+        print("Cc - Preview in Context  (Xx - Short Context)") 
         print("Uu - Undo (only last 100 states saved)")
         print("Dd - Delete this Voice") #UNDEFINED
         print("Qq - Quit")
@@ -1187,9 +1191,31 @@ def editVoiceMenu(voice, theme, pal, path):
         elif inp in "Tt":
             print(voice.toTab()+"\n")
             
+        elif inp in "Pp":
+            sidePlay(voice.getAudio(pal._bpm))
+        elif inp in "Ss":
+            sidePlay(voice.partialAudio(0.01, pal._bpm))
+            
+        elif inp in "Cc":
+            try:
+                part = markovzart2.Part(tag, 1, 1, 0, 0)
+                sidePlay(part.getAudio(pal, pal._bpm))
+            except:
+                "Something went wrong with playing your audio"      
+        elif inp in "Xx":
+            try:
+                part = markovzart2.Part(tag, 1, 0.01, 0, 0)
+                sidePlay(part.getAudio(pal, pal._bpm))
+            except:
+                "Something went wrong with playing your audio"                  
+            
         elif inp in "Uu":
             print("Reverting to previous state...")
-            voice.become(undoer.revert())
+            prev = undoer.revert()
+            if prev != None:
+                voice.become(prev)
+            else:
+                print("End of undo stack")
             print(voice.toTab()+"\n")
         
         elif inp in "Qq":
