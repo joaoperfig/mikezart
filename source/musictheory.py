@@ -633,7 +633,7 @@ class voice:
     def getTag(self):
         try:
             return self._tag
-        except
+        except:
             return "notag"
         
     def setTag(self, tag):
