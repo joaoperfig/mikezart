@@ -859,7 +859,7 @@ def themeEdit(theme, pal, introSentence="Editing undefined Theme", tag=None, pat
         print("Ee - Edit a Voice")
         print("Ss - Edit Voice Sorting") #UNDEFINED
         print("Aa - Preview Audio")
-        print("Ff - Fast Preview")
+        print("Ff - Fast Preview (Xx - Short Preview)")
         print("Dd - Display Theme Properties") 
         print("Ii - Scale Info") 
         print("Qq - Quit")
@@ -927,6 +927,12 @@ def themeEdit(theme, pal, introSentence="Editing undefined Theme", tag=None, pat
         elif inp in "Ff":
             try:
                 part = markovzart2.Part(tag, 1, 1, 0, 0)
+                sidePlay(part.getAudio(pal, pal._bpm))
+            except:
+                "Something went wrong with playing your audio"
+        elif inp in "Xx":
+            try:
+                part = markovzart2.Part(tag, 1, 0.01, 0, 0)
                 sidePlay(part.getAudio(pal, pal._bpm))
             except:
                 "Something went wrong with playing your audio"
