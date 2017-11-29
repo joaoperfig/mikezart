@@ -628,7 +628,16 @@ class voice:
             self._weights[note] = adaptedNormal(centre._value, note._value)
             
     def __repr__(self):
-        return "~" + self._inst._name + "->" + str(self._cent) + "<-" + str(self._scale)[2:-2] + "~"
+        return "~" + self.getTag() + ":" + self._inst._name + "->" + str(self._cent) + "<-" + str(self._scale)[2:-2] + "~"
+    
+    def getTag(self):
+        try:
+            return self._tag
+        except
+            return "notag"
+        
+    def setTag(self, tag):
+        self._tag = tag
     
     def become(self, other):                                                                                               # Becomes copy of other voice
         self.__dict__ = copy.deepcopy(other.__dict__)
