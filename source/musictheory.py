@@ -557,6 +557,9 @@ class chunk:
                 thissound = thissound.overlay(noteaudio,  position=0)
             sound = sound.overlay(thissound, position=(beat/4)*temp)
         return sound
+    
+    def clearAudio(self):                                                       # recursive clean of audio cache
+        return
         
     def toTab(self):                                                            # return Tab string
         return str(self)
@@ -582,6 +585,11 @@ class progression:
             return self.forceGetAudio(inst, bpm)
         print("cached")
         return self._audio
+    
+    def clearAudio(self):                                                       # recursive clean of audio cache
+        self._audio = None
+        for c in self._chunks:
+            c.clearAudio()
     
     def forceGetAudio(self, inst, bpm):                                         # returns AudioSegment
         beat = bpmToBeat(bpm)
@@ -786,6 +794,11 @@ class voice:
         if (self._audio == None) or (self._abpm != bpm):
             return self.forceGetAudio(bpm)
         return self._audio
+    
+    def clearAudio(self):                                                       # recursive delete of audio cache
+        self.audio = None
+        for p in self._progs:
+            p.clearAudio()
         
     def forceGetAudio(self, bpm):                                               # returns AudioSegment, use to override cached audio
         total = 3000 + self.baseDuration(bpm)
