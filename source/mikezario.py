@@ -857,7 +857,7 @@ def themeEdit(theme, pal, introSentence="Editing undefined Theme", tag=None, pat
         print("Generic Voices:      ", len(theme._voices["generic"]))
         print("Vv - Create a Voice")
         print("Ee - Edit a Voice")
-        print("Ss - Edit Voice Sorting") #UNDEFINED
+        print("Ss - Edit Voice Sorting") 
         print("Aa - Preview Audio")
         print("Ff - Fast Preview (Xx - Short Preview)")
         print("Dd - Display Theme Properties") 
@@ -922,6 +922,8 @@ def themeEdit(theme, pal, introSentence="Editing undefined Theme", tag=None, pat
                             editVoiceMenu(theme._voices[typ][vid], theme, pal, path, tag)
                             break
                     break
+        elif inp in "Ss":
+            editSortingMenu(theme, pal, tag, path)
         elif inp in "Aa":
             previewThemeAudioMenu(theme, pal, tag)
         elif inp in "Ff":
@@ -954,6 +956,15 @@ def themeEdit(theme, pal, introSentence="Editing undefined Theme", tag=None, pat
                 pianoprinter.octoPrint  (ch._types)
         elif inp in "Qq":
             return
+        
+def editSortingMenu(theme, pal, tag, path):
+    path = path + " > Voice Sorting Edition"
+    while True:
+        print(path)
+        print("Current sorting order:")
+        for i in range(len(theme._sorting)):
+            print("    "+"0"*(2-len(str(i)))+str(i)+": "+theme._sorting[i].indicationStr(theme)) #UNDEFINED UNFINISHED TODO BUG
+        break
         
 def previewThemeAudioMenu(theme, pal, tag): 
     try:
@@ -1144,7 +1155,8 @@ def editVoiceMenu(voice, theme, pal, path, tag=None):
         print("Mm - Mimic")
         print("Ee - Add/Edit Notes/MMovs") #UNDEFINED 
         print("Aa - Apply Notes to MMovs") 
-        print("Ii - Show Info")
+        print("Ii - Show Info") # SHOW TAG
+        print("Mm - Change Tag") #UNDEFINED
         print("Vv - Change Volume") #UNDEFINED
         print("Pp - Change Pan") #UNDEFINED
         print("Tt - Tab")
