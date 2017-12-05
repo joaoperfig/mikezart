@@ -963,8 +963,27 @@ def editSortingMenu(theme, pal, tag, path):
         print(path)
         print("Current sorting order:")
         for i in range(len(theme._sorting)):
-            print("    "+"0"*(2-len(str(i)))+str(i)+": "+theme._sorting[i].indicationStr(theme)) #UNDEFINED UNFINISHED TODO BUG
-        break
+            print("    "+"0"*(2-len(str(i)))+str(i)+": "+theme._sorting[i].indicationStr(theme))
+        print()
+        print("Input two indexes to swap separated by a space (sorry) (Qq - quit)")
+        ids = usrinp()
+        if ids in "Qq":
+            return
+        ids = str.split(ids)
+        if len(ids) != 2:
+            print("Bad input!\nReturning")
+            return
+        for i in range(len(ids)):
+            while len(ids[i]) > 1 and ids[i][0] == "0":
+                ids[i] = ids[i][1:]
+            ids[i] = eval(ids[i])
+            if ids[i] >= len(theme._sorting):
+                print("ID out of range!\nReturning.")
+                return
+        print("Swapping",ids[0],"and",ids[1])
+        carry = theme._sorting[ids[0]]
+        theme._sorting = theme._sorting[:ids[0]] + (theme._sorting[ids[1]],) + theme._sorting[ids[0]+1:]
+        theme._sorting = theme._sorting[:ids[1]] + (carry,) + theme._sorting[ids[1]+1:]
         
 def previewThemeAudioMenu(theme, pal, tag): 
     try:
@@ -1155,8 +1174,8 @@ def editVoiceMenu(voice, theme, pal, path, tag=None):
         print("Mm - Mimic")
         print("Ee - Add/Edit Notes/MMovs") #UNDEFINED 
         print("Aa - Apply Notes to MMovs") 
-        print("Ii - Show Info") # SHOW TAG
-        print("Mm - Change Tag") #UNDEFINED
+        print("Ii - Show Info") 
+        print("Zz - Change Tag") #UNDEFINED
         print("Vv - Change Volume") #UNDEFINED
         print("Pp - Change Pan") #UNDEFINED
         print("Tt - Tab")
@@ -1193,6 +1212,7 @@ def editVoiceMenu(voice, theme, pal, path, tag=None):
         
         elif inp in "Ii":
             print("Instrument:", voice._inst)
+            print("Tag       :", voice.getTag())
             print("Centre    :", voice._cent)
             print("Vol       :", voice._vol)
             print("Pan       :", voice._pan)
@@ -1205,6 +1225,14 @@ def editVoiceMenu(voice, theme, pal, path, tag=None):
                 warn = ""
             print("Prog Count:", len(voice._progs))
             print("Theme PC  :", theme._progc, warn)
+            
+        elif inp in "Zz":
+            print("Input your tag (Qq-quit):")
+            inp = usrinp()
+            if inp in "Qq":
+                print("Returning")
+            else:
+                voice.setTag(inp)
         
         elif inp in "Tt":
             print(voice.toTab()+"\n")
