@@ -1175,9 +1175,9 @@ def editVoiceMenu(voice, theme, pal, path, tag=None):
         print("Ee - Add/Edit Notes/MMovs") #UNDEFINED 
         print("Aa - Apply Notes to MMovs") 
         print("Ii - Show Info") 
-        print("Zz - Change Tag") #UNDEFINED
-        print("Vv - Change Volume") #UNDEFINED
-        print("Pp - Change Pan") #UNDEFINED
+        print("Zz - Change Tag")
+        print("Vv - Change Volume")
+        print("Bb - Change Pan") 
         print("Tt - Tab")
         print("Pp - Preview Voice  (Ss - Short Preview)") 
         print("Cc - Preview in Context  (Xx - Short Context)") 
@@ -1186,27 +1186,31 @@ def editVoiceMenu(voice, theme, pal, path, tag=None):
         print("Qq - Quit")
         inp = usrinp()
         
+        def prepare_undo(u, v):
+            u.update(v)
+            v.clearAudio()
+        
         if inp in "Rr":
             print("Copying to undo clipboard...")
-            undoer.update(voice)
+            prepare_undo(undoer, voice)
             autoGen(voice, theme, pal)
             print(voice.toTab()+"\n")
             
         elif inp in "Gg":
             print("Copying to undo clipboard...")
-            undoer.update(voice)
+            prepare_undo(undoer, voice)
             customGen(voice, theme, pal)
             print(voice.toTab()+"\n")
             
         elif inp in "Mm":
             print("Copying to undo clipboard...")
-            undoer.update(voice)
+            prepare_undo(undoer, voice)
             mimicMenu(voice, theme, pal)
             print(voice.toTab()+"\n")
             
         elif inp in "Aa":
             print("Copying to undo clipboard...")
-            undoer.update(voice)
+            prepare_undo(undoer, voice)
             voice.applyToMovs()
             print(voice.toTab()+"\n")
         
@@ -1227,13 +1231,41 @@ def editVoiceMenu(voice, theme, pal, path, tag=None):
             print("Theme PC  :", theme._progc, warn)
             
         elif inp in "Zz":
+            print("Current tag:", voice.getTag())
             print("Input your tag (Qq-quit):")
             inp = usrinp()
             if inp in "Qq":
                 print("Returning")
             else:
                 voice.setTag(inp)
-        
+                
+        elif inp in "Vv":
+            print("Current volume:", voice._vol)
+            print("Please input volume (as the difference in decibeis from the source audio) (Qq-quit)")
+            inp = usrinp()
+            if inp in "Qq":
+                print("Returning")
+            else:
+                try:
+                    vol = eval(inp)
+                    voice._vol = vol
+                except:
+                    print("Bad input, returning")
+                    
+        elif inp in "Bb":
+            print("Current pan:", voice._pan)
+            print("Please input pan in range [-1, 1] (where -1 only enables left audio and 1 only enables right audio) (Qq-quit)")
+            inp = usrinp()
+            if inp in "Qq":
+                print("Returning")
+            else:
+                try:
+                    pan = eval(inp)
+                    voice._pan = pan
+                except:
+                    print("Bad input, returning")            
+                
+         
         elif inp in "Tt":
             print(voice.toTab()+"\n")
             
@@ -1263,6 +1295,17 @@ def editVoiceMenu(voice, theme, pal, path, tag=None):
             else:
                 print("End of undo stack")
             print(voice.toTab()+"\n")
+            
+        elif inp in "Dd":
+            print("Are you sure you want to delete this voice? This is undoable (Yy-Delete, anythin else-return)")
+            inp = usrinp()
+            if inp in "Yy":
+                print("Deleting voice")
+                theme.findAndDelete(voice)
+                print("Deleting successfull")
+                return
+            else:
+                print("Returning")
         
         elif inp in "Qq":
             return
