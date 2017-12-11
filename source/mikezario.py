@@ -962,6 +962,7 @@ def editSortingMenu(theme, pal, tag, path):
     while True:
         print(path)
         print("Current sorting order:")
+        print(theme._sorting)
         for i in range(len(theme._sorting)):
             print("    "+"0"*(2-len(str(i)))+str(i)+": "+theme._sorting[i].indicationStr(theme))
         print()

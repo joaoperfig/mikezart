@@ -982,7 +982,7 @@ class theme:
         random.shuffle(l)
         self._sorting = tuple(l)
         
-    def findAndDelete(voic):                                                    # locate voice, delete it from voices and from tvindicators
+    def findAndDelete(self, voic):                                                    # locate voice, delete it from voices and from tvindicators
         found = False
         for i in range(len(self._sorting)):
             tvi = self._sorting[i]
@@ -992,13 +992,26 @@ class theme:
                 break
         if not found:
             print("Warning: the voice you are deleting was not found on tvindicators")
+        found = False
         for tip in list(self._voices):
             for i in range(len(self._voices[tip])):
                 tvc = self._voices[tip][i]
                 if tvc == voic:
                     self._voices[tip] = self._voices[tip][:i] + self._voices[tip][i+1:]
-                    return
-        print("Warning: the voice you are deleting was not found anywhere!!")
+                    found = True
+                    vtip = tip
+                    vid = i
+                    break
+            if found:
+                break
+        if not found:
+            print("Warning: the voice you are deleting was not found anywhere!!")
+            return
+        for i in range(len(self._sorting)): #lower the indexes of tvis above the deleted voice
+            tvi = self._sorting[i]
+            if tvi._mtype == vtip:
+                if tvi._index > vid:
+                    tvi._index = tvi._index-1
                 
         
         
