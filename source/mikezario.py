@@ -1163,6 +1163,10 @@ def chooseCentreMenu(notes):
                 if inp in "Nn":
                     break
 
+def prepare_undo(u, v):
+    u.update(v)
+    v.clearAudio()
+
 def editVoiceMenu(voice, theme, pal, path, tag=None):
     path = path + " > "+str(voice)
     undoer = Undoer()
@@ -1172,9 +1176,11 @@ def editVoiceMenu(voice, theme, pal, path, tag=None):
         print("Editing",voice)
         print("Rr - Full Auto-Generation") 
         print("Gg - Custom Auto-Generation") 
+        print("Jj - Clear Note Content")
         print("Mm - Mimic")
         print("Ee - Add/Edit Notes/MMovs") #UNDEFINED 
         print("Aa - Apply Notes to MMovs") 
+        print("Kk - Use a Preset Generator/Effect") #UNDEFINED
         print("Ii - Show Info") 
         print("Zz - Change Tag")
         print("Vv - Change Volume")
@@ -1183,13 +1189,9 @@ def editVoiceMenu(voice, theme, pal, path, tag=None):
         print("Pp - Preview Voice  (Ss - Short Preview)") 
         print("Cc - Preview in Context  (Xx - Short Context)") 
         print("Uu - Undo (only last 100 states saved)")
-        print("Dd - Delete this Voice") #UNDEFINED
+        print("Dd - Delete this Voice") 
         print("Qq - Quit")
         inp = usrinp()
-        
-        def prepare_undo(u, v):
-            u.update(v)
-            v.clearAudio()
         
         if inp in "Rr":
             print("Copying to undo clipboard...")
@@ -1203,11 +1205,26 @@ def editVoiceMenu(voice, theme, pal, path, tag=None):
             customGen(voice, theme, pal)
             print(voice.toTab()+"\n")
             
+        elif inp in "Jj":
+            print("Copying to undo clipboard...")
+            prepare_undo(undoer, voice)            
+            fullVoiceClear(voice)
+            print("All notes and mmovs are cleared!")
+            
         elif inp in "Mm":
             print("Copying to undo clipboard...")
             prepare_undo(undoer, voice)
             mimicMenu(voice, theme, pal)
             print(voice.toTab()+"\n")
+            
+        elif inp in "Ee":
+            print("Please input the index of a prog to edit")
+            print("Index must be in range [0 , "+str(len(voice._progs))+"]")
+            index = idMenu()
+            if index not in range(len(voice._progs)):
+                print("Bad index, returning")
+            else:
+                progContentEditMenu     (voice._progs[index], voice, index, path)
             
         elif inp in "Aa":
             print("Copying to undo clipboard...")
@@ -1454,6 +1471,49 @@ def mimicMenu(voice, theme, pal):
                     voice.mimic(theme._voices[typ][vid])
                     return
         
+def fullVoiceClear(voice):
+    voice.autoProg(theme._cprog, theme._progc, theme._csize, 0, None, None)
+            
+def progContentEditMenu(prog, voice, index, path):                                            # Menu for directly accessing and editing content in progs
+    path = path + " > ProgEdit"+str(index)
+    "Creating undo stack for prog"
+    undoer = Undoer()
+    while True:
+        print(path)
+        print(prog.toTab()+"\n")
+        print("Cc - Clear All Content")
+        print("Pp - Edit a Chunk") #UNDEFINED
+        print("Dd - Duplicate to all other chunks") #UNDEFINED
+        print("Uu - Undo (please note that this undo stack only exists in the context of this prog)")
+        print("Qq - Quit")
+        inp = usrinp()
+        if inp in "Cc":
+            print("Copying to undo clipboard...")
+            prepare_undo(undoer, prog)
+            for chu in prog._chunks:
+                chu._content = [()]*(4*chu._size)
+                        
+        elif inp in "Pp":
+            print("UNDEFINED")
+            
+        elif inp in "Uu":
+            print("Reverting to previous state...")
+            prev = undoer.revert()
+            if prev != None:
+                prog = prev
+                voice._progs[index] = prev
+            else:
+                print("End of undo stack")
+            print(voice.toTab()+"\n")            
+            
+
+            
+            
+            
+            
+            
+            
+            
             
     
         
