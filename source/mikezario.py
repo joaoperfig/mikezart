@@ -1173,12 +1173,14 @@ def editVoiceMenu(voice, theme, pal, path, tag=None):
     print("Reseting undo clipboard!")
     while True:
         print(path)
+        voice.divorceprogs() # Makes each prog a copy of the others, not a pointer to the same
         print("Editing",voice)
         print("Rr - Full Auto-Generation") 
         print("Gg - Custom Auto-Generation") 
         print("Jj - Clear Note Content")
         print("Mm - Mimic")
-        print("Ee - Add/Edit Notes/MMovs") #UNDEFINED 
+        print("Ee - Add/Edit Notes/MMovs (prog menu)")
+        print("Ff - Clone a prog onto another")
         print("Aa - Apply Notes to MMovs") 
         print("Kk - Use a Preset Generator/Effect") #UNDEFINED
         print("Ii - Show Info") 
@@ -1219,12 +1221,29 @@ def editVoiceMenu(voice, theme, pal, path, tag=None):
             
         elif inp in "Ee":
             print("Please input the index of a prog to edit")
-            print("Index must be in range [0 , "+str(len(voice._progs))+"]")
+            print("Index must be in range [0 , "+str(len(voice._progs)-1)+"]")
             index = idMenu()
             if index not in range(len(voice._progs)):
                 print("Bad index, returning")
             else:
-                progContentEditMenu     (voice._progs[index], voice, index, path)
+                print("Copying to undo clipboard...")
+                prepare_undo(undoer, voice)                
+                progContentEditMenu (voice._progs[index], voice, index, path)
+            
+        elif inp in "Ff":
+            print("Please input the index of prog to copy from")
+            print("Index must be in range [0 , "+str(len(voice._progs)-1)+"]")
+            index1 = idMenu()   
+            print("Please input the index of prog to copy to")
+            print("Index must be in range [0 , "+str(len(voice._progs)-1)+"]")
+            index2 = idMenu()      
+            if (index1 not in range(len(voice._progs))) or (index2 not in range(len(voice._progs))):
+                print("Bad indexes, returning")
+            else:
+                print("Copying to undo clipboard...")
+                prepare_undo(undoer, voice)                
+                print("Copying...")
+                voice._progs = voice._progs[:index2] + (copy.deepcopy(voice._progs[index1]),) + voice._progs[index2+1:]
             
         elif inp in "Aa":
             print("Copying to undo clipboard...")
@@ -1476,40 +1495,98 @@ def fullVoiceClear(voice):
             
 def progContentEditMenu(prog, voice, index, path):                                            # Menu for directly accessing and editing content in progs
     path = path + " > ProgEdit"+str(index)
-    "Creating undo stack for prog"
+    print("Creating undo stack for prog")
     undoer = Undoer()
     while True:
         print(path)
         print(prog.toTab()+"\n")
         print("Cc - Clear All Content")
-        print("Pp - Edit a Chunk") #UNDEFINED
-        print("Dd - Duplicate to all other chunks") #UNDEFINED
+        print("Pp - Edit a Chunk") 
+        print("Gg - Clone a Chunk onto Another")
+        print("Dd - Duplicate this to All Other Progs (undoable on the menu above)") #UNDEFINED
         print("Uu - Undo (please note that this undo stack only exists in the context of this prog)")
         print("Qq - Quit")
         inp = usrinp()
         if inp in "Cc":
+            
+            for pro in voice._progs:
+                print(prog)
+            
             print("Copying to undo clipboard...")
             prepare_undo(undoer, prog)
             for chu in prog._chunks:
                 chu._content = [()]*(4*chu._size)
                         
         elif inp in "Pp":
-            print("UNDEFINED")
+            print("Please input the index of a chunk to edit")
+            print("Index must be in range [0 , "+str(len(prog._chunks)-1)+"]")
+            idx = idMenu()
+            if idx not in range(len(prog._chunks)):
+                print("Bad index, returning")
+            else:
+                print("Copying to undo clipboard...")
+                prepare_undo(undoer, prog)                
+                chunkContentEditMenu(prog._chunks[idx], idx, prog, voice, path)     
+                
+        elif inp in "Gg":
+            print("Please input the index of the chunk to copy from")
+            print("Index must be in range [0 , "+str(len(prog._chunks)-1)+"]")
+            idx1 = idMenu()   
+            print("Please input the index of the chunk to copy to")
+            print("Index must be in range [0 , "+str(len(prog._chunks)-1)+"]")
+            idx2 = idMenu()
+            if (idx2 not in range(len(prog._chunks))) or (idx2 not in range(len(prog._chunks))):
+                print("Bad index, returning")  
+            else:
+                print("Copying to undo clipboard...")
+                prepare_undo(undoer, prog)    
+                prog._chunks = prog._chunks[:idx2] + (copy.deepcopy(prog._chunks[idx1]),) + prog._chunks[idx2+1:]
             
         elif inp in "Uu":
             print("Reverting to previous state...")
             prev = undoer.revert()
             if prev != None:
                 prog = prev
-                voice._progs[index] = prev
+                voice._progs = voice._progs[:index] + (prev,) + voice._progs[index+1:]
             else:
                 print("End of undo stack")
-            print(voice.toTab()+"\n")            
+            print(prog.toTab()+"\n")       
+            
+        elif inp in "Qq":
+            return
             
 
+def chunkContentEditMenu(chu, index, prog, voice, path):
+    path = path + " > ChunkEdit"+str(index)
+    print("Creating undo stack for chunk")
+    undoer = Undoer()
+    while True:
+        print(path)
+        print(chu.toTab()+"\n")
+        print("Cc - Clear All Content")
+        print("Gg - Clone a Chunk to Another")
+        print("Dd - Duplicate this to All Other Progs (undoable on the menu above)") #UNDEFINED
+        print("Uu - Undo (please note that this undo stack only exists in the context of this prog)")
+        print("Qq - Quit")
+        inp = usrinp()
+        if inp in "Cc":
+            print("Copying to undo clipboard...")
+            prepare_undo(undoer, prog)
+            chu._content = [()]*(4*chu._size)
             
             
+        elif inp in "Uu":
+            print("Reverting to previous state...")
+            prev = undoer.revert()
+            if prev != None:
+                chu = prev
+                prog._chunks = prog._chunks[:index] + (prev,) + prog._chunks[index+1:]
+            else:
+                print("End of undo stack")
+            print(prog.toTab()+"\n")        
             
+        elif inp in "Qq":
+            return        
             
             
             
