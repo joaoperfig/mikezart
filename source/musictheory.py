@@ -749,6 +749,12 @@ class voice:
         else:
             raise ValueError("Invalid mtype: " + self._mtype + ".")
         
+    def divorceprogs(self):                                                     # makes it so that progs are not pointers to same object
+        prgs = ()
+        for prog in self._progs:
+            prgs = prgs + (copy.deepcopy(prog),)
+        self._progs = prgs
+        
     def applyToMovs(self):                                                      # Finds any movs in chunks and replaces them with appropriate notes
         for prog in self._progs:
             for chuc in prog._chunks:
@@ -1263,6 +1269,16 @@ def smelodicTWeights():
     return {"whole":4, "half":2, "quarter":1}
 
 def smelodicCWeights():
+    return {1:1, 2:2, 3:3, 4:20, 5:20, 6:20, 7:15, 8:14, 9:13, 10:3, 11:2, 12:1}
+
+#Long Melodic Parameters
+def lmelodicMWeights():
+    return {mmov("general", "repeat"):2,mmov("chordic", "repeat"):4, mmov("chordic", "rise"):4, mmov("chordic", "lower"):4, mmov("general", "rise"):2, mmov("general", "lower"):2}
+
+def lmelodicTWeights():
+    return {"whole":4, "half":2, "quarter":1}
+
+def lmelodicCWeights():
     return {1:1, 2:2, 3:3, 4:20, 5:20, 6:20, 7:15, 8:14, 9:13, 10:3, 11:2, 12:1}
 
 #Percussion Parameters
