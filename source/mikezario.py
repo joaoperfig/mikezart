@@ -1210,7 +1210,7 @@ def editVoiceMenu(voice, theme, pal, path, tag=None):
         elif inp in "Jj":
             print("Copying to undo clipboard...")
             prepare_undo(undoer, voice)            
-            fullVoiceClear(voice)
+            fullVoiceClear(voice, theme)
             print("All notes and mmovs are cleared!")
             
         elif inp in "Mm":
@@ -1490,7 +1490,7 @@ def mimicMenu(voice, theme, pal):
                     voice.mimic(theme._voices[typ][vid])
                     return
         
-def fullVoiceClear(voice):
+def fullVoiceClear(voice, theme):
     voice.autoProg(theme._cprog, theme._progc, theme._csize, 0, None, None)
             
 def progContentEditMenu(prog, voice, index, path):                                            # Menu for directly accessing and editing content in progs
@@ -1501,7 +1501,7 @@ def progContentEditMenu(prog, voice, index, path):                              
         print(path)
         print(prog.toTab()+"\n")
         print("Cc - Clear All Content")
-        print("Pp - Edit a Chunk") 
+        print("Ee - Edit a Chunk") 
         print("Gg - Clone a Chunk onto Another")
         print("Dd - Duplicate this to All Other Progs (undoable on the menu above)") #UNDEFINED
         print("Uu - Undo (please note that this undo stack only exists in the context of this prog)")
@@ -1517,7 +1517,7 @@ def progContentEditMenu(prog, voice, index, path):                              
             for chu in prog._chunks:
                 chu._content = [()]*(4*chu._size)
                         
-        elif inp in "Pp":
+        elif inp in "Ee":
             print("Please input the index of a chunk to edit")
             print("Index must be in range [0 , "+str(len(prog._chunks)-1)+"]")
             idx = idMenu()
@@ -1541,6 +1541,16 @@ def progContentEditMenu(prog, voice, index, path):                              
                 print("Copying to undo clipboard...")
                 prepare_undo(undoer, prog)    
                 prog._chunks = prog._chunks[:idx2] + (copy.deepcopy(prog._chunks[idx1]),) + prog._chunks[idx2+1:]
+                
+        elif inp in "Dd":
+            print("Warning: this is only undoable in the above menu!!!")
+            t = ()
+            for i in range(len(voice._progs)):
+                if i != index:
+                    t = t + (copy.deepcopy(prog),)
+                else:
+                    t = t + (prog,)
+            voice._progs = t
             
         elif inp in "Uu":
             print("Reverting to previous state...")
