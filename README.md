@@ -5,7 +5,7 @@ Mikezart is an autonomous music generator
 Mikezario is a tool for lazy musicians  
 
 ### setup:
-- install ptython 3 or latter
+- install python 3 or latter
 - pip install pyaudio
 - pip install pydub
 - you may need to install audio codecs
